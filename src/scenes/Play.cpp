@@ -1,5 +1,7 @@
 ﻿#include "Play.h"
 
+#include "raylib.h"
+
 namespace Play {
 
 #pragma region Declarations
@@ -15,7 +17,7 @@ void Play() {
   bool exit = false;
   bool playerWon = false;
 
-  while (!exit && playerWon) {
+  while (!exit && !playerWon && !WindowShouldClose()) {
     Input();
     Update();
     Draw();
