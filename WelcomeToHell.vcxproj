@@ -122,7 +122,9 @@ xcopy "$(SolutionDir)res\" "$(OutDir)res\"  /i/y/s</Command>
     <Folder Include="src\scenes\" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\Math.cpp" />
     <ClCompile Include="src\engine\SceneManager.cpp" />
+    <ClCompile Include="src\engine\StartUp.cpp" />
     <ClCompile Include="src\main.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -193,7 +195,9 @@ xcopy "$(SolutionDir)res\" "$(OutDir)res\"  /i/y/s</Command>
     <ClCompile Include="src\scenes\Play.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\Math.h" />
     <ClInclude Include="src\engine\SceneManager.h" />
+    <ClInclude Include="src\engine\StartUp.h" />
     <ClInclude Include="src\scenes\Credits.h" />
     <ClInclude Include="src\scenes\Exit.h" />
     <ClInclude Include="src\scenes\MainMenu.h" />
