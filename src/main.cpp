@@ -1,8 +1,8 @@
 ﻿#include "raylib.h"
 
 enum class ScreenSize {
-  Height = ,
-  Width = ,
+  Height = 1024,
+  Width = 768,
 }
 
 int main(){
