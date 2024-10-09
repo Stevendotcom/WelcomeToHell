@@ -1,0 +1,3 @@
+﻿namespace StartUp {
+void Start();
+}
