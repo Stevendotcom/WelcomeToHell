@@ -1,9 +1,5 @@
-﻿#include "engine/StartUp.h"
-#include "engine/SceneManager.h"
-enum class ScreenSize {
-  Height = 1024,
-  Width = 768,
-};
+﻿#include "engine/SceneManager.h"
+#include "engine/StartUp.h"
 
 int main(){
   SceneManager::ChangeScene();

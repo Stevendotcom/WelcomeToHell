@@ -195,6 +195,7 @@ xcopy "$(SolutionDir)res\" "$(OutDir)res\"  /i/y/s</Command>
     <ClCompile Include="src\scenes\Play.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\engine\Math.h" />
     <ClInclude Include="src\engine\SceneManager.h" />
     <ClInclude Include="src\engine\StartUp.h" />
