@@ -2,36 +2,40 @@
 
 #include "raylib.h"
 
+namespace {
+
+void Input() {
+}
+
+
+
+void Update() {
+}
+
+
+
+void Draw() {
+  BeginDrawing();
+  {
+    DrawTexture();
+  }
+}
+
+}
+
 namespace Play {
-
-#pragma region Declarations
-
-void Input();
-void Update();
-void Draw();
-
-#pragma endregion
 
 void Play() {
 
-  bool exit = false;
-  bool playerWon = false;
+  const bool Exit = false;
+  const bool PlayerWon = false;
 
-  while (!exit && !playerWon && !WindowShouldClose()) {
+  while (!Exit && !PlayerWon && !WindowShouldClose()) {
     Input();
     Update();
     Draw();
   }
 
-}
-
-void Input() {
-}
-
-void Update() {
-}
-
-void Draw() {
 }
 
 } // namespace Play

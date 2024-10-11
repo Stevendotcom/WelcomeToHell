@@ -1,40 +1,41 @@
-﻿#include "raylib.h"
-
+﻿#pragma once
+#include "raylib.h"
 
 namespace Math {
 
 /**
  *
  */
-float GetRotation(const Vector2& a);
+float GetRotation(const Vector2& A);
 
 /**
  * 
  */
-Vector2 Subtract(const Vector2& a, const Vector2& b);
-/**
-  *
-  */
-Vector2 Add(const Vector2& a, const Vector2& b);
+Vector2 Subtract(const Vector2& A, const Vector2& B);
 
 /**
   *
   */
-Vector2 Normalize(const Vector2& a, float mag);
+Vector2 Add(const Vector2& A, const Vector2& B);
 
 /**
   *
   */
-float GetMag(const Vector2& a);
+Vector2 Normalize(const Vector2& A, float Mag);
+
+/**
+  *
+  */
+float GetMag(const Vector2& A);
 
 /**
  *
  */
-bool IsEqual(const Vector2& a, const Vector2& b);
+bool IsEqual(const Vector2& A, const Vector2& B);
 
 /**
  *
  */
-bool IsEqual(float a, float b);
+bool IsEqual(float A, float B);
 
 } // namespace Math

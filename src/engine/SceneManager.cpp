@@ -1,29 +1,17 @@
 ﻿#include "SceneManager.h"
 
 #include <iostream>
-#include <ostream>
 
-#include "scenes/MainMenu.h"
 #include "scenes/Play.h"
-#include "scenes/Credits.h"
 
-namespace SceneManager {
+namespace {
 
-#pragma region Declarations
+void SceneLoop(const SceneManager::Scenes SelectedScene) {
 
-/**
- *
- */
-void SceneLoop(Scenes selectedScene);
-
-#pragma endregion
-
-
-
-void SceneLoop(Scenes selectedScene) {
-  switch (selectedScene) {
+  switch (SelectedScene) {
     case SceneManager::Scenes::MainMenu:
-
+      //MainMenu();
+      Play::Play();
       break;
     case SceneManager::Scenes::Play:
       break;
@@ -35,8 +23,14 @@ void SceneLoop(Scenes selectedScene) {
       std::cerr << "Scene not found!" << std::endl;
       break;
   }
+
 }
-void ChangeScene(const Scenes SelectedScene ) {
+
+}
+
+namespace SceneManager {
+
+void ChangeScene(const Scenes SelectedScene) {
   SceneLoop(SelectedScene);
 }
 

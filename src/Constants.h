@@ -1,3 +1,3 @@
 ﻿#pragma once
-constexpr int gScreenHeight = 1024;
-constexpr int gScreenWidth = 768;
+constexpr int g_ScreenHeight = 1024;
+constexpr int g_ScreenWidth = 768;

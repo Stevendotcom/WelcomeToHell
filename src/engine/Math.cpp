@@ -6,86 +6,94 @@
 
 using namespace std;
 
-namespace Math {
+namespace {
 
 using Rads = float;
 
-#pragma region Declarations
 
-/**
- *
- */
-float _RadianCast(Rads degree);
 
-#pragma endregion
+float RadianCast(const Rads Degree) {
+  return Degree * 180.0F / PI;
+}
 
-float GetRotation(const Vector2& a) {
-  int quad = 0;
-  Rads degree = 0;
+}
 
-  if (a.x > 0) {
-    if (a.y < 0) {
-      quad = 1;
+namespace Math {
+
+float GetRotation(const Vector2& A) {
+  int Quad = 0;
+  Rads Degree = 0;
+
+  if (A.x > 0) {
+    if (A.y < 0) {
+      Quad = 1;
     } else {
-      quad = 4;
+      Quad = 4;
     }
 
   } else {
-    if (a.y < 0) {
-      quad = 2;
+    if (A.y < 0) {
+      Quad = 2;
     } else {
-      quad = 3;
+      Quad = 3;
     }
   }
 
-  switch (quad) {
+  switch (Quad) {
     case 1:
-      degree = atan(-a.y / a.x);
+      Degree = atan(-A.y / A.x);
       break;
     case 2:
-      degree = PI - atan(-a.y / a.x);
+      Degree = PI - atan(-A.y / A.x);
       break;
     case 3:
-      degree = PI + atan(-a.y / a.x);
+      Degree = PI + atan(-A.y / A.x);
       break;
     case 4:
-      degree = 2 * PI - atan(-a.y / a.x);
+      Degree = 2 * PI - atan(-A.y / A.x);
       break;
     default:
-      cout << "Err Math.cpp:54"
-           << "\n";
+      cerr << "Err Math.cpp:54" << "\n";
       break;
   }
 
-  return _RadianCast(degree);
+  return RadianCast(Degree);
 }
 
-Vector2 Subtract(const Vector2& a, const Vector2& b) {
-  return {(b.x - a.x), (b.y - a.y)};
+
+
+Vector2 Subtract(const Vector2& A, const Vector2& B) {
+  return {(B.x - A.x), (B.y - A.y)};
 }
 
-Vector2 Add(const Vector2& a, const Vector2& b) {
-  return {(b.x + a.x), (b.y + a.y)};
+
+
+Vector2 Add(const Vector2& A, const Vector2& B) {
+  return {(B.x + A.x), (B.y + A.y)};
 }
 
-Vector2 Normalize(const Vector2& a, float mag) {
-  return {a.x / mag, a.y / mag};
+
+
+Vector2 Normalize(const Vector2& A, const float Mag) {
+  return {A.x / Mag, A.y / Mag};
 }
 
-float GetMag(const Vector2& a) {
-  return sqrtf(powf(a.x, 2) + powf(a.y, 2));
+
+
+float GetMag(const Vector2& A) {
+  return sqrtf(powf(A.x, 2) + powf(A.y, 2));
 }
 
-bool IsEqual(const Vector2& a, const Vector2& b) {
-  return IsEqual(a.x, b.x) && IsEqual(a.y, b.y);
+
+
+bool IsEqual(const Vector2& A, const Vector2& B) {
+  return IsEqual(A.x, B.x) && IsEqual(A.y, B.y);
 }
 
-bool IsEqual(float a, float b) {
-  return a > b - FLT_EPSILON && a < b + FLT_EPSILON;
-}
 
-float _RadianCast(Rads degree) {
-  return static_cast<Rads>((degree * 180.0f) / PI);
+
+bool IsEqual(const float A, const float B) {
+  return A > B - FLT_EPSILON && A < B + FLT_EPSILON;
 }
 
 } // namespace Math

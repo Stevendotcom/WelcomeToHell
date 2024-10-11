@@ -1,7 +1,6 @@
 ---
 Language: Cpp
-BasedOnStyle: Google
-AccessModifierOffset: -2
+BasedOnStyle: LLVM
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignOperands: true
@@ -9,8 +8,8 @@ AlignTrailingComments: true
 AllowShortBlocksOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: false
+AlwaysBreakTemplateDeclarations: Yes
 BinPackParameters: false
 BraceWrapping: 
   AfterCaseLabel: false
@@ -30,7 +29,7 @@ BraceWrapping:
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BreakBeforeBraces: Custom
-DerivePointerAlignment: false
+IncludeBlocks: Regroup
 IncludeCategories: 
   - Regex: '^<.*'
     Priority: 1
@@ -39,20 +38,14 @@ IncludeCategories:
   - Regex: '.*'
     Priority: 3
 IncludeIsMainRegex: '([-_](test|unittest))?$'
+IndentCaseLabels: true
 InsertNewlineAtEOF: true
 MacroBlockBegin: ''
 MacroBlockEnd: ''
-SortIncludes: false
+PointerAlignment: Left
 SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 1
 SpacesInAngles: false
 SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
-StatementMacros: 
-  - MARKUPMAP
-  - ASSERT_TRUE
-  - ASSERT_FALSE
-  - TEST
-  - CHECK
 ...
