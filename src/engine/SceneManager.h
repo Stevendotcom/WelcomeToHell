@@ -7,6 +7,6 @@ namespace SceneManager {
     Credits,
     Exit
 };
-void ChangeScene(Scenes selectedScene = Scenes::MainMenu);
+void ChangeScene(Scenes SelectedScene = Scenes::MainMenu);
 
 }

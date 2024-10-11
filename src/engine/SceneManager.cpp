@@ -1,7 +1,11 @@
 ﻿#include "SceneManager.h"
-#include "MainMenu.h"
-#include "Play.h"
-#include "Credits.h"
+
+#include <iostream>
+#include <ostream>
+
+#include "scenes/MainMenu.h"
+#include "scenes/Play.h"
+#include "scenes/Credits.h"
 
 namespace SceneManager {
 
@@ -28,11 +32,12 @@ void SceneLoop(Scenes selectedScene) {
     case SceneManager::Scenes::Exit:
       break;
     default:
+      std::cerr << "Scene not found!" << std::endl;
       break;
   }
 }
-void ChangeScene(Scenes selectedScene = Scenes::MainMenu) {
-  SceneLoop(selectedScene);
+void ChangeScene(const Scenes SelectedScene ) {
+  SceneLoop(SelectedScene);
 }
 
 } // namespace SceneManager
