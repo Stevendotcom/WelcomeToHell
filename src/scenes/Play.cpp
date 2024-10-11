@@ -23,9 +23,9 @@ void Draw() {
 
 }
 
-namespace Play {
 
-void Play() {
+
+void Play::Play() {
 
   const bool Exit = false;
   const bool PlayerWon = false;
@@ -37,5 +37,3 @@ void Play() {
   }
 
 }
-
-} // namespace Play

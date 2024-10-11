@@ -28,10 +28,8 @@ void SceneLoop(const SceneManager::Scenes SelectedScene) {
 
 }
 
-namespace SceneManager {
 
-void ChangeScene(const Scenes SelectedScene) {
+void SceneManager::ChangeScene(const Scenes SelectedScene) {
   SceneLoop(SelectedScene);
 }
 
-} // namespace SceneManager

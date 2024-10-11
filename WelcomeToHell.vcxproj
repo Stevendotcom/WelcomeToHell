@@ -118,11 +118,11 @@ xcopy "$(SolutionDir)res\" "$(OutDir)res\"  /i/y/s</Command>
     <Folder Include="obj\" />
     <Folder Include="res\" />
     <Folder Include="src\actors\" />
-    <Folder Include="src\engine\" />
     <Folder Include="src\scenes\" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\Math.cpp" />
+    <ClCompile Include="src\engine\ResManager.cpp" />
     <ClCompile Include="src\engine\SceneManager.cpp" />
     <ClCompile Include="src\engine\StartUp.cpp" />
     <ClCompile Include="src\main.cpp">
@@ -197,6 +197,7 @@ xcopy "$(SolutionDir)res\" "$(OutDir)res\"  /i/y/s</Command>
   <ItemGroup>
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\engine\Math.h" />
+    <ClInclude Include="src\engine\ResManager.h" />
     <ClInclude Include="src\engine\SceneManager.h" />
     <ClInclude Include="src\engine\StartUp.h" />
     <ClInclude Include="src\scenes\Credits.h" />

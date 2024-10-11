@@ -18,9 +18,9 @@ float RadianCast(const Rads Degree) {
 
 }
 
-namespace Math {
 
-float GetRotation(const Vector2& A) {
+
+float Math::GetRotation(const Vector2& A) {
   int Quad = 0;
   Rads Degree = 0;
 
@@ -62,31 +62,31 @@ float GetRotation(const Vector2& A) {
 
 
 
-Vector2 Subtract(const Vector2& A, const Vector2& B) {
+Vector2 Math::Subtract(const Vector2& A, const Vector2& B) {
   return {(B.x - A.x), (B.y - A.y)};
 }
 
 
 
-Vector2 Add(const Vector2& A, const Vector2& B) {
+Vector2 Math::Add(const Vector2& A, const Vector2& B) {
   return {(B.x + A.x), (B.y + A.y)};
 }
 
 
 
-Vector2 Normalize(const Vector2& A, const float Mag) {
+Vector2 Math::Normalize(const Vector2& A, const float Mag) {
   return {A.x / Mag, A.y / Mag};
 }
 
 
 
-float GetMag(const Vector2& A) {
+float Math::GetMag(const Vector2& A) {
   return sqrtf(powf(A.x, 2) + powf(A.y, 2));
 }
 
 
 
-bool IsEqual(const Vector2& A, const Vector2& B) {
+bool Math::IsEqual(const Vector2& A, const Vector2& B) {
   return IsEqual(A.x, B.x) && IsEqual(A.y, B.y);
 }
 
@@ -95,5 +95,3 @@ bool IsEqual(const Vector2& A, const Vector2& B) {
 bool IsEqual(const float A, const float B) {
   return A > B - FLT_EPSILON && A < B + FLT_EPSILON;
 }
-
-} // namespace Math
