@@ -1,3 +1,7 @@
-﻿namespace StartUp {
+﻿#pragma once
+
+namespace StartUp {
+
 void Start();
+
 }

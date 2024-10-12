@@ -1,12 +1,33 @@
 ﻿#include "StartUp.h"
 
 #include "Constants.h"
+#include "ResManager.h"
 #include "raylib.h"
 
-void StartUp::Start() {
-  constexpr int kFPS = 60;
+namespace {
 
-  InitWindow(gScreenWidth, gScreenHeight, "Welcome To Hell");
+// ReSharper disable once CppInconsistentNaming
+constexpr int kFPS = 60;
+
+void MakeRes() {
+  ResManager::MakeFonts();
+  ResManager::MakeTextures();
+  ResManager::MakeSounds();
+  ResManager::MakeMusic();
+}
+
+}
+
+
+
+void StartUp::Start() {
+
+  MakeRes();
+
+  InitWindow(g_ScreenWidth, g_ScreenHeight, "Welcome To Hell");
 
   SetTargetFPS(kFPS);
+
 }
+
+
