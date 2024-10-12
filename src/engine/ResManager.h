@@ -13,7 +13,8 @@ enum class Resources {
   Hit,
   Dropship,
   MenuOpen,
-  MenuHover
+  MenuHover,
+  Last
 };
 
 

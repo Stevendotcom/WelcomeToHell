@@ -247,6 +247,7 @@
         <Folder Include="src\scenes\"/>
     </ItemGroup>
     <ItemGroup>
+        <ClCompile Include="src\engine\CloseUp.cpp" />
         <ClCompile Include="src\engine\Math.cpp"/>
         <ClCompile Include="src\engine\ResManager.cpp"/>
         <ClCompile Include="src\engine\SceneManager.cpp"/>
@@ -259,6 +260,7 @@
     </ItemGroup>
     <ItemGroup>
         <ClInclude Include="src\Constants.h"/>
+        <ClInclude Include="src\engine\CloseUp.h" />
         <ClInclude Include="src\engine\Math.h"/>
         <ClInclude Include="src\engine\ResManager.h"/>
         <ClInclude Include="src\engine\SceneManager.h"/>
