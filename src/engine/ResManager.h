@@ -4,13 +4,26 @@
 
 namespace ResManager {
 
-Texture2D& GetTexture(const std::string& Name);
+enum class Resources {
+  AlmendraDisplay,
+  Background,
+  MainMenuMusic,
+  GameMusic,
+  Shoot,
+  Hit,
+  Dropship,
+  MenuOpen,
+  MenuHover
+};
 
-Music& GetMusic(const std::string& Name);
 
-Sound& GetSound(const std::string& Name);
+Texture2D& GetTexture(Resources Resource);
 
-Font& GetFont(const std::string& Name);
+Music& GetMusic(Resources Resource);
+
+Sound& GetSound(Resources Resource);
+
+Font& GetFont(Resources Resource);
 
 void MakeFonts();
 
@@ -20,4 +33,5 @@ void MakeSounds();
 
 void MakeMusic();
 
+std::string ResourceToString(Resources Resource);
 };

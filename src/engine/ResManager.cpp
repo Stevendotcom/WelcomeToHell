@@ -44,113 +44,140 @@ void ErrUnknownResource(const std::string& Name) {
 
 
 
-Texture2D& ResManager::GetTexture(const std::string& Name) {
+std::string ResManager::ResourceToString(const Resources Resource) {
+  switch (Resource) {
+    case Resources::AlmendraDisplay:
+      return "AlmendraDisplay";
+    case Resources::Background:
+      return "Background";
+    case Resources::MainMenuMusic:
+      return "MainMenuMusic";
+    case Resources::GameMusic:
+      return "GameMusic";
+    case Resources::Shoot:
+      return "Shoot";
+    case Resources::Hit:
+      return "Hit";
+    case Resources::Dropship:
+      return "Dropship";
+    case Resources::MenuOpen:
+      return "MenuOpen";
+    case Resources::MenuHover:
+      return "MenuHover";
+    default:
+      return "unknown";
+  }
+}
 
-  switch (Name) {
-    case "Background":
+
+
+Texture2D& ResManager::GetTexture(const Resources Resource) {
+
+  switch (Resource) {
+    case Resources::Background:
       if (IsTextureReady(Background)) {
         return Background;
       }
       break;
 
     default:
-      ErrUnknownResource(Name);
+      ErrUnknownResource(ResourceToString(Resource));
       abort();
   }
 
-  ErrResourceNotReady(Name);
+  ErrResourceNotReady(ResourceToString(Resource));
   abort();
 }
 
 
 
-Music& ResManager::GetMusic(const std::string& Name) {
+Music& ResManager::GetMusic(const Resources Resource) {
 
-  switch (Name) {
-    case "MainMenuMusic":
+  switch (Resource) {
+    case Resources::MainMenuMusic:
       if (IsMusicReady(MainMenuMusic)) {
         return MainMenuMusic;
       }
       break;
 
-    case "GameMusic":
+    case Resources::GameMusic:
       if (IsMusicReady(GameMusic)) {
         return GameMusic;
       }
       break;
 
     default:
-      ErrUnknownResource(Name);
+      ErrUnknownResource(ResourceToString(Resource));
       abort();
 
   }
 
-  ErrResourceNotReady(Name);
+  ErrResourceNotReady(ResourceToString(Resource));
   abort();
 
 }
 
 
 
-Sound& ResManager::GetSound(const std::string& Name) {
+Sound& ResManager::GetSound(const Resources Resource) {
 
-  switch (Name) {
-    case "Shoot":
+  switch (Resource) {
+    case Resources::Shoot:
       if (IsSoundReady(Shoot)) {
         return Shoot;
       }
       break;
 
-    case "Hit":
+    case Resources::Hit:
       if (IsSoundReady(Hit)) {
         return Hit;
       }
       break;
 
-    case "Dropship":
+    case Resources::Dropship:
       if (IsSoundReady(Dropship)) {
         return Dropship;
       }
       break;
 
-    case "MenuOpen":
+    case Resources::MenuOpen:
       if (IsSoundReady(MenuOpen)) {
         return MenuOpen;
       }
       break;
 
-    case "MenuHover":
+    case Resources::MenuHover:
       if (IsSoundReady(MenuHover)) {
         return MenuHover;
       }
       break;
 
     default:
-      ErrUnknownResource(Name);
+      ErrUnknownResource(ResourceToString(Resource));
       abort();
   }
 
-  ErrResourceNotReady(Name);
+  ErrResourceNotReady(ResourceToString(Resource));
   abort();
 }
 
 
 
-Font& ResManager::GetFont(const std::string& Name) {
+Font& ResManager::GetFont(const Resources Resource) {
 
-  switch (Name) {
-    case "AlmendraDisplay":
+  switch (Resource) {
+    case Resources::AlmendraDisplay:
       if (IsFontReady(AlmendraDisplay)) {
         return AlmendraDisplay;
       }
       break;
 
     default:
-      ErrUnknownResource(Name);
+      ErrUnknownResource(ResourceToString(Resource));
       abort();
   }
 
-  ErrResourceNotReady(Name);
+  ErrResourceNotReady(ResourceToString(Resource));
   abort();
 }
 
