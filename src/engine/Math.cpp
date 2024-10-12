@@ -92,6 +92,6 @@ bool Math::IsEqual(const Vector2& A, const Vector2& B) {
 
 
 
-bool IsEqual(const float A, const float B) {
+bool Math::IsEqual(const float A, const float B) {
   return A > B - FLT_EPSILON && A < B + FLT_EPSILON;
 }

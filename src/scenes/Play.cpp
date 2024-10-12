@@ -1,6 +1,7 @@
 ﻿#include "Play.h"
 
 #include "raylib.h"
+#include "engine/ResManager.h"
 
 namespace {
 
@@ -17,7 +18,7 @@ void Update() {
 void Draw() {
   BeginDrawing();
   {
-    DrawTexture();
+    DrawTexture(GetTexture(ResManager::Resources::Background), 0, 0, WHITE);
   }
 }
 
