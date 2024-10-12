@@ -1,5 +1,6 @@
 ﻿#include "Play.h"
 
+#include "Constants.h"
 #include "raylib.h"
 #include "engine/ResManager.h"
 
@@ -16,10 +17,21 @@ void Update() {
 
 
 void Draw() {
+  Texture2D& Background = GetTexture(ResManager::Resources::Background);
+
   BeginDrawing();
   {
-    DrawTexture(GetTexture(ResManager::Resources::Background), 0, 0, WHITE);
+    DrawTexturePro(Background,
+                   {0,
+                    0,
+                    static_cast<float>(Background.width),
+                    static_cast<float>(Background.height)},
+                   {0,
+                    0,
+                    static_cast<float>(g_ScreenWidth),
+                    static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
   }
+  EndDrawing();
 }
 
 }
