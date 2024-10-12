@@ -197,11 +197,11 @@ void ResManager::MakeTextures() {
 
 void ResManager::MakeSounds() {
 
-  Shoot = LoadSound("res/SnakesAuthentic/762x54r_Single_WAV.wav");
-  Hit = LoadSound("res/ShapeForms/BLLTImpt_Hit Marker_07.wav");
-  MenuOpen = LoadSound("res/ShapeForms/Hologram_Menu_Open-2.wav");
-  MenuHover = LoadSound("res/ShapeForms/Old_Terminal_Popup_Appear_Low.wav");
-  Dropship = LoadSound("res/PixaBay/dropship-idle-hum-84742.wav");
+  Shoot = LoadSound("res/sfx/SnakesAuthentic/762x54r_Single_WAV.wav");
+  Hit = LoadSound("res/sfx/ShapeForms/BLLTImpt_Hit Marker_07.wav");
+  MenuOpen = LoadSound("res/sfx/ShapeForms/Hologram_Menu_Open-2.wav");
+  MenuHover = LoadSound("res/sfx/ShapeForms/Old_Terminal_Popup_Appear_Low.wav");
+  Dropship = LoadSound("res/sfx/PixaBay/dropship-idle-hum-84742.ogg");
 
 }
 
@@ -209,7 +209,8 @@ void ResManager::MakeSounds() {
 
 void ResManager::MakeMusic() {
 
-  MainMenuMusic = LoadMusicStream("res/sfx/DavidKBD-From_the_Dark_Past.ogg");
-  GameMusic = LoadMusicStream("res/sfx/DavidKBD-On_Fire.ogg");
+  MainMenuMusic = LoadMusicStream(
+      "res/sfx/PurgatoryPack/DavidKBD-From_the_Dark_Past.ogg");
+  GameMusic = LoadMusicStream("res/sfx/PurgatoryPack/DavidKBD-On_Fire.ogg");
 
 }

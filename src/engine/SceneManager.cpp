@@ -29,7 +29,7 @@ void SceneLoop(const SceneManager::Scenes SelectedScene) {
 }
 
 
+
 void SceneManager::ChangeScene(const Scenes SelectedScene) {
   SceneLoop(SelectedScene);
 }
-

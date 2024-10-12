@@ -17,6 +17,7 @@ enum class Resources {
 };
 
 
+
 Texture2D& GetTexture(Resources Resource);
 
 Music& GetMusic(Resources Resource);
