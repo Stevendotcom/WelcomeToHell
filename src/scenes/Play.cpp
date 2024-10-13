@@ -2,22 +2,31 @@
 
 #include "Constants.h"
 #include "raylib.h"
+#include "actors/Player.h"
 #include "engine/ResManager.h"
+
+using namespace Player;
 
 namespace {
 
-void Input() {
+bool Pause = false;
+
+
+
+void Input(PlayerType& Player) {
+  Player::Input(Player, Pause);
 }
 
 
 
-void Update() {
+void Update(const float Delta, PlayerType& Player) {
+  Player::Update(Player, Delta);
 }
 
 
 
-void Draw() {
-  Texture2D& Background = GetTexture(ResManager::Resources::Background);
+void PlayDraw(const PlayerType& Player) {
+  const Texture2D& Background = GetTexture(ResManager::Resources::Background);
 
   BeginDrawing();
   {
@@ -30,6 +39,9 @@ void Draw() {
                     0,
                     static_cast<float>(g_ScreenWidth),
                     static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
+    DrawText(TextFormat("Speed= %f, %f", Player.f_Speed.x, Player.f_Speed.y), 10, 10, 10, WHITE);
+    Draw(Player);
+
   }
   EndDrawing();
 }
@@ -40,13 +52,22 @@ void Draw() {
 
 void Play::Play() {
 
-  const bool Exit = false;
-  const bool PlayerWon = false;
+  const Music Music = GetMusic(ResManager::Resources::GameMusic);
+  float MusicVol = 0.5F;
+  bool Exit = false;
+  bool PlayerWon = false;
+  PlayerType Player;
+
+  Initialize(Player);
+
+  PlayMusicStream(Music);
+  SetMusicVolume(Music, MusicVol);
 
   while (!Exit && !PlayerWon && !WindowShouldClose()) {
-    Input();
-    Update();
-    Draw();
+    Input(Player);
+    Update(GetFrameTime(), Player);
+    UpdateMusicStream(Music);
+    PlayDraw(Player);
   }
 
 }
