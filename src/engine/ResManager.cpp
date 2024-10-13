@@ -15,6 +15,8 @@ Font AlmendraDisplay;
 
 Texture2D Background;
 
+Texture2D PlayerSprite;
+
 #pragma endregion
 
 #pragma region SFX
@@ -80,6 +82,11 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
       }
       break;
 
+    case Resources::PlayerSprite:
+      if (IsTextureReady(PlayerSprite)) {
+        return PlayerSprite;
+      }
+    break;
     default:
       ErrUnknownResource(ResourceToString(Resource));
       abort();
@@ -191,6 +198,7 @@ void ResManager::MakeFonts() {
 
 void ResManager::MakeTextures() {
   Background = LoadTexture("res/sprites/background.png");
+  PlayerSprite = LoadTexture("res/sprites/jetpack.png");
 }
 
 

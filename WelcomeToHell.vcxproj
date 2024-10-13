@@ -243,11 +243,12 @@
         <Folder Include="lib\"/>
         <Folder Include="obj\"/>
         <Folder Include="res\"/>
-        <Folder Include="src\actors\"/>
         <Folder Include="src\scenes\"/>
     </ItemGroup>
     <ItemGroup>
+        <ClCompile Include="src\actors\Player.cpp" />
         <ClCompile Include="src\engine\CloseUp.cpp" />
+        <ClCompile Include="src\engine\Collisions.cpp" />
         <ClCompile Include="src\engine\Math.cpp"/>
         <ClCompile Include="src\engine\ResManager.cpp"/>
         <ClCompile Include="src\engine\SceneManager.cpp"/>
@@ -259,8 +260,10 @@
         <ClCompile Include="src\scenes\Play.cpp"/>
     </ItemGroup>
     <ItemGroup>
+        <ClInclude Include="src\actors\Player.h" />
         <ClInclude Include="src\Constants.h"/>
         <ClInclude Include="src\engine\CloseUp.h" />
+        <ClInclude Include="src\engine\Collisions.h" />
         <ClInclude Include="src\engine\Math.h"/>
         <ClInclude Include="src\engine\ResManager.h"/>
         <ClInclude Include="src\engine\SceneManager.h"/>

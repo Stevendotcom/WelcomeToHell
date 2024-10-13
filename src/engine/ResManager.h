@@ -14,6 +14,7 @@ enum class Resources {
   Dropship,
   MenuOpen,
   MenuHover,
+  PlayerSprite,
   Last
 };
 
