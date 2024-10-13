@@ -24,6 +24,14 @@ Vector2 Add(const Vector2& A, const Vector2& B);
 Vector2 Normalize(const Vector2& A, float Mag);
 
 /**
+ * @brief
+ * @param A
+ * @param K
+ * @return
+ */
+Vector2 Multiply(const Vector2& A, float K);
+
+/**
   *
   */
 float GetMag(const Vector2& A);

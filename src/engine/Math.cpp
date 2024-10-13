@@ -24,15 +24,15 @@ float Math::GetRotation(const Vector2& A) {
   int Quad = 0;
   Rads Degree = 0;
 
-  if (A.x > 0) {
-    if (A.y < 0) {
+  if (A.x >= 0) {
+    if (A.y <= 0) {
       Quad = 1;
     } else {
       Quad = 4;
     }
 
   } else {
-    if (A.y < 0) {
+    if (A.y <= 0) {
       Quad = 2;
     } else {
       Quad = 3;
@@ -44,13 +44,13 @@ float Math::GetRotation(const Vector2& A) {
       Degree = atan(-A.y / A.x);
       break;
     case 2:
-      Degree = PI - atan(-A.y / A.x);
+      Degree = PI + atan(-A.y / A.x);
       break;
     case 3:
       Degree = PI + atan(-A.y / A.x);
       break;
     case 4:
-      Degree = 2 * PI - atan(-A.y / A.x);
+      Degree = 2 * PI + atan(-A.y / A.x);
       break;
     default:
       cerr << "Err Math.cpp:54" << "\n";
@@ -76,6 +76,12 @@ Vector2 Math::Add(const Vector2& A, const Vector2& B) {
 
 Vector2 Math::Normalize(const Vector2& A, const float Mag) {
   return {A.x / Mag, A.y / Mag};
+}
+
+
+
+Vector2 Math::Multiply(const Vector2& A, const float K) {
+  return {A.x * K, A.y * K};
 }
 
 

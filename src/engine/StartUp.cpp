@@ -24,14 +24,14 @@ void MakeRes() {
 
 void StartUp::Start() {
 
-  InitAudioDevice();
-
   InitWindow(g_ScreenWidth, g_ScreenHeight, "Welcome To Hell");
+
+  InitAudioDevice();
 
   SetExitKey(KEY_NULL);
 
   MakeRes();
 
-  SetTargetFPS(kFPS);
+  //SetTargetFPS(kFPS);
 
 }
