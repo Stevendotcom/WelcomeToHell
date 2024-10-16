@@ -6,7 +6,6 @@
 #include "engine/Collisions.h"
 #include "engine/ResManager.h"
 
-
 using namespace Player;
 using namespace Collisions;
 
@@ -22,14 +21,17 @@ void Input(PlayerType& Player) {
 
 
 
-void Update(const float Delta, PlayerType& Player, PlayerType& Duplicated, bool& DuplicatedVisible) {
+void Update(const float Delta,
+            PlayerType& Player,
+            PlayerType& Duplicated,
+            bool& DuplicatedVisible) {
 
-   auto CollisionPlace = WhereCollides::Down;
+  auto CollisionPlace = WhereCollides::Down;
 
   Player::Update(Player, Delta);
 
-  if (IsBorderCircle(Player.f_PositionCenter, Player.f_Radius, CollisionPlace))
-  {
+  if (IsBorderCircle(Player.f_PositionCenter, Player.f_Radius,
+                     CollisionPlace)) {
     if (!DuplicatedVisible) {
       DuplicatedVisible = true;
       Duplicate(Player, Duplicated, CollisionPlace);
@@ -40,7 +42,9 @@ void Update(const float Delta, PlayerType& Player, PlayerType& Duplicated, bool&
 
 
 
-void PlayDraw(const PlayerType& Player, const bool DuplicatedVisible, const PlayerType& Duplicated) {
+void PlayDraw(const PlayerType& Player,
+              const bool DuplicatedVisible,
+              const PlayerType& Duplicated) {
   const Texture2D& Background = GetTexture(ResManager::Resources::Background);
 
   BeginDrawing();
@@ -54,9 +58,12 @@ void PlayDraw(const PlayerType& Player, const bool DuplicatedVisible, const Play
                     0,
                     static_cast<float>(g_ScreenWidth),
                     static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
-    DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10, 10, WHITE);
+    DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10, 10,
+             WHITE);
+    DrawCircleLinesV(Player.f_PositionCenter, Player.f_Radius, RAYWHITE);
     Draw(Player);
     if (DuplicatedVisible) {
+      DrawCircleLinesV(Duplicated.f_PositionCenter, Duplicated.f_Radius, RAYWHITE);
       Draw(Duplicated);
     }
   }

@@ -12,7 +12,7 @@ using namespace Collisions;
 namespace {
 
 constexpr float k_MaxSpeed = 500.0F;
-constexpr float k_DefRadius = 90.0F;
+constexpr float k_DefRadius = 40.0F;
 constexpr int k_DefHearts = 3;
 constexpr int k_DefAccel = 1000.0F;
 
@@ -97,7 +97,6 @@ void Player::UpdateDuplicate(PlayerType& Player,
       if (Player.f_PositionCenter.y - Player.f_Radius <= -Player.f_Radius) {
         Player = Duplicated;
         DuplicatedVisible = false;
-        // Todo Delete duplicate
       }
       break;
 
@@ -106,7 +105,6 @@ void Player::UpdateDuplicate(PlayerType& Player,
           .f_Radius) {
         Player = Duplicated;
         DuplicatedVisible = false;
-        // Todo Delete duplicate
       }
       break;
 
@@ -116,7 +114,6 @@ void Player::UpdateDuplicate(PlayerType& Player,
 
         Player = Duplicated;
         DuplicatedVisible = false;
-        // Todo Delete duplicate
       }
       break;
 
@@ -125,7 +122,6 @@ void Player::UpdateDuplicate(PlayerType& Player,
 
         Player = Duplicated;
         DuplicatedVisible = false;
-        // Todo Delete duplicate
       }
       break;
   }
@@ -151,7 +147,7 @@ void Player::Update(PlayerType& Player, const float Delta) {
 
 void Player::Draw(const PlayerType& Player) {
   constexpr float k_RotCorrection = 90.0F;
-
+  constexpr float k_Scale = 2.0F;
   const Rectangle Source = {0,
                             0,
                             static_cast<float>(Player.f_Sprite.width),
@@ -159,10 +155,11 @@ void Player::Draw(const PlayerType& Player) {
 
   const Rectangle Dest = {Player.f_PositionCenter.x,
                           Player.f_PositionCenter.y,
-                          Player.f_Radius * 2.0F,
-                          Player.f_Radius * 2.0F};
+                          Player.f_Radius * k_Scale * 2.0F,
+                          Player.f_Radius * k_Scale * 2.0F};
 
   DrawTexturePro(Player.f_Sprite, Source, Dest,
-                 {Player.f_Radius, Player.f_Radius},
+                 {Player.f_Radius * k_Scale,
+                  Player.f_Radius * k_Scale},
                  k_RotCorrection - GetRotation(Player.f_Direction), WHITE);
 }

@@ -18,23 +18,23 @@ bool Collisions::IsCircleCircle(const Vector2& APosition,
 
 bool Collisions::IsBorderCircle(const Vector2& Position, const float Radius, WhereCollides& CollisionPlace) {
   
-  bool collides = false;
+  bool Collides = false;
   
   if (Position.x + Radius >= g_ScreenWidth) {
-    collides = true;
+    Collides = true;
     CollisionPlace = WhereCollides::Right;
 
   } else if (Position.x - Radius <= 0) {
-    collides = true;
+    Collides = true;
     CollisionPlace = WhereCollides::Left;
 
   } else if (Position.y + Radius <= 0) {
-    collides = true;
+    Collides = true;
     CollisionPlace = WhereCollides::Up;
 
   } else if (Position.y - Radius >= g_ScreenHeight) {
-    collides = true;
+    Collides = true;
     CollisionPlace = WhereCollides::Down;
   }
-  return collides;
+  return Collides;
 }
