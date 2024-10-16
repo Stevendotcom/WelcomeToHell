@@ -56,28 +56,29 @@ void Player::Accelerate(PlayerType& Player, const Vector2& MousePosition) {
 void Player::Duplicate(const PlayerType& Player,
                        PlayerType& Duplicated,
                        const WhereCollides CollisionPlace) {
-  Duplicated.f_Acceleration = Player.f_Acceleration;
-  Duplicated.f_Speed = Player.f_Speed;
-  Duplicated.f_Radius = Player.f_Radius;
-  Duplicated.f_Hearts = Player.f_Hearts;
-  Duplicated.f_Sprite = Player.f_Sprite;
 
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
-      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x, g_ScreenHeight};
+      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x,
+                                     g_ScreenHeight + Player.f_PositionCenter.
+                                     y};
       break;
 
     case WhereCollides::Down:
-      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x, 0};
+      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x,
+                                     Player.f_PositionCenter.y -
+                                     g_ScreenHeight};
       break;
 
     case WhereCollides::Right:
-      Duplicated.f_PositionCenter = {0, Player.f_PositionCenter.y};
+      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x - g_ScreenWidth,
+                                     Player.f_PositionCenter.y};
       break;
 
     case WhereCollides::Left:
-      Duplicated.f_PositionCenter = {g_ScreenWidth, Player.f_PositionCenter.y};
+      Duplicated.f_PositionCenter = {g_ScreenWidth + Player.f_PositionCenter.x,
+                                     Player.f_PositionCenter.y};
       break;
   }
 }
@@ -88,39 +89,54 @@ void Player::UpdateDuplicate(PlayerType& Player,
                              PlayerType& Duplicated,
                              const WhereCollides CollisionPlace,
                              bool& DuplicatedVisible) {
-  Duplicated.f_Hearts = Player.f_Hearts;
-  Player::Input(Duplicated, false);
-  Player::Update(Duplicated, GetFrameTime());
+  Duplicated = {Player.f_Acceleration,
+                Player.f_Radius,
+                Player.f_Hearts,
+                Duplicated.f_PositionCenter,
+                Player.f_Speed,
+                Player.f_Direction,
+                Player.f_Sprite};
+
+  Update(Duplicated, GetFrameTime());
+
+  // cases where the duplicate needs to disappear or get copied to player
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
-      if (Player.f_PositionCenter.y - Player.f_Radius <= -Player.f_Radius) {
+      if (Player.f_PositionCenter.y + Player.f_Radius <= 0) {
+        //if no longer visible
         Player = Duplicated;
+        DuplicatedVisible = false;
+      } else if (Player.f_PositionCenter.y - Player.f_Radius > 0) {
+        // if return
         DuplicatedVisible = false;
       }
       break;
 
     case WhereCollides::Down:
-      if (Player.f_PositionCenter.y + Player.f_Radius >= g_ScreenHeight + Player
-          .f_Radius) {
+      if (Player.f_PositionCenter.y - Player.f_Radius >= g_ScreenHeight) {
         Player = Duplicated;
+        DuplicatedVisible = false;
+      } else if (Player.f_PositionCenter.y + Player.f_Radius < g_ScreenHeight) {
         DuplicatedVisible = false;
       }
       break;
 
     case WhereCollides::Right:
-      if (Player.f_PositionCenter.y + Player.f_Radius >= g_ScreenWidth + Player.
-          f_Radius) {
-
+      if (Player.f_PositionCenter.x - Player.f_Radius >= g_ScreenWidth) {
         Player = Duplicated;
+        DuplicatedVisible = false;
+      } else if (Player.f_PositionCenter.x + Player.f_Radius < g_ScreenWidth) {
         DuplicatedVisible = false;
       }
       break;
 
     case WhereCollides::Left:
-      if (Player.f_PositionCenter.y - Player.f_Radius >= -Player.f_Radius) {
+      if (Player.f_PositionCenter.x + Player.f_Radius <= 0) {
 
         Player = Duplicated;
+        DuplicatedVisible = false;
+      } else if (Player.f_PositionCenter.x - Player.f_Radius > 0) {
         DuplicatedVisible = false;
       }
       break;
@@ -159,7 +175,6 @@ void Player::Draw(const PlayerType& Player) {
                           Player.f_Radius * k_Scale * 2.0F};
 
   DrawTexturePro(Player.f_Sprite, Source, Dest,
-                 {Player.f_Radius * k_Scale,
-                  Player.f_Radius * k_Scale},
+                 {Player.f_Radius * k_Scale, Player.f_Radius * k_Scale},
                  k_RotCorrection - GetRotation(Player.f_Direction), WHITE);
 }

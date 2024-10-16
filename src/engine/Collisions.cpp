@@ -28,11 +28,11 @@ bool Collisions::IsBorderCircle(const Vector2& Position, const float Radius, Whe
     Collides = true;
     CollisionPlace = WhereCollides::Left;
 
-  } else if (Position.y + Radius <= 0) {
+  } else if (Position.y - Radius <= 0) {
     Collides = true;
     CollisionPlace = WhereCollides::Up;
 
-  } else if (Position.y - Radius >= g_ScreenHeight) {
+  } else if (Position.y + Radius >= g_ScreenHeight) {
     Collides = true;
     CollisionPlace = WhereCollides::Down;
   }

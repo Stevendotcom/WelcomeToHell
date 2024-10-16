@@ -30,12 +30,13 @@ void Update(const float Delta,
 
   Player::Update(Player, Delta);
 
-  if (IsBorderCircle(Player.f_PositionCenter, Player.f_Radius,
-                     CollisionPlace)) {
-    if (!DuplicatedVisible) {
-      DuplicatedVisible = true;
-      Duplicate(Player, Duplicated, CollisionPlace);
-    }
+  if (IsBorderCircle(Player.f_PositionCenter, Player.f_Radius, CollisionPlace)
+      && !DuplicatedVisible) {
+
+    DuplicatedVisible = true;
+    Duplicate(Player, Duplicated, CollisionPlace);
+  }
+  if (DuplicatedVisible) {
     UpdateDuplicate(Player, Duplicated, CollisionPlace, DuplicatedVisible);
   }
 }
@@ -63,7 +64,8 @@ void PlayDraw(const PlayerType& Player,
     DrawCircleLinesV(Player.f_PositionCenter, Player.f_Radius, RAYWHITE);
     Draw(Player);
     if (DuplicatedVisible) {
-      DrawCircleLinesV(Duplicated.f_PositionCenter, Duplicated.f_Radius, RAYWHITE);
+      DrawCircleLinesV(Duplicated.f_PositionCenter, Duplicated.f_Radius,
+                       RAYWHITE);
       Draw(Duplicated);
     }
   }
