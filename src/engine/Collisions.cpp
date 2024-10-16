@@ -1,12 +1,6 @@
 ﻿#include "Collisions.h"
 #include "Constants.h"
 
-enum class WhereCollides {
-    Up,
-    Down, 
-    Left,
-    Right
-};
 
 bool Collisions::IsCircleCircle(const Vector2& APosition,
                                 float ARadius,
@@ -22,20 +16,23 @@ bool Collisions::IsCircleCircle(const Vector2& APosition,
   return k_Radii >= k_Dist;
 }
 
-bool Collisions::IsBorderCircle(const Vector2& Position, const float Radius, WhereCollides CollisionPlace) {
+bool Collisions::IsBorderCircle(const Vector2& Position, const float Radius, WhereCollides& CollisionPlace) {
   
   bool collides = false;
   
   if (Position.x + Radius >= g_ScreenWidth) {
     collides = true;
     CollisionPlace = WhereCollides::Right;
-  } else if (Position.x + Radius <= 0) {
+
+  } else if (Position.x - Radius <= 0) {
     collides = true;
     CollisionPlace = WhereCollides::Left;
-  } else if (Position.y - Radius <= 0) {
+
+  } else if (Position.y + Radius <= 0) {
     collides = true;
     CollisionPlace = WhereCollides::Up;
-  } else if (Position.y + Radius <= g_ScreenHeight) {
+
+  } else if (Position.y - Radius >= g_ScreenHeight) {
     collides = true;
     CollisionPlace = WhereCollides::Down;
   }

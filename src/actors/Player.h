@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "engine/Math.h"
+#include "engine/Collisions.h"
 
 namespace Player {
 
@@ -28,6 +29,19 @@ void Initialize(PlayerType& Player);
  * @param MousePosition
  */
 void Accelerate(PlayerType& Player, const Vector2& MousePosition);
+
+/**
+ *
+ */
+void Duplicate(const PlayerType& Player, PlayerType& Duplicated, Collisions::WhereCollides CollisionPlace);
+
+/**
+ *
+ */
+void UpdateDuplicate(PlayerType& Player,
+                     PlayerType& Duplicated,
+                     Collisions::WhereCollides CollisionPlace,
+                     bool& DuplicatedVisible);
 
 /**
  * @brief

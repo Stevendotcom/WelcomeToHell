@@ -3,9 +3,12 @@
 #include "Constants.h"
 #include "raylib.h"
 #include "actors/Player.h"
+#include "engine/Collisions.h"
 #include "engine/ResManager.h"
 
+
 using namespace Player;
+using namespace Collisions;
 
 namespace {
 
@@ -19,13 +22,25 @@ void Input(PlayerType& Player) {
 
 
 
-void Update(const float Delta, PlayerType& Player) {
+void Update(const float Delta, PlayerType& Player, PlayerType& Duplicated, bool& DuplicatedVisible) {
+  
+   auto CollisionPlace = WhereCollides::Down;
+  
   Player::Update(Player, Delta);
+
+  if (IsBorderCircle(Player.f_PositionCenter, Player.f_Radius, CollisionPlace))
+  {
+    if (!DuplicatedVisible) {
+      DuplicatedVisible = true;
+      Duplicate(Player, Duplicated, CollisionPlace);
+    }
+    UpdateDuplicate(Player, Duplicated, CollisionPlace, DuplicatedVisible);
+  }
 }
 
 
 
-void PlayDraw(const PlayerType& Player) {
+void PlayDraw(const PlayerType& Player, const bool DuplicatedVisible, const PlayerType& Duplicated) {
   const Texture2D& Background = GetTexture(ResManager::Resources::Background);
 
   BeginDrawing();
@@ -39,9 +54,11 @@ void PlayDraw(const PlayerType& Player) {
                     0,
                     static_cast<float>(g_ScreenWidth),
                     static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
-    DrawText(TextFormat("Speed= %f, %f", Player.f_Speed.x, Player.f_Speed.y), 10, 10, 10, WHITE);
+    DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10, 10, WHITE);
     Draw(Player);
-
+    if (DuplicatedVisible) {
+      Draw(Duplicated);
+    }
   }
   EndDrawing();
 }
@@ -56,7 +73,9 @@ void Play::Play() {
   float MusicVol = 0.5F;
   bool Exit = false;
   bool PlayerWon = false;
+  static bool DuplicatedVisible = false;
   PlayerType Player;
+  PlayerType Duplicated;
 
   Initialize(Player);
 
@@ -65,9 +84,9 @@ void Play::Play() {
 
   while (!Exit && !PlayerWon && !WindowShouldClose()) {
     Input(Player);
-    Update(GetFrameTime(), Player);
+    Update(GetFrameTime(), Player, Duplicated, DuplicatedVisible);
     UpdateMusicStream(Music);
-    PlayDraw(Player);
+    PlayDraw(Player, DuplicatedVisible, Duplicated);
   }
 
 }
