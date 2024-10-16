@@ -1,6 +1,9 @@
 ﻿#include "Player.h"
 
 #include "Constants.h"
+#include "raylib.h"
+#include "engine/Collisions.h"
+#include "engine/Math.h"
 #include "engine/ResManager.h"
 
 using namespace Math;
@@ -25,30 +28,30 @@ void Player::Initialize(PlayerType& Player) {
             GetTexture(ResManager::Resources::PlayerSprite)};
 }
 
+
+
 void Player::Accelerate(PlayerType& Player, const Vector2& MousePosition) {
 
   const Vector2 k_Temp = {MousePosition.x - Player.f_PositionCenter.x,
                           MousePosition.y - Player.f_PositionCenter.y};
 
   const float k_Mag = GetMag(k_Temp);
-  float k_SpeedMag;
 
   Player.f_Direction = Normalize(k_Temp, k_Mag);
 
-  Player.f_Speed =
-      Add(Player.f_Speed, Multiply(Player.f_Direction,
-                                   (Player.f_Acceleration * GetFrameTime())));
+  Player.f_Speed = Add(Player.f_Speed,
+                       Multiply(Player.f_Direction,
+                                Player.f_Acceleration * GetFrameTime()));
 
-  if (Player.f_Speed.x * Player.f_Speed.x +
-          Player.f_Speed.y * Player.f_Speed.y >
-      k_MaxSpeed * k_MaxSpeed) {
+  if (Player.f_Speed.x * Player.f_Speed.x + Player.f_Speed.y * Player.f_Speed.y
+      > k_MaxSpeed * k_MaxSpeed) {
 
-    k_SpeedMag = GetMag(Player.f_Speed);
-
-    Player.f_Speed = Normalize(Player.f_Speed, k_SpeedMag);
+    Player.f_Speed = Normalize(Player.f_Speed, GetMag(Player.f_Speed));
     Player.f_Speed = Multiply(Player.f_Speed, k_MaxSpeed);
   }
 }
+
+
 
 void Player::Duplicate(const PlayerType& Player,
                        PlayerType& Duplicated,
@@ -62,8 +65,7 @@ void Player::Duplicate(const PlayerType& Player,
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
-      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x,
-                                     g_ScreenHeight};
+      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x, g_ScreenHeight};
       break;
 
     case WhereCollides::Down:
@@ -79,6 +81,8 @@ void Player::Duplicate(const PlayerType& Player,
       break;
   }
 }
+
+
 
 void Player::UpdateDuplicate(PlayerType& Player,
                              PlayerType& Duplicated,
@@ -98,8 +102,8 @@ void Player::UpdateDuplicate(PlayerType& Player,
       break;
 
     case WhereCollides::Down:
-      if (Player.f_PositionCenter.y + Player.f_Radius >=
-          g_ScreenHeight + Player.f_Radius) {
+      if (Player.f_PositionCenter.y + Player.f_Radius >= g_ScreenHeight + Player
+          .f_Radius) {
         Player = Duplicated;
         DuplicatedVisible = false;
         // Todo Delete duplicate
@@ -107,8 +111,8 @@ void Player::UpdateDuplicate(PlayerType& Player,
       break;
 
     case WhereCollides::Right:
-      if (Player.f_PositionCenter.y + Player.f_Radius >=
-          g_ScreenWidth + Player.f_Radius) {
+      if (Player.f_PositionCenter.y + Player.f_Radius >= g_ScreenWidth + Player.
+          f_Radius) {
 
         Player = Duplicated;
         DuplicatedVisible = false;
@@ -127,25 +131,36 @@ void Player::UpdateDuplicate(PlayerType& Player,
   }
 }
 
-void Player::Input(PlayerType& Player, const float Pause) {
+
+
+void Player::Input(PlayerType& Player, const bool Pause) {
   if (!Pause && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
     Accelerate(Player, GetMousePosition());
   }
 }
 
-void Player::Update(PlayerType& Player, float Delta) {
+
+
+void Player::Update(PlayerType& Player, const float Delta) {
   Player.f_PositionCenter = {
       Player.f_PositionCenter.x + Player.f_Speed.x * Delta,
       Player.f_PositionCenter.y + Player.f_Speed.y * Delta};
 }
 
-void Player::Draw(const PlayerType& Player) {
-  constexpr float k_RotCorrection = 90.0f;
 
-  const Rectangle Source = {0, 0, static_cast<float>(Player.f_Sprite.width),
+
+void Player::Draw(const PlayerType& Player) {
+  constexpr float k_RotCorrection = 90.0F;
+
+  const Rectangle Source = {0,
+                            0,
+                            static_cast<float>(Player.f_Sprite.width),
                             static_cast<float>(Player.f_Sprite.height)};
-  const Rectangle Dest = {Player.f_PositionCenter.x, Player.f_PositionCenter.y,
-                          Player.f_Radius * 2.0f, Player.f_Radius * 2.0f};
+
+  const Rectangle Dest = {Player.f_PositionCenter.x,
+                          Player.f_PositionCenter.y,
+                          Player.f_Radius * 2.0F,
+                          Player.f_Radius * 2.0F};
 
   DrawTexturePro(Player.f_Sprite, Source, Dest,
                  {Player.f_Radius, Player.f_Radius},

@@ -23,9 +23,9 @@ void Input(PlayerType& Player) {
 
 
 void Update(const float Delta, PlayerType& Player, PlayerType& Duplicated, bool& DuplicatedVisible) {
-  
+
    auto CollisionPlace = WhereCollides::Down;
-  
+
   Player::Update(Player, Delta);
 
   if (IsBorderCircle(Player.f_PositionCenter, Player.f_Radius, CollisionPlace))
@@ -70,7 +70,7 @@ void PlayDraw(const PlayerType& Player, const bool DuplicatedVisible, const Play
 void Play::Play() {
 
   const Music Music = GetMusic(ResManager::Resources::GameMusic);
-  float MusicVol = 0.5F;
+  constexpr float k_MusicVol = 0.1F;
   bool Exit = false;
   bool PlayerWon = false;
   static bool DuplicatedVisible = false;
@@ -80,7 +80,7 @@ void Play::Play() {
   Initialize(Player);
 
   PlayMusicStream(Music);
-  SetMusicVolume(Music, MusicVol);
+  SetMusicVolume(Music, k_MusicVol);
 
   while (!Exit && !PlayerWon && !WindowShouldClose()) {
     Input(Player);

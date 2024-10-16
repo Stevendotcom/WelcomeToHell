@@ -7,7 +7,7 @@
 namespace {
 
 // ReSharper disable once CppInconsistentNaming
-constexpr int kFPS = 60;
+constexpr int k_FPS = 60;
 
 
 
@@ -32,6 +32,6 @@ void StartUp::Start() {
 
   MakeRes();
 
-  //SetTargetFPS(kFPS);
+  //SetTargetFPS(k_FPS);
 
 }

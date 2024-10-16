@@ -48,7 +48,7 @@ void UpdateDuplicate(PlayerType& Player,
  * @param Player
  * @param Pause
  */
-void Input(PlayerType& Player, float Pause);
+void Input(PlayerType& Player, bool Pause);
 
 /**
  * @brief
