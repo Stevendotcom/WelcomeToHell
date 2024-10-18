@@ -3,10 +3,11 @@
 #include <iostream>
 
 #include "Constants.h"
+#include "engine/ResManager.h"
 
 namespace {
 
-constexpr
+constexpr float k_Speed = 1000;
 
 /**
  * 
@@ -34,7 +35,8 @@ Vector2 GetRandomStart() {
     Right
   };
 
-  const Start Starting = static_cast<Start>(GetRandomValue(static_cast<int>(Start::Up), static_cast<int>(Start::Right)));
+  const Start Starting = static_cast<Start>(GetRandomValue(
+      static_cast<int>(Start::Up), static_cast<int>(Start::Right)));
   Vector2 Position;
 
   switch (Starting) {
@@ -64,10 +66,48 @@ Vector2 GetRandomStart() {
 
   return Position;
 }
+
+float GetRadiusRandom() {
+
+  enum class Radii {
+    Big = 80,
+    Mid = 50,
+    Sml = 30
+  };
+
+  float Size;
+
+  switch (GetRandomValue(0, 2)) {
+    case 0:
+      Size = static_cast<float>(Radii::Big);
+      break;
+    case 1:
+      Size = static_cast<float>(Radii::Mid);
+      break;
+    case 2:
+      Size = static_cast<float>(Radii::Sml);
+      break;
+    default:
+      Size = 0;
+      std::cerr << "Something went wrong at Demon.cpp:89" << '\n';
+  }
+
+  return Size;
 }
 
-void Demon::Initialize(std::list<DemonType>& Demons, const Vector2& PlayerPosition) {
+}
 
+void Demon::Initialize(std::list<DemonType>& Demons,
+                       const Vector2& PlayerPosition) {
+  const DemonType Demon = {
+      GetRandomStart(),
+      PlayerPosition,
+      k_Speed,
+      GetRadiusRandom(),
+      GetTexture(ResManager::Resources::DemonSpriteMove),
+      0
+  };
+  Demons.push_back(Demon);
 }
 
 void Demon::Update(
