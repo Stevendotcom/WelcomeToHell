@@ -3,28 +3,71 @@
 #include <iostream>
 
 #include "Constants.h"
+#include "engine/Error.h"
+#include "engine/Math.h"
 #include "engine/ResManager.h"
 
 namespace {
 
+using Frame = Rectangle;
+
 constexpr float k_Speed = 1000;
+constexpr int k_Rows = 2;
+constexpr int k_Cols = 6;
+
+float FrameTime = 0;
+
+
+enum class Radii { Big = 80, Mid = 50, Sml = 30 };
+
+
+void Kill(Demon::DemonType& Demon, std::list<Demon::DemonType>& Demons) {
+  Demons.remove_if(Demon);//TODO CHECK
+}
 
 /**
  * 
  */
-void DivideDemon() {
+void DivideDemon(Demon::DemonType& Demon, std::list<Demon::DemonType>& Demons) {
+  Demon::DemonType NewDemon = Demon;
+
+  if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Big))) {
+
+    NewDemon.f_Radius = static_cast<float>(Radii::Mid);
+    Demon.f_Radius = static_cast<float>(Radii::Mid);
+    Demons.push_back(NewDemon);
+  } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Mid))) {
+
+    NewDemon.f_Radius = static_cast<float>(Radii::Sml);
+    Demon.f_Radius = static_cast<float>(Radii::Sml);
+    Demons.push_back(NewDemon);
+
+  } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Sml))) {
+    Kill(Demon, Demons);
+  } else {
+    Error::Unhandled(__LINE__, __FILE__);
+  }
+
 }
+
 
 /**
  * 
  * @param Demon 
  * @return 
  */
-Texture GetNextFrame(Demon::DemonType& Demon) {
-
-}
-
-void Kill(Demon::DemonType& Demon, std::list<Demon::DemonType>& Demons) {
+Frame GetNextFrame(Demon::DemonType& Demon) {
+  const Frame NewFrame = {
+      static_cast<float>(Demon.f_Frame % k_Cols *
+                         (Demon.f_Sprite.width / k_Cols)),
+      static_cast<float>(Demon.f_Frame > 6
+                           ? Demon.f_Sprite.height / k_Rows
+                           : 0),
+      static_cast<float>(Demon.f_Sprite.width / k_Cols),
+      static_cast<float>(Demon.f_Sprite.height / k_Rows),
+  };
+  Demon.f_Frame++;
+  return NewFrame;
 }
 
 Vector2 GetRandomStart() {
@@ -61,19 +104,13 @@ Vector2 GetRandomStart() {
 
     default:
       Position = {0, 0};
-      std::cerr << "Something went wrong at Demon.cpp:54" << '\n';
+      Error::Unhandled(__LINE__, __FILE__);
   }
 
   return Position;
 }
 
 float GetRadiusRandom() {
-
-  enum class Radii {
-    Big = 80,
-    Mid = 50,
-    Sml = 30
-  };
 
   float Size;
 
@@ -89,13 +126,14 @@ float GetRadiusRandom() {
       break;
     default:
       Size = 0;
-      std::cerr << "Something went wrong at Demon.cpp:89" << '\n';
+      Error::Unhandled(__LINE__, __FILE__);
   }
 
   return Size;
 }
 
-}
+} // Private
+
 
 void Demon::Initialize(std::list<DemonType>& Demons,
                        const Vector2& PlayerPosition) {
