@@ -15,6 +15,7 @@ enum class Resources {
   MenuOpen,
   MenuHover,
   PlayerSprite,
+  DemonSpriteMove,
   Last
 };
 

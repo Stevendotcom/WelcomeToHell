@@ -14,8 +14,8 @@ Font AlmendraDisplay;
 #pragma region Textures
 
 Texture2D Background;
-
 Texture2D PlayerSprite;
+Texture2D DemonSpriteMove;
 
 #pragma endregion
 
@@ -37,13 +37,11 @@ void ErrResourceNotReady(const std::string& Name) {
 }
 
 
-
 void ErrUnknownResource(const std::string& Name) {
   std::cerr << "Unknown resource name: " << Name << "\n";
 }
 
 }
-
 
 
 std::string ResManager::ResourceToString(const Resources Resource) {
@@ -66,11 +64,14 @@ std::string ResManager::ResourceToString(const Resources Resource) {
       return "MenuOpen";
     case Resources::MenuHover:
       return "MenuHover";
+    case Resources::PlayerSprite:
+      return "PlayerSprite";
+    case Resources::DemonSpriteMove:
+      return "DemonSpriteMove";
     default:
       return "unknown";
   }
 }
-
 
 
 Texture2D& ResManager::GetTexture(const Resources Resource) {
@@ -86,7 +87,14 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
       if (IsTextureReady(PlayerSprite)) {
         return PlayerSprite;
       }
-    break;
+      break;
+
+    case Resources::DemonSpriteMove:
+      if (IsTextureReady(DemonSpriteMove)) {
+        return DemonSpriteMove;
+      }
+      break;
+
     default:
       ErrUnknownResource(ResourceToString(Resource));
       abort();
@@ -95,7 +103,6 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
   ErrResourceNotReady(ResourceToString(Resource));
   abort();
 }
-
 
 
 Music& ResManager::GetMusic(const Resources Resource) {
@@ -123,7 +130,6 @@ Music& ResManager::GetMusic(const Resources Resource) {
   abort();
 
 }
-
 
 
 Sound& ResManager::GetSound(const Resources Resource) {
@@ -169,7 +175,6 @@ Sound& ResManager::GetSound(const Resources Resource) {
 }
 
 
-
 Font& ResManager::GetFont(const Resources Resource) {
 
   switch (Resource) {
@@ -189,18 +194,16 @@ Font& ResManager::GetFont(const Resources Resource) {
 }
 
 
-
 void ResManager::MakeFonts() {
   AlmendraDisplay = LoadFont("res/fonts/AlmendraDisplay-Regular.ttf");
 }
 
 
-
 void ResManager::MakeTextures() {
   Background = LoadTexture("res/sprites/background.png");
   PlayerSprite = LoadTexture("res/sprites/jetpack.png");
+  DemonSpriteMove = LoadTexture("res/sprites/CacodaemonMoveOnly.png");
 }
-
 
 
 void ResManager::MakeSounds() {
@@ -212,7 +215,6 @@ void ResManager::MakeSounds() {
   Dropship = LoadSound("res/sfx/PixaBay/dropship-idle-hum-84742.ogg");
 
 }
-
 
 
 void ResManager::MakeMusic() {
