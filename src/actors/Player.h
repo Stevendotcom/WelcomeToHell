@@ -26,17 +26,23 @@ void Initialize(PlayerType& Player);
 /**
  * @brief
  * @param Player
- * @param MousePosition
  */
 void Accelerate(PlayerType& Player);
 
 /**
- *
+ * 
+ * @param Player 
+ * @param Duplicated 
+ * @param CollisionPlace 
  */
 void Duplicate(const PlayerType& Player, PlayerType& Duplicated, Collisions::WhereCollides CollisionPlace);
 
 /**
- *
+ * 
+ * @param Player 
+ * @param Duplicated 
+ * @param CollisionPlace 
+ * @param DuplicatedVisible 
  */
 void UpdateDuplicate(PlayerType& Player,
                      PlayerType& Duplicated,
@@ -54,6 +60,7 @@ void Input(PlayerType& Player, bool Pause);
  * @brief
  * @param Player
  * @param Delta
+ * @param IsDuplicated
  */
 void Update(PlayerType& Player, float Delta, bool IsDuplicated = false);
 
