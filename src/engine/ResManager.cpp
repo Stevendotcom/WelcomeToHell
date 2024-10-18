@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "Error.h"
+
 namespace {
 
 #pragma region Fonts
@@ -31,15 +33,6 @@ Sound MenuHover;
 
 #pragma endregion
 
-void ErrResourceNotReady(const std::string& Name) {
-  //if it was found but is not ready
-  std::cerr << "Resource Not Ready: " << Name << "\n";
-}
-
-
-void ErrUnknownResource(const std::string& Name) {
-  std::cerr << "Unknown resource name: " << Name << "\n";
-}
 
 }
 
@@ -96,12 +89,11 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
       break;
 
     default:
-      ErrUnknownResource(ResourceToString(Resource));
-      abort();
+      Error::UnknownResource(ResourceToString(Resource));
   }
 
-  ErrResourceNotReady(ResourceToString(Resource));
-  abort();
+  Error::ResourceNotReady(ResourceToString(Resource));
+  
 }
 
 
@@ -121,14 +113,10 @@ Music& ResManager::GetMusic(const Resources Resource) {
       break;
 
     default:
-      ErrUnknownResource(ResourceToString(Resource));
-      abort();
-
+      Error::UnknownResource(ResourceToString(Resource));
   }
 
-  ErrResourceNotReady(ResourceToString(Resource));
-  abort();
-
+  Error::ResourceNotReady(ResourceToString(Resource));
 }
 
 
@@ -166,12 +154,10 @@ Sound& ResManager::GetSound(const Resources Resource) {
       break;
 
     default:
-      ErrUnknownResource(ResourceToString(Resource));
-      abort();
+      Error::UnknownResource(ResourceToString(Resource));
   }
 
-  ErrResourceNotReady(ResourceToString(Resource));
-  abort();
+  Error::ResourceNotReady(ResourceToString(Resource));
 }
 
 
@@ -185,12 +171,10 @@ Font& ResManager::GetFont(const Resources Resource) {
       break;
 
     default:
-      ErrUnknownResource(ResourceToString(Resource));
-      abort();
+      Error::UnknownResource(ResourceToString(Resource));
   }
 
-  ErrResourceNotReady(ResourceToString(Resource));
-  abort();
+  Error::ResourceNotReady(ResourceToString(Resource));
 }
 
 

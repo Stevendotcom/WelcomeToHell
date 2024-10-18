@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Error.h"
 #include "scenes/Play.h"
 
 namespace {
@@ -20,7 +21,7 @@ void SceneLoop(const SceneManager::Scenes SelectedScene) {
     case SceneManager::Scenes::Exit:
       break;
     default:
-      std::cerr << "Scene not found!" << std::endl;
+      Error::Unhandled(__LINE__, __FILE__);
       break;
   }
 
