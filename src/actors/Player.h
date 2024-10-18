@@ -28,7 +28,7 @@ void Initialize(PlayerType& Player);
  * @param Player
  * @param MousePosition
  */
-void Accelerate(PlayerType& Player, const Vector2& MousePosition);
+void Accelerate(PlayerType& Player);
 
 /**
  *
@@ -55,7 +55,7 @@ void Input(PlayerType& Player, bool Pause);
  * @param Player
  * @param Delta
  */
-void Update(PlayerType& Player, float Delta);
+void Update(PlayerType& Player, float Delta, bool IsDuplicated = false);
 
 /**
  * @brief

@@ -30,16 +30,9 @@ void Player::Initialize(PlayerType& Player) {
 
 
 
-void Player::Accelerate(PlayerType& Player, const Vector2& MousePosition) {
-
-  const Vector2 k_Temp = {MousePosition.x - Player.f_PositionCenter.x,
-                          MousePosition.y - Player.f_PositionCenter.y};
-
-  const float k_Mag = GetMag(k_Temp);
-
-  Player.f_Direction = Normalize(k_Temp, k_Mag);
-
-  Player.f_Speed = Add(Player.f_Speed,
+void Player::Accelerate(PlayerType& Player) {
+  Player.f_Speed =
+      Add(Player.f_Speed,
                        Multiply(Player.f_Direction,
                                 Player.f_Acceleration * GetFrameTime()));
 
@@ -97,7 +90,7 @@ void Player::UpdateDuplicate(PlayerType& Player,
                 Player.f_Direction,
                 Player.f_Sprite};
 
-  Update(Duplicated, GetFrameTime());
+  Update(Duplicated, GetFrameTime(), true);
 
   // cases where the duplicate needs to disappear or get copied to player
   switch (CollisionPlace) {
@@ -114,6 +107,7 @@ void Player::UpdateDuplicate(PlayerType& Player,
       break;
 
     case WhereCollides::Down:
+
       if (Player.f_PositionCenter.y - Player.f_Radius >= g_ScreenHeight) {
         Player = Duplicated;
         DuplicatedVisible = false;
@@ -123,6 +117,7 @@ void Player::UpdateDuplicate(PlayerType& Player,
       break;
 
     case WhereCollides::Right:
+
       if (Player.f_PositionCenter.x - Player.f_Radius >= g_ScreenWidth) {
         Player = Duplicated;
         DuplicatedVisible = false;
@@ -132,6 +127,7 @@ void Player::UpdateDuplicate(PlayerType& Player,
       break;
 
     case WhereCollides::Left:
+
       if (Player.f_PositionCenter.x + Player.f_Radius <= 0) {
 
         Player = Duplicated;
@@ -147,13 +143,22 @@ void Player::UpdateDuplicate(PlayerType& Player,
 
 void Player::Input(PlayerType& Player, const bool Pause) {
   if (!Pause && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-    Accelerate(Player, GetMousePosition());
+    Accelerate(Player);
   }
 }
 
 
 
-void Player::Update(PlayerType& Player, const float Delta) {
+void Player::Update(PlayerType& Player, const float Delta, bool IsDuplicated) {
+  if (!IsDuplicated) {
+
+    const Vector2 k_Temp = {GetMousePosition().x - Player.f_PositionCenter.x,
+                            GetMousePosition().y - Player.f_PositionCenter.y};
+
+    const float k_Mag = GetMag(k_Temp);
+
+    Player.f_Direction = Normalize(k_Temp, k_Mag);
+  }
   Player.f_PositionCenter = {
       Player.f_PositionCenter.x + Player.f_Speed.x * Delta,
       Player.f_PositionCenter.y + Player.f_Speed.y * Delta};
