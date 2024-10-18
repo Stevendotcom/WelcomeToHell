@@ -26,6 +26,8 @@ void StartUp::Start() {
 
   InitWindow(g_ScreenWidth, g_ScreenHeight, "Welcome To Hell");
 
+  SetWindowState(FLAG_VSYNC_HINT);
+
   InitAudioDevice();
 
   SetExitKey(KEY_NULL);
