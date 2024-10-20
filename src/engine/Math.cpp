@@ -63,7 +63,7 @@ float Math::GetRotation(const Vector2& A) {
 
 
 Vector2 Math::Subtract(const Vector2& A, const Vector2& B) {
-  return {(B.x - A.x), (B.y - A.y)};
+  return {(A.x - B.x), (A.y - B.y)};
 }
 
 
