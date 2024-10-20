@@ -4,13 +4,16 @@
 
 namespace Demon {
 
+using Frame = Rectangle;
+
 struct DemonType {
   Vector2 f_Position;
   Vector2 f_Direction;
   float f_Speed;
   float f_Radius;
   Texture f_Sprite;
-  int f_Frame;
+  Frame f_Frame;
+  int f_FrameIndex;
   };
     /**
    * @brief
@@ -18,14 +21,15 @@ struct DemonType {
   void Initialize(std::list<DemonType>& Demons, const Vector2& PlayerPosition);
   /**
    * @brief
+   * @param PlayerPosition
    * @param Delta
    */
-  void Update(std::list<DemonType>& Demons, float Delta);
+  void Update(std::list<DemonType>& Demons, const Vector2& PlayerPosition, float Delta);
 
   /**
    * @brief
    * @param Demons
    */
-  void Draw(const std::list<DemonType>& Demons);
+  void Draw(std::list<DemonType>& Demons);
 
   };

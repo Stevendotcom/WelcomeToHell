@@ -9,8 +9,6 @@
 
 namespace {
 
-using Frame = Rectangle;
-
 constexpr float k_Speed = 1000;
 constexpr int k_Rows = 2;
 constexpr int k_Cols = 6;
@@ -18,15 +16,19 @@ constexpr int k_Cols = 6;
 float FrameTime = 0;
 
 
+
 enum class Radii { Big = 80, Mid = 50, Sml = 30 };
 
 
+
 void Kill(Demon::DemonType& Demon, std::list<Demon::DemonType>& Demons) {
-  Demons.remove_if(Demon);//TODO CHECK
+  Demons.remove_if(Demon); //TODO CHECK
 }
 
+
+
 /**
- * 
+ *
  */
 void DivideDemon(Demon::DemonType& Demon, std::list<Demon::DemonType>& Demons) {
   Demon::DemonType NewDemon = Demon;
@@ -51,24 +53,25 @@ void DivideDemon(Demon::DemonType& Demon, std::list<Demon::DemonType>& Demons) {
 }
 
 
+
 /**
- * 
- * @param Demon 
- * @return 
+ *
+ * @param Demon
+ * @return
  */
-Frame GetNextFrame(Demon::DemonType& Demon) {
-  const Frame NewFrame = {
-      static_cast<float>(Demon.f_Frame % k_Cols *
-                         (Demon.f_Sprite.width / k_Cols)),
-      static_cast<float>(Demon.f_Frame > 6
-                           ? Demon.f_Sprite.height / k_Rows
-                           : 0),
+Demon::Frame GetNextFrame(Demon::DemonType& Demon) {
+  const Demon::Frame NewFrame = {
+      static_cast<float>(Demon.f_FrameIndex % k_Cols * (
+                           Demon.f_Sprite.width / k_Cols)),
+      static_cast<float>(
+        Demon.f_FrameIndex > 6 ? Demon.f_Sprite.height / k_Rows : 0),
       static_cast<float>(Demon.f_Sprite.width / k_Cols),
-      static_cast<float>(Demon.f_Sprite.height / k_Rows),
-  };
-  Demon.f_Frame++;
+      static_cast<float>(Demon.f_Sprite.height / k_Rows),};
+  Demon.f_FrameIndex++;
   return NewFrame;
 }
+
+
 
 Vector2 GetRandomStart() {
   enum class Start {
@@ -110,6 +113,8 @@ Vector2 GetRandomStart() {
   return Position;
 }
 
+
+
 float GetRadiusRandom() {
 
   float Size;
@@ -134,25 +139,57 @@ float GetRadiusRandom() {
 
 } // Private
 
-
 void Demon::Initialize(std::list<DemonType>& Demons,
                        const Vector2& PlayerPosition) {
-  const DemonType Demon = {
-      GetRandomStart(),
-      PlayerPosition,
-      k_Speed,
-      GetRadiusRandom(),
-      GetTexture(ResManager::Resources::DemonSpriteMove),
-      0
-  };
+  DemonType Demon = {GetRandomStart(),
+                     PlayerPosition,
+                     k_Speed,
+                     GetRadiusRandom(),
+                     GetTexture(ResManager::Resources::DemonSpriteMove),
+                     {},
+                     0};
+  Demon.f_Frame = {0,
+                   0,
+                   static_cast<float>(Demon.f_Sprite.width / k_Cols),
+                   static_cast<float>(Demon.f_Sprite.height / k_Rows)};
   Demons.push_back(Demon);
 }
 
-void Demon::Update(
-    std::list<DemonType>& Demons,
-    float Delta) {
-  //TODO it should handle all demons, including killing and divide when nec
+
+
+void Demon::Update(std::list<DemonType>& Demons,
+                   const Vector2& PlayerPosition,
+                   const float Delta) {
+
+  for (auto& Demon : Demons) {
+    Demon.f_Direction = PlayerPosition;
+    Demon.f_Position = {Demon.f_Speed * Delta * Demon.f_Direction.x,
+                        Demon.f_Speed * Delta * Demon.f_Direction.y};
+  }
 }
 
-void Demon::Draw(const std::list<DemonType>& Demons) {
+
+
+void Demon::Draw(std::list<DemonType>& Demons) {
+  constexpr float k_RotCorrection = 90.0F;
+  constexpr float k_Scale = 2.0F;
+  constexpr float k_Minute = 60.0F;
+
+  for (auto& Demon : Demons) {
+
+    if (FrameTime > k_Cols * k_Rows / k_Minute) {
+      Demon.f_Frame = GetNextFrame(Demon);
+      FrameTime = 0;
+    }
+    FrameTime += GetFrameTime();
+
+    DrawTexturePro(Demon.f_Sprite, Demon.f_Frame,
+                   {Demon.f_Position.x,
+                    Demon.f_Position.y,
+                    Demon.f_Radius * 2.0f,
+                    Demon.f_Radius * 2.0f},
+                   {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
+                   k_RotCorrection - Math::GetRotation(Demon.f_Direction),
+                   WHITE);
+  }
 }
