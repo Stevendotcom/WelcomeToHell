@@ -1,5 +1,7 @@
 ﻿#include "Collisions.h"
+
 #include "Constants.h"
+
 
 
 bool Collisions::IsCircleCircle(const Vector2& APosition,
@@ -16,10 +18,14 @@ bool Collisions::IsCircleCircle(const Vector2& APosition,
   return k_Radii >= k_Dist;
 }
 
-bool Collisions::IsBorderCircle(const Vector2& Position, const float Radius, WhereCollides& CollisionPlace) {
-  
+
+
+bool Collisions::IsBorderCircle(const Vector2& Position,
+                                const float Radius,
+                                WhereCollides& CollisionPlace) {
+
   bool Collides = false;
-  
+
   if (Position.x + Radius >= g_ScreenWidth) {
     Collides = true;
     CollisionPlace = WhereCollides::Right;
@@ -37,4 +43,28 @@ bool Collisions::IsBorderCircle(const Vector2& Position, const float Radius, Whe
     CollisionPlace = WhereCollides::Down;
   }
   return Collides;
+}
+
+
+
+bool Collisions::IsDotBorder(const Vector2& Position,
+                             WhereCollides& CollisionPlace) {
+  bool Collides = false;
+
+  if (Position.x >= g_ScreenWidth) {
+    Collides = true;
+    CollisionPlace = WhereCollides::Right;
+  } else if (Position.x <= 0) {
+    Collides = true;
+    CollisionPlace = WhereCollides::Left;
+  } else if (Position.y >= g_ScreenHeight) {
+    Collides = true;
+    CollisionPlace = WhereCollides::Down;
+  } else if (Position.y <= 0) {
+    Collides = true;
+    CollisionPlace = WhereCollides::Up;
+  }
+
+  return Collides;
+
 }
