@@ -8,7 +8,7 @@ struct PlayerType {
   float f_Acceleration;
   float f_Radius;
   int f_Hearts;
-  Vector2 f_PositionCenter;
+  Vector2 f_Position;
   Vector2 f_Speed;
   Vector2 f_Direction;
   Texture f_Sprite;

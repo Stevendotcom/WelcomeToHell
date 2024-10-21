@@ -44,9 +44,7 @@ float Math::GetRotation(const Vector2& A) {
       Degree = atan(-A.y / A.x);
       break;
     case 2:
-      Degree = PI + atan(-A.y / A.x);
-      break;
-    case 3:
+      __fallthrough case 3:
       Degree = PI + atan(-A.y / A.x);
       break;
     case 4:
@@ -58,6 +56,27 @@ float Math::GetRotation(const Vector2& A) {
   }
 
   return RadianCast(Degree);
+}
+
+
+
+Vector2 Math::Rotate(const Vector2& A, float Angle) {
+  float OgAngle = atan(-A.y / A.x);
+
+  if (A.x < 0) {
+    OgAngle = PI + OgAngle;
+  } else if (A.x >= 0 && A.y > 0) {
+    OgAngle = 2.0f * PI + OgAngle;
+  }
+
+  if (Angle > 2.0F * PI) {
+    Angle  = Angle * PI / 180.0F;
+  }
+
+  OgAngle += Angle;
+
+  //rotation Matrix
+  return {A.x * cos(OgAngle) - A.y * sin(OgAngle), A.x * sin(OgAngle) + A.y * cos(OgAngle)};
 }
 
 

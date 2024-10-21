@@ -27,7 +27,7 @@ void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
     }
     if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) {
       Shoot(Bullets, Player.f_Direction, Player.f_Radius,
-            Player.f_PositionCenter);
+            Player.f_Position);
     }
   }
 
@@ -39,7 +39,7 @@ void ManagePlayerDuplicates(Player::PlayerType& Player,
                             Player::PlayerType& Duplicated,
                             bool& DuplicatedVisible,
                             WhereCollides& CollisionPlace) {
-  if (IsBorderCircle(Player.f_PositionCenter, Player.f_Radius, CollisionPlace)
+  if (IsBorderCircle(Player.f_Position, Player.f_Radius, CollisionPlace)
       && !DuplicatedVisible) {
 
     DuplicatedVisible = true;
@@ -78,7 +78,7 @@ void ManageDemons(Player::PlayerType& Player,
                         DemonDuplicates);
       }
 
-      if (IsCircleCircle(Player.f_PositionCenter, Player.f_Radius,
+      if (IsCircleCircle(Player.f_Position, Player.f_Radius,
                          Demon.f_Position, Demon.f_Radius)) {
         Player.f_Hearts--;
         DivideDemon(Demon, Demons);
@@ -181,14 +181,14 @@ void Draw(const Player::PlayerType& Player,
       DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10,
                10, WHITE);
       DrawText(TextFormat("Hearts= %i", Player.f_Hearts), 10, 20, 10, WHITE);
-      DrawCircleLinesV(Player.f_PositionCenter, Player.f_Radius, RAYWHITE);
+      DrawCircleLinesV(Player.f_Position, Player.f_Radius, RAYWHITE);
 #endif
 
       Player::Draw(Player);
       if (DuplicatedVisible) {
 
 #ifdef _DEBUG
-        DrawCircleLinesV(Duplicated.f_PositionCenter, Duplicated.f_Radius,
+        DrawCircleLinesV(Duplicated.f_Position, Duplicated.f_Radius,
                          RAYWHITE);
 #endif
 
@@ -238,7 +238,7 @@ void Play::Play() {
   bool Exit = false;
   bool PlayerWon = false;
   static bool DuplicatedVisible = false;
-  static bool DemonDuplicatedVisible = false;
+
   Player::PlayerType Player;
   Player::PlayerType Duplicated;
   std::list<Demon::DemonType> Demons;
@@ -255,7 +255,7 @@ void Play::Play() {
     Input(Player, Bullets);
     Update(Player, Duplicated, DuplicatedVisible, Demons, DuplicatedDemons,
            Bullets, BulletDuplicates);
-    DemonTimer(Demons, Player.f_PositionCenter);
+    DemonTimer(Demons, Player.f_Position);
     UpdateMusicStream(Music);
     Draw(Player, DuplicatedVisible, Duplicated, Demons, DuplicatedDemons,
          Bullets, BulletDuplicates);

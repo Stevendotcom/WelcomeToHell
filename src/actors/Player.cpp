@@ -53,25 +53,25 @@ void Player::Duplicate(const PlayerType& Player,
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
-      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x,
-                                     g_ScreenHeight + Player.f_PositionCenter.
+      Duplicated.f_Position = {Player.f_Position.x,
+                                     g_ScreenHeight + Player.f_Position.
                                      y};
       break;
 
     case WhereCollides::Down:
-      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x,
-                                     Player.f_PositionCenter.y -
+      Duplicated.f_Position = {Player.f_Position.x,
+                                     Player.f_Position.y -
                                      g_ScreenHeight};
       break;
 
     case WhereCollides::Right:
-      Duplicated.f_PositionCenter = {Player.f_PositionCenter.x - g_ScreenWidth,
-                                     Player.f_PositionCenter.y};
+      Duplicated.f_Position = {Player.f_Position.x - g_ScreenWidth,
+                                     Player.f_Position.y};
       break;
 
     case WhereCollides::Left:
-      Duplicated.f_PositionCenter = {g_ScreenWidth + Player.f_PositionCenter.x,
-                                     Player.f_PositionCenter.y};
+      Duplicated.f_Position = {g_ScreenWidth + Player.f_Position.x,
+                                     Player.f_Position.y};
       break;
   }
 }
@@ -85,7 +85,7 @@ void Player::UpdateDuplicate(PlayerType& Player,
   Duplicated = {Player.f_Acceleration,
                 Player.f_Radius,
                 Player.f_Hearts,
-                Duplicated.f_PositionCenter,
+                Duplicated.f_Position,
                 Player.f_Speed,
                 Player.f_Direction,
                 Player.f_Sprite};
@@ -96,11 +96,11 @@ void Player::UpdateDuplicate(PlayerType& Player,
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
-      if (Player.f_PositionCenter.y + Player.f_Radius <= 0) {
+      if (Player.f_Position.y + Player.f_Radius <= 0) {
         //if no longer visible
         Player = Duplicated;
         DuplicatedVisible = false;
-      } else if (Player.f_PositionCenter.y - Player.f_Radius > 0) {
+      } else if (Player.f_Position.y - Player.f_Radius > 0) {
         // if return
         DuplicatedVisible = false;
       }
@@ -108,31 +108,31 @@ void Player::UpdateDuplicate(PlayerType& Player,
 
     case WhereCollides::Down:
 
-      if (Player.f_PositionCenter.y - Player.f_Radius >= g_ScreenHeight) {
+      if (Player.f_Position.y - Player.f_Radius >= g_ScreenHeight) {
         Player = Duplicated;
         DuplicatedVisible = false;
-      } else if (Player.f_PositionCenter.y + Player.f_Radius < g_ScreenHeight) {
+      } else if (Player.f_Position.y + Player.f_Radius < g_ScreenHeight) {
         DuplicatedVisible = false;
       }
       break;
 
     case WhereCollides::Right:
 
-      if (Player.f_PositionCenter.x - Player.f_Radius >= g_ScreenWidth) {
+      if (Player.f_Position.x - Player.f_Radius >= g_ScreenWidth) {
         Player = Duplicated;
         DuplicatedVisible = false;
-      } else if (Player.f_PositionCenter.x + Player.f_Radius < g_ScreenWidth) {
+      } else if (Player.f_Position.x + Player.f_Radius < g_ScreenWidth) {
         DuplicatedVisible = false;
       }
       break;
 
     case WhereCollides::Left:
 
-      if (Player.f_PositionCenter.x + Player.f_Radius <= 0) {
+      if (Player.f_Position.x + Player.f_Radius <= 0) {
 
         Player = Duplicated;
         DuplicatedVisible = false;
-      } else if (Player.f_PositionCenter.x - Player.f_Radius > 0) {
+      } else if (Player.f_Position.x - Player.f_Radius > 0) {
         DuplicatedVisible = false;
       }
       break;
@@ -142,16 +142,16 @@ void Player::UpdateDuplicate(PlayerType& Player,
 void Player::Update(PlayerType& Player, const float Delta, bool IsDuplicated) {
   if (!IsDuplicated) {
 
-    const Vector2 k_Temp = {GetMousePosition().x - Player.f_PositionCenter.x,
-                            GetMousePosition().y - Player.f_PositionCenter.y};
+    const Vector2 k_Temp = {GetMousePosition().x - Player.f_Position.x,
+                            GetMousePosition().y - Player.f_Position.y};
 
     const float k_Mag = GetMag(k_Temp);
 
     Player.f_Direction = Normalize(k_Temp, k_Mag);
   }
-  Player.f_PositionCenter = {
-      Player.f_PositionCenter.x + Player.f_Speed.x * Delta,
-      Player.f_PositionCenter.y + Player.f_Speed.y * Delta};
+  Player.f_Position = {
+      Player.f_Position.x + Player.f_Speed.x * Delta,
+      Player.f_Position.y + Player.f_Speed.y * Delta};
 }
 
 
@@ -164,8 +164,8 @@ void Player::Draw(const PlayerType& Player) {
                             static_cast<float>(Player.f_Sprite.width),
                             static_cast<float>(Player.f_Sprite.height)};
 
-  const Rectangle Dest = {Player.f_PositionCenter.x,
-                          Player.f_PositionCenter.y,
+  const Rectangle Dest = {Player.f_Position.x,
+                          Player.f_Position.y,
                           Player.f_Radius * k_Scale * 2.0F,
                           Player.f_Radius * k_Scale * 2.0F};
 

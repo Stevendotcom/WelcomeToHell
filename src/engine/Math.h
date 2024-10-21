@@ -8,6 +8,8 @@ namespace Math {
  */
 float GetRotation(const Vector2& A);
 
+Vector2 Rotate(const Vector2& A, float Angle);
+
 /**
  * 
  */
