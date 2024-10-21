@@ -18,6 +18,7 @@ Font AlmendraDisplay;
 Texture2D Background;
 Texture2D PlayerSprite;
 Texture2D DemonSpriteMove;
+Texture2D BulletSprite;
 
 #pragma endregion
 
@@ -33,8 +34,8 @@ Sound MenuHover;
 
 #pragma endregion
 
-
 }
+
 
 
 std::string ResManager::ResourceToString(const Resources Resource) {
@@ -67,6 +68,7 @@ std::string ResManager::ResourceToString(const Resources Resource) {
 }
 
 
+
 Texture2D& ResManager::GetTexture(const Resources Resource) {
 
   switch (Resource) {
@@ -87,14 +89,19 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
         return DemonSpriteMove;
       }
       break;
-
+    case Resources::BulletSprite:
+      if (IsTextureReady(BulletSprite)) {
+        return BulletSprite;
+      }
+      break;
     default:
       Error::UnknownResource(ResourceToString(Resource));
   }
 
   Error::ResourceNotReady(ResourceToString(Resource));
-  
+
 }
+
 
 
 Music& ResManager::GetMusic(const Resources Resource) {
@@ -118,6 +125,7 @@ Music& ResManager::GetMusic(const Resources Resource) {
 
   Error::ResourceNotReady(ResourceToString(Resource));
 }
+
 
 
 Sound& ResManager::GetSound(const Resources Resource) {
@@ -161,6 +169,7 @@ Sound& ResManager::GetSound(const Resources Resource) {
 }
 
 
+
 Font& ResManager::GetFont(const Resources Resource) {
 
   switch (Resource) {
@@ -178,16 +187,20 @@ Font& ResManager::GetFont(const Resources Resource) {
 }
 
 
+
 void ResManager::MakeFonts() {
   AlmendraDisplay = LoadFont("res/fonts/AlmendraDisplay-Regular.ttf");
 }
+
 
 
 void ResManager::MakeTextures() {
   Background = LoadTexture("res/sprites/background.png");
   PlayerSprite = LoadTexture("res/sprites/jetpack.png");
   DemonSpriteMove = LoadTexture("res/sprites/CacodaemonMoveOnly.png");
+  BulletSprite = LoadTexture("res/sprites/bullet.png");
 }
+
 
 
 void ResManager::MakeSounds() {
@@ -199,6 +212,7 @@ void ResManager::MakeSounds() {
   Dropship = LoadSound("res/sfx/PixaBay/dropship-idle-hum-84742.ogg");
 
 }
+
 
 
 void ResManager::MakeMusic() {
