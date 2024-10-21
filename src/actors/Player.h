@@ -52,13 +52,6 @@ void UpdateDuplicate(PlayerType& Player,
 /**
  * @brief
  * @param Player
- * @param Pause
- */
-void Input(PlayerType& Player, bool Pause);
-
-/**
- * @brief
- * @param Player
  * @param Delta
  * @param IsDuplicated
  */

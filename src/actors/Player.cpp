@@ -139,16 +139,6 @@ void Player::UpdateDuplicate(PlayerType& Player,
   }
 }
 
-
-
-void Player::Input(PlayerType& Player, const bool Pause) {
-  if (!Pause && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-    Accelerate(Player);
-  }
-}
-
-
-
 void Player::Update(PlayerType& Player, const float Delta, bool IsDuplicated) {
   if (!IsDuplicated) {
 
