@@ -19,6 +19,8 @@ constexpr int k_Cols = 6;
 float FrameTime = 0;
 int UniqueId = 0;
 
+std::list<int> Targets;
+
 
 
 enum class Radii { Big = 80, Mid = 50, Sml = 30 };
@@ -35,33 +37,6 @@ void Kill(std::list<Demon::DemonType>& Demons, const int Id) {
   Demons.remove_if([&, Id](auto& Demon) -> bool {
     return Demon.f_Id == Id;
   });
-
-}
-
-
-
-/**
- *
- */
-void DivideDemon(Demon::DemonType& Demon, std::list<Demon::DemonType>& Demons) {
-  Demon::DemonType NewDemon = Demon;
-
-  if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Big))) {
-
-    NewDemon.f_Radius = static_cast<float>(Radii::Mid);
-    Demon.f_Radius = static_cast<float>(Radii::Mid);
-    Demons.push_back(NewDemon);
-  } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Mid))) {
-
-    NewDemon.f_Radius = static_cast<float>(Radii::Sml);
-    Demon.f_Radius = static_cast<float>(Radii::Sml);
-    Demons.push_back(NewDemon);
-
-  } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Sml))) {
-    Kill(Demons, Demon.f_Id);
-  } else {
-    Error::Unhandled(__LINE__, __FILE__);
-  }
 
 }
 
@@ -122,7 +97,6 @@ Vector2 GetRandomStart() {
       Position = {0, 0};
       Error::Unhandled(__LINE__, __FILE__);
   }
-
   return Position;
 }
 
@@ -152,6 +126,36 @@ float GetRadiusRandom() {
 
 } // Private
 
+void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
+  DemonType NewDemon = Demon;
+
+  if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Big))) {
+
+    NewDemon.f_Radius = static_cast<float>(Radii::Mid);
+    NewDemon.f_Id = UniqueId++;
+    //TODO CHANGE DIRECTION
+
+    Demon.f_Radius = static_cast<float>(Radii::Mid);
+    Demons.push_back(NewDemon);
+
+  } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Mid))) {
+
+    NewDemon.f_Radius = static_cast<float>(Radii::Sml);
+    Demon.f_Radius = static_cast<float>(Radii::Sml);
+    NewDemon.f_Id = UniqueId++;
+    Demons.push_back(NewDemon);
+
+  } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Sml))) {
+    Targets.push_back(Demon.f_Id);
+
+  } else {
+    Error::Unhandled(__LINE__, __FILE__);
+  }
+
+}
+
+
+
 void Demon::Initialize(std::list<DemonType>& Demons,
                        const Vector2& PlayerPosition) {
 
@@ -163,7 +167,6 @@ void Demon::Initialize(std::list<DemonType>& Demons,
                      {},
                      0,
                      UniqueId,
-                     false,
                      nullptr};
 
   UniqueId++;
@@ -188,7 +191,6 @@ void Demon::Duplicate(const DemonType& Demon,
                       DemonType& Duplicated,
                       const WhereCollides CollisionPlace) {
   Duplicated = Demon;
-
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
@@ -215,11 +217,21 @@ void Demon::Duplicate(const DemonType& Demon,
 
 
 
+void Demon::Execute(std::list<DemonType>& Demons, std::list<DemonType>& DemonDups) {
+  for (const auto Target : Targets) {
+    Kill(DemonDups, Target);
+    Kill(Demons, Target);
+  }
+  Targets.clear();
+}
+
+
+
 void Demon::UpdateDuplicate(DemonType& Demon,
                             DemonType& Duplicated,
                             const WhereCollides CollisionPlace,
-                            bool& DuplicatedVisible,
                             std::list<DemonType>& DemonDups) {
+  bool ShouldDupRemove = false;
 
   Duplicated.f_Position.x += Duplicated.f_Speed * GetFrameTime() * Duplicated.
       f_Direction.x;
@@ -233,15 +245,11 @@ void Demon::UpdateDuplicate(DemonType& Demon,
       if (Demon.f_Position.y + Demon.f_Radius <= 0) {
         //if no longer visible
         Demon = Duplicated;
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
+        ShouldDupRemove = true;
+
       } else if (Demon.f_Position.y - Demon.f_Radius > 0) {
         // if return
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
-
+        ShouldDupRemove = true;
       }
       break;
 
@@ -249,15 +257,10 @@ void Demon::UpdateDuplicate(DemonType& Demon,
 
       if (Demon.f_Position.y - Demon.f_Radius >= g_ScreenHeight) {
         Demon = Duplicated;
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
+        ShouldDupRemove = true;
 
       } else if (Demon.f_Position.y + Demon.f_Radius < g_ScreenHeight) {
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
-
+        ShouldDupRemove = true;
       }
       break;
 
@@ -265,14 +268,10 @@ void Demon::UpdateDuplicate(DemonType& Demon,
 
       if (Demon.f_Position.x - Demon.f_Radius >= g_ScreenWidth) {
         Demon = Duplicated;
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
+        ShouldDupRemove = true;
 
       } else if (Demon.f_Position.x + Demon.f_Radius < g_ScreenWidth) {
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
+        ShouldDupRemove = true;
 
       }
       break;
@@ -282,17 +281,18 @@ void Demon::UpdateDuplicate(DemonType& Demon,
       if (Demon.f_Position.x + Demon.f_Radius <= 0) {
 
         Demon = Duplicated;
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
+        ShouldDupRemove = true;
 
       } else if (Demon.f_Position.x - Demon.f_Radius > 0) {
-        DuplicatedVisible = false;
-        Kill(DemonDups, Duplicated.f_Id);
-        Demon.f_Duplicate = nullptr;
+        ShouldDupRemove = true;
 
       }
       break;
+  }
+
+  if (ShouldDupRemove) {
+    Kill(DemonDups, Duplicated.f_Id);
+    Demon.f_Duplicate = nullptr;
   }
 }
 
@@ -310,8 +310,7 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
 
 
 
-void Demon::Draw(std::list<DemonType>& Demons) {
-  constexpr float k_RotCorrection = 0.0F;
+void Demon::Draw(std::list<DemonType>& Demons, bool IsDup) {
   constexpr float k_Scale = 2.0F;
   constexpr float k_Minute = 60.0F;
 
@@ -327,11 +326,12 @@ void Demon::Draw(std::list<DemonType>& Demons) {
     DrawTexturePro(Demon.f_Sprite, Demon.f_Frame,
                    {Demon.f_Position.x,
                     Demon.f_Position.y,
-                    Demon.f_Radius * 2.0f,
-                     Demon.f_Radius * 2.0f},
-                   {Demon.f_Radius * k_Scale,
-                     Demon.f_Radius * k_Scale},
-                   k_RotCorrection - Math::GetRotation(Demon.f_Direction),
-                   WHITE);
+                    Demon.f_Radius * k_Scale * 2.0f,
+                    Demon.f_Radius * k_Scale * 2.0f},
+                   {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
+                   -Math::GetRotation(Demon.f_Direction), WHITE);
+#ifdef _DEBUG
+    DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup? BLACK : WHITE);
+#endif
   }
 }

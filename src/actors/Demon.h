@@ -20,11 +20,12 @@ struct DemonType {
   Frame f_Frame;
   int f_FrameIndex;
   int f_Id;
-  bool f_HasDuplicate;
   DemonType* f_Duplicate;
 };
 
 
+
+void DivideDemon(DemonType& Demon, std::list<DemonType>& Demons);
 
 /**
 * @brief
@@ -36,19 +37,19 @@ void Initialize(std::list<DemonType>& Demons, const Vector2& PlayerPosition);
  * @param Demon
  * @param Duplicated
  * @param CollisionPlace
- * @param DuplicatedVisible
  * @param DemonDups
  */
 void UpdateDuplicate(DemonType& Demon,
                      DemonType& Duplicated,
                      Collisions::WhereCollides CollisionPlace,
-                     bool& DuplicatedVisible,
-                     std::list<Demon::DemonType>& DemonDups);
-
+                     std::list<DemonType>& DemonDups);
 
 void Duplicate(const DemonType& Demon,
-                      DemonType& Duplicated,
-                      Collisions::WhereCollides CollisionPlace);
+               DemonType& Duplicated,
+               Collisions::WhereCollides CollisionPlace);
+
+void Execute(std::list<DemonType>& Demons, std::list<DemonType>& DemonDups);
+
 /**
  * @brief
  * @param Delta
@@ -58,7 +59,8 @@ void Update(std::list<DemonType>& Demons, float Delta);
 /**
  * @brief
  * @param Demons
+ * @param IsDup
  */
-void Draw(std::list<DemonType>& Demons);
+void Draw(std::list<DemonType>& Demons, bool IsDup = false);
 
 };
