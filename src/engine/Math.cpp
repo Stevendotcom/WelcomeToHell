@@ -60,25 +60,23 @@ float Math::GetRotation(const Vector2& A) {
 
 
 
-Vector2 Math::Rotate(const Vector2& A, const float Angle) {
-  //Angle sum and difference identities
-  const float Alpha = tan(Angle);
-  float Beta = atan(-A.y / A.x);
+Vector2 Math::Rotate(const Vector2& A, float Angle) {
+  float OgAngle = atan(-A.y / A.x);
 
   if (A.x < 0) {
-    Beta = PI + Beta;
-  } else if (A.x >= 0 && A.y < 0) {
-    Beta = 2.0f * PI + Beta;
+    OgAngle = PI + OgAngle;
+  } else if (A.x >= 0 && A.y > 0) {
+    OgAngle = 2.0f * PI + OgAngle;
   }
 
-  // tan(alpha + beta) = Numerator / Denominator = OP / AJ
-  // then OP = Y = AJ * Numerator / Denominator and
-  // AJ = X = OP * Denominator / Numerator
+  if (Angle > 2.0F * PI) {
+    Angle  = Angle * PI / 180.0F;
+  }
 
-  const float Numerator = Alpha + Beta;
-  const float Denominator = 1 - Alpha * Beta;
+  OgAngle += Angle;
 
-  return {(A.y * Denominator / Numerator), A.x * Numerator / Denominator};
+  //rotation Matrix
+  return {A.x * cos(OgAngle) - A.y * sin(OgAngle), A.x * sin(OgAngle) + A.y * cos(OgAngle)};
 }
 
 
