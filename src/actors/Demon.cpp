@@ -126,6 +126,13 @@ float GetRadiusRandom() {
 
 } // Private
 
+void Demon::ChangeDirection(DemonType& Demon) {
+  Demon.f_Direction = Math::Rotate(Demon.f_Direction,
+                                   static_cast<float>(GetRandomValue(0, 180)));
+}
+
+
+
 void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
   DemonType NewDemon = Demon;
 
@@ -133,7 +140,8 @@ void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
 
     NewDemon.f_Radius = static_cast<float>(Radii::Mid);
     NewDemon.f_Id = UniqueId++;
-    //TODO CHANGE DIRECTION
+    ChangeDirection(Demon);
+    ChangeDirection(NewDemon);
 
     Demon.f_Radius = static_cast<float>(Radii::Mid);
     Demons.push_back(NewDemon);
@@ -141,8 +149,10 @@ void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
   } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Mid))) {
 
     NewDemon.f_Radius = static_cast<float>(Radii::Sml);
-    Demon.f_Radius = static_cast<float>(Radii::Sml);
     NewDemon.f_Id = UniqueId++;
+    ChangeDirection(Demon);
+    ChangeDirection(NewDemon);
+    Demon.f_Radius = static_cast<float>(Radii::Sml);
     Demons.push_back(NewDemon);
 
   } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Sml))) {
@@ -217,7 +227,8 @@ void Demon::Duplicate(const DemonType& Demon,
 
 
 
-void Demon::Execute(std::list<DemonType>& Demons, std::list<DemonType>& DemonDups) {
+void Demon::Execute(std::list<DemonType>& Demons,
+                    std::list<DemonType>& DemonDups) {
   for (const auto Target : Targets) {
     Kill(DemonDups, Target);
     Kill(Demons, Target);
@@ -331,7 +342,7 @@ void Demon::Draw(std::list<DemonType>& Demons, bool IsDup) {
                    {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
                    -Math::GetRotation(Demon.f_Direction), WHITE);
 #ifdef _DEBUG
-    DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup? BLACK : WHITE);
+    DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup ? BLACK : WHITE);
 #endif
   }
 }

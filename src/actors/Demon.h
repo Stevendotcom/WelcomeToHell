@@ -1,10 +1,9 @@
 #pragma once
-#include "raylib.h"
 #include <list>
 
-namespace Collisions {
-enum class WhereCollides;
-}
+#include "raylib.h"
+#include "engine/Collisions.h"
+
 namespace Demon {
 
 using Frame = Rectangle;
@@ -24,6 +23,8 @@ struct DemonType {
 };
 
 
+
+void ChangeDirection(DemonType& Demon);
 
 void DivideDemon(DemonType& Demon, std::list<DemonType>& Demons);
 
