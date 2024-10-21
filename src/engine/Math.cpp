@@ -44,9 +44,7 @@ float Math::GetRotation(const Vector2& A) {
       Degree = atan(-A.y / A.x);
       break;
     case 2:
-      Degree = PI + atan(-A.y / A.x);
-      break;
-    case 3:
+      __fallthrough case 3:
       Degree = PI + atan(-A.y / A.x);
       break;
     case 4:
@@ -58,6 +56,29 @@ float Math::GetRotation(const Vector2& A) {
   }
 
   return RadianCast(Degree);
+}
+
+
+
+Vector2 Math::Rotate(const Vector2& A, const float Angle) {
+  //Angle sum and difference identities
+  const float Alpha = tan(Angle);
+  float Beta = atan(-A.y / A.x);
+
+  if (A.x < 0) {
+    Beta = PI + Beta;
+  } else if (A.x >= 0 && A.y < 0) {
+    Beta = 2.0f * PI + Beta;
+  }
+
+  // tan(alpha + beta) = Numerator / Denominator = OP / AJ
+  // then OP = Y = AJ * Numerator / Denominator and
+  // AJ = X = OP * Denominator / Numerator
+
+  const float Numerator = Alpha + Beta;
+  const float Denominator = 1 - Alpha * Beta;
+
+  return {(A.y * Denominator / Numerator), A.x * Numerator / Denominator};
 }
 
 
