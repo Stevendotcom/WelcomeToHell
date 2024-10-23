@@ -6,11 +6,6 @@
 
 namespace {
 
-// ReSharper disable once CppInconsistentNaming
-constexpr int k_FPS = 60;
-
-
-
 void MakeRes() {
   ResManager::MakeFonts();
   ResManager::MakeTextures();
@@ -35,7 +30,5 @@ void StartUp::Start() {
   SetExitKey(KEY_NULL);
 
   MakeRes();
-
-  //SetTargetFPS(k_FPS);
 
 }
