@@ -15,7 +15,9 @@ void MakeRes() {
   ResManager::MakeFonts();
   ResManager::MakeTextures();
   ResManager::MakeSounds();
-  ResManager::MakeMusic();
+  if (IsAudioDeviceReady()) {
+    ResManager::MakeMusic();
+  }
 }
 
 }
