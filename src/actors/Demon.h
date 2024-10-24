@@ -40,10 +40,10 @@ void Initialize(std::list<DemonType>& Demons, const Vector2& PlayerPosition);
  * @param CollisionPlace
  */
 void UpdateDuplicate(DemonType& Demon,
-                     DemonType& Duplicated,
+                     DemonType* Duplicated,
                      Collisions::WhereCollides CollisionPlace);
 
-void Duplicate(const DemonType& Demon,
+void Duplicate(DemonType& Demon,
                DemonType* Duplicated,
                Collisions::WhereCollides CollisionPlace);
 

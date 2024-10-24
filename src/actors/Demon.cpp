@@ -35,17 +35,7 @@ void Kill(std::list<Demon::DemonType>& Demons, const int Id) {
 
   // For clarity: lambda function that checks if id == Demon.f_id
   Demons.remove_if([&, Id](auto& Demon) -> bool {
-
-    bool ShouldBeKilled = false;
-
-    if (Demon.f_Id == Id) {
-      ShouldBeKilled = true;
-      if (Demon.f_Duplicate) {
-        delete Demon.f_Duplicate;
-      }
-    }
-
-    return ShouldBeKilled;
+    return Demon.f_Id == Id;
   });
 
 }
@@ -145,8 +135,14 @@ void Demon::ChangeDirection(DemonType& Demon) {
 
 void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
   DemonType NewDemon = Demon;
-  // demon and new demon should recheck if they need to split or point to null
+
   if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Big))) {
+
+    if (Demon.f_Duplicate) {
+      delete Demon.f_Duplicate;
+      Demon.f_Duplicate = nullptr;
+      NewDemon.f_Duplicate = nullptr;
+    }
 
     NewDemon.f_Radius = static_cast<float>(Radii::Mid);
     NewDemon.f_Id = UniqueId++;
@@ -158,6 +154,12 @@ void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
 
   } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Mid))) {
 
+    if (Demon.f_Duplicate) {
+      delete Demon.f_Duplicate;
+      Demon.f_Duplicate = nullptr;
+      NewDemon.f_Duplicate = nullptr;
+
+    }
     NewDemon.f_Radius = static_cast<float>(Radii::Sml);
     NewDemon.f_Id = UniqueId++;
     ChangeDirection(Demon);
@@ -167,6 +169,10 @@ void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
 
   } else if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Sml))) {
     Targets.push_back(Demon.f_Id);
+    if (Demon.f_Duplicate) {
+      delete Demon.f_Duplicate;
+      Demon.f_Duplicate = nullptr;
+    }
 
   } else {
     Error::Unhandled(__LINE__, __FILE__);
@@ -207,10 +213,11 @@ void Demon::Initialize(std::list<DemonType>& Demons,
 
 
 
-void Demon::Duplicate(const DemonType& Demon,
+void Demon::Duplicate(DemonType& Demon,
                       DemonType* Duplicated,
                       const WhereCollides CollisionPlace) {
   *Duplicated = Demon;
+  Duplicated->f_Duplicate = nullptr;
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
@@ -247,14 +254,14 @@ void Demon::Execute(std::list<DemonType>& Demons) {
 
 
 void Demon::UpdateDuplicate(DemonType& Demon,
-                            DemonType& Duplicated,
+                            DemonType* Duplicated,
                             const WhereCollides CollisionPlace) {
   bool ShouldDupRemove = false;
 
-  Duplicated.f_Position.x += Duplicated.f_Speed * GetFrameTime() * Duplicated.
-      f_Direction.x;
-  Duplicated.f_Position.y += Duplicated.f_Speed * GetFrameTime() * Duplicated.
-      f_Direction.y;
+  Duplicated->f_Position.x += Duplicated->f_Speed * GetFrameTime() * Duplicated
+      ->f_Direction.x;
+  Duplicated->f_Position.y += Duplicated->f_Speed * GetFrameTime() * Duplicated
+      ->f_Direction.y;
 
   // cases where the duplicate needs to disappear or get copied to player
   switch (CollisionPlace) {
@@ -262,7 +269,7 @@ void Demon::UpdateDuplicate(DemonType& Demon,
     case WhereCollides::Up:
       if (Demon.f_Position.y + Demon.f_Radius <= 0) {
         //if no longer visible
-        Demon = Duplicated;
+        Demon = *Duplicated;
         ShouldDupRemove = true;
 
       } else if (Demon.f_Position.y - Demon.f_Radius > 0) {
@@ -274,7 +281,7 @@ void Demon::UpdateDuplicate(DemonType& Demon,
     case WhereCollides::Down:
 
       if (Demon.f_Position.y - Demon.f_Radius >= g_ScreenHeight) {
-        Demon = Duplicated;
+        Demon = *Duplicated;
         ShouldDupRemove = true;
 
       } else if (Demon.f_Position.y + Demon.f_Radius < g_ScreenHeight) {
@@ -285,7 +292,7 @@ void Demon::UpdateDuplicate(DemonType& Demon,
     case WhereCollides::Right:
 
       if (Demon.f_Position.x - Demon.f_Radius >= g_ScreenWidth) {
-        Demon = Duplicated;
+        Demon = *Duplicated;
         ShouldDupRemove = true;
 
       } else if (Demon.f_Position.x + Demon.f_Radius < g_ScreenWidth) {
@@ -298,7 +305,7 @@ void Demon::UpdateDuplicate(DemonType& Demon,
 
       if (Demon.f_Position.x + Demon.f_Radius <= 0) {
 
-        Demon = Duplicated;
+        Demon = *Duplicated;
         ShouldDupRemove = true;
 
       } else if (Demon.f_Position.x - Demon.f_Radius > 0) {
@@ -309,8 +316,8 @@ void Demon::UpdateDuplicate(DemonType& Demon,
   }
 
   if (ShouldDupRemove) {
-    delete Demon.f_Duplicate;
-    Demon.f_Duplicate = nullptr; //is it necessary?
+    delete Duplicated;
+    Demon.f_Duplicate = nullptr;
   }
 }
 

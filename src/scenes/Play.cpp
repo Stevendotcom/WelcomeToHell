@@ -65,14 +65,13 @@ void ManageDemons(Player::PlayerType& Player,
       if (IsBorderCircle(Demon.f_Position, Demon.f_Radius, CollisionPlace) && !
           Demon.f_Duplicate) {
 
-        auto Duplicated = new Demon::DemonType();
+        auto* Duplicated = new Demon::DemonType();
         Duplicate(Demon, Duplicated, CollisionPlace);
         Demon.f_Duplicate = Duplicated;
-
       }
 
       if (Demon.f_Duplicate) {
-        UpdateDuplicate(Demon, *Demon.f_Duplicate, CollisionPlace);
+        UpdateDuplicate(Demon, Demon.f_Duplicate, CollisionPlace);
       }
 
       if (IsCircleCircle(Player.f_Position, Player.f_Radius,
