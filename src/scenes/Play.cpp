@@ -150,7 +150,7 @@ void Update(Player::PlayerType& Player,
 
   ManageBullets(Bullets, BulletDuplicates, CollisionPlace);
 
-  Execute(Demons, DemonDuplicates);
+  Execute(Demons);
 }
 
 

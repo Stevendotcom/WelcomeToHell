@@ -35,7 +35,17 @@ void Kill(std::list<Demon::DemonType>& Demons, const int Id) {
 
   // For clarity: lambda function that checks if id == Demon.f_id
   Demons.remove_if([&, Id](auto& Demon) -> bool {
-    return Demon.f_Id == Id;
+
+    bool ShouldBeKilled = false;
+
+    if (Demon.f_Id == Id) {
+      ShouldBeKilled = true;
+      if (Demon.f_Duplicate) {
+        delete Demon.f_Duplicate;
+      }
+    }
+
+    return ShouldBeKilled;
   });
 
 }
@@ -181,7 +191,7 @@ void Demon::Initialize(std::list<DemonType>& Demons,
 
   UniqueId++;
 
-  Vector2 Temp = Math::Subtract(PlayerPosition, Demon.f_Position);
+  const Vector2 Temp = Math::Subtract(PlayerPosition, Demon.f_Position);
   Demon.f_Direction = Math::Normalize(Temp, Math::GetMag(Temp));
 
   Demon.f_Frame = {0,
@@ -227,10 +237,8 @@ void Demon::Duplicate(const DemonType& Demon,
 
 
 
-void Demon::Execute(std::list<DemonType>& Demons,
-                    std::list<DemonType>& DemonDups) {
+void Demon::Execute(std::list<DemonType>& Demons) {
   for (const auto Target : Targets) {
-    Kill(DemonDups, Target);
     Kill(Demons, Target);
   }
   Targets.clear();
@@ -302,8 +310,8 @@ void Demon::UpdateDuplicate(DemonType& Demon,
   }
 
   if (ShouldDupRemove) {
-    Kill(DemonDups, Duplicated.f_Id);
-    Demon.f_Duplicate = nullptr;
+    delete Demon.f_Duplicate;
+    Demon.f_Duplicate = nullptr; //is it necessary?
   }
 }
 
@@ -314,7 +322,6 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
   for (DemonType& Demon : Demons) {
     Demon.f_Position.x += Demon.f_Speed * Delta * Demon.f_Direction.x;
     Demon.f_Position.y += Demon.f_Speed * Delta * Demon.f_Direction.y;
-
   }
 
 }

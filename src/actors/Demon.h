@@ -49,7 +49,7 @@ void Duplicate(const DemonType& Demon,
                DemonType& Duplicated,
                Collisions::WhereCollides CollisionPlace);
 
-void Execute(std::list<DemonType>& Demons, std::list<DemonType>& DemonDups);
+void Execute(std::list<DemonType>& Demons);
 
 /**
  * @brief
