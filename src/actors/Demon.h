@@ -59,9 +59,9 @@ void Update(std::list<DemonType>& Demons, float Delta);
 
 /**
  * @brief
- * @param Demons
+ * @param Demon
  * @param IsDup
  */
-void Draw(std::list<DemonType>& Demons, bool IsDup = false);
+void Draw(DemonType& Demon, bool IsDup = false);
 
 };

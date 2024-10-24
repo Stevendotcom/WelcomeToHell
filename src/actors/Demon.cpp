@@ -328,28 +328,25 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
 
 
 
-void Demon::Draw(std::list<DemonType>& Demons, bool IsDup) {
+void Demon::Draw(DemonType& Demon, bool IsDup) {
   constexpr float k_Scale = 2.0F;
   constexpr float k_Minute = 60.0F;
 
-  for (auto& Demon : Demons) {
-
-    if (FrameTime > k_Cols * k_Rows / k_Minute) {
-      Demon.f_Frame = GetNextFrame(Demon);
-      Demon.f_Frame.height *= (Demon.f_Direction.x > 0.0F ? 1.0f : -1.0f);
-      FrameTime = 0;
-    }
-    FrameTime += GetFrameTime();
-
-    DrawTexturePro(Demon.f_Sprite, Demon.f_Frame,
-                   {Demon.f_Position.x,
-                    Demon.f_Position.y,
-                    Demon.f_Radius * k_Scale * 2.0f,
-                    Demon.f_Radius * k_Scale * 2.0f},
-                   {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
-                   -Math::GetRotation(Demon.f_Direction), WHITE);
-#ifdef _DEBUG
-    DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup ? BLACK : WHITE);
-#endif
+  if (FrameTime > k_Cols * k_Rows / k_Minute) {
+    Demon.f_Frame = GetNextFrame(Demon);
+    Demon.f_Frame.height *= (Demon.f_Direction.x > 0.0F ? 1.0f : -1.0f);
+    FrameTime = 0;
   }
+  FrameTime += GetFrameTime();
+
+  DrawTexturePro(Demon.f_Sprite, Demon.f_Frame,
+                 {Demon.f_Position.x,
+                  Demon.f_Position.y,
+                  Demon.f_Radius * k_Scale * 2.0f,
+                  Demon.f_Radius * k_Scale * 2.0f},
+                 {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
+                 -Math::GetRotation(Demon.f_Direction), WHITE);
+#ifdef _DEBUG
+  DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup ? BLACK : WHITE);
+#endif
 }
