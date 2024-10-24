@@ -248,8 +248,7 @@ void Demon::Execute(std::list<DemonType>& Demons) {
 
 void Demon::UpdateDuplicate(DemonType& Demon,
                             DemonType& Duplicated,
-                            const WhereCollides CollisionPlace,
-                            std::list<DemonType>& DemonDups) {
+                            const WhereCollides CollisionPlace) {
   bool ShouldDupRemove = false;
 
   Duplicated.f_Position.x += Duplicated.f_Speed * GetFrameTime() * Duplicated.
