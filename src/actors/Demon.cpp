@@ -145,7 +145,7 @@ void Demon::ChangeDirection(DemonType& Demon) {
 
 void Demon::DivideDemon(DemonType& Demon, std::list<DemonType>& Demons) {
   DemonType NewDemon = Demon;
-
+  // demon and new demon should recheck if they need to split or point to null
   if (Math::IsEqual(Demon.f_Radius, static_cast<float>(Radii::Big))) {
 
     NewDemon.f_Radius = static_cast<float>(Radii::Mid);
@@ -208,29 +208,29 @@ void Demon::Initialize(std::list<DemonType>& Demons,
 
 
 void Demon::Duplicate(const DemonType& Demon,
-                      DemonType& Duplicated,
+                      DemonType* Duplicated,
                       const WhereCollides CollisionPlace) {
-  Duplicated = Demon;
+  *Duplicated = Demon;
   switch (CollisionPlace) {
 
     case WhereCollides::Up:
-      Duplicated.f_Position = {Demon.f_Position.x,
-                               g_ScreenHeight + Demon.f_Position.y};
+      Duplicated->f_Position = {Demon.f_Position.x,
+                                g_ScreenHeight + Demon.f_Position.y};
       break;
 
     case WhereCollides::Down:
-      Duplicated.f_Position = {Demon.f_Position.x,
-                               Demon.f_Position.y - g_ScreenHeight};
+      Duplicated->f_Position = {Demon.f_Position.x,
+                                Demon.f_Position.y - g_ScreenHeight};
       break;
 
     case WhereCollides::Right:
-      Duplicated.f_Position = {Demon.f_Position.x - g_ScreenWidth,
-                               Demon.f_Position.y};
+      Duplicated->f_Position = {Demon.f_Position.x - g_ScreenWidth,
+                                Demon.f_Position.y};
       break;
 
     case WhereCollides::Left:
-      Duplicated.f_Position = {g_ScreenWidth + Demon.f_Position.x,
-                               Demon.f_Position.y};
+      Duplicated->f_Position = {g_ScreenWidth + Demon.f_Position.x,
+                                Demon.f_Position.y};
       break;
   }
 }
