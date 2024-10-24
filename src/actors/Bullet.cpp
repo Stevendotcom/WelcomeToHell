@@ -209,8 +209,7 @@ void Bullet::Update(std::list<BulletType>& Bullets, float Delta) {
 
 
 
-void Bullet::Draw(std::list<BulletType>& Bullets) {
-  constexpr float k_Scale = 4.0F;
+void Bullet::Draw(const std::list<BulletType>& Bullets) {
   constexpr float k_RotCorrection = 90.0F;
 
   Rectangle Source;
