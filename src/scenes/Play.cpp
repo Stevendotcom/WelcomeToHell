@@ -160,7 +160,7 @@ void Draw(const Player::PlayerType& Player,
 
   BeginDrawing();
   {
-
+    ClearBackground(BLACK);
     DrawTexturePro(Background,
                    {0,
                     0,
