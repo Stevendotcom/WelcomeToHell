@@ -57,7 +57,7 @@ void Update(std::list<BulletType>& Bullets, float Delta);
  * @brief
  * @param Bullets
  */
-void Draw(std::list<BulletType>& Bullets);
+void Draw(const std::list<BulletType>& Bullets);
 
 
 };

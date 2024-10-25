@@ -38,18 +38,16 @@ void Initialize(std::list<DemonType>& Demons, const Vector2& PlayerPosition);
  * @param Demon
  * @param Duplicated
  * @param CollisionPlace
- * @param DemonDups
  */
 void UpdateDuplicate(DemonType& Demon,
-                     DemonType& Duplicated,
-                     Collisions::WhereCollides CollisionPlace,
-                     std::list<DemonType>& DemonDups);
+                     DemonType* Duplicated,
+                     Collisions::WhereCollides CollisionPlace);
 
-void Duplicate(const DemonType& Demon,
-               DemonType& Duplicated,
+void Duplicate(DemonType& Demon,
+               DemonType* Duplicated,
                Collisions::WhereCollides CollisionPlace);
 
-void Execute(std::list<DemonType>& Demons, std::list<DemonType>& DemonDups);
+void Execute(std::list<DemonType>& Demons);
 
 /**
  * @brief
@@ -59,9 +57,9 @@ void Update(std::list<DemonType>& Demons, float Delta);
 
 /**
  * @brief
- * @param Demons
+ * @param Demon
  * @param IsDup
  */
-void Draw(std::list<DemonType>& Demons, bool IsDup = false);
+void Draw(DemonType& Demon, bool IsDup = false);
 
 };

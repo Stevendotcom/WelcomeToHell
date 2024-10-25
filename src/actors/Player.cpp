@@ -14,7 +14,7 @@ namespace {
 constexpr float k_MaxSpeed = 500.0F;
 constexpr float k_DefRadius = 40.0F;
 constexpr int k_DefHearts = 3;
-constexpr int k_DefAccel = 1000.0F;
+constexpr float k_DefAccel = 1000.0F;
 
 } // namespace
 
