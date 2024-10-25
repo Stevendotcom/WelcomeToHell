@@ -10,6 +10,7 @@ namespace {
 #pragma region Fonts
 
 Font AlmendraDisplay;
+Font MissingFont;
 
 #pragma endregion
 
@@ -19,6 +20,7 @@ Texture2D Background;
 Texture2D PlayerSprite;
 Texture2D DemonSpriteMove;
 Texture2D BulletSprite;
+Texture2D MissingTexture;
 
 #pragma endregion
 
@@ -26,12 +28,13 @@ Texture2D BulletSprite;
 
 Music MainMenuMusic;
 Music GameMusic;
+Music MissingMusic;
 Sound Shoot;
 Sound Hit;
 Sound Dropship;
 Sound MenuOpen;
 Sound MenuHover;
-
+Sound MissingSound;
 #pragma endregion
 
 }
@@ -62,6 +65,10 @@ std::string ResManager::ResourceToString(const Resources Resource) {
       return "PlayerSprite";
     case Resources::DemonSpriteMove:
       return "DemonSpriteMove";
+    case Resources::BulletSprite:
+      return  "BulletSprite";
+    case Resources::Last:
+      return  "";
     default:
       return "unknown";
   }
@@ -99,7 +106,7 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
   }
 
   Error::ResourceNotReady(ResourceToString(Resource));
-
+  return MissingTexture;
 }
 
 
@@ -124,6 +131,7 @@ Music& ResManager::GetMusic(const Resources Resource) {
   }
 
   Error::ResourceNotReady(ResourceToString(Resource));
+  return MissingMusic;
 }
 
 
@@ -166,6 +174,7 @@ Sound& ResManager::GetSound(const Resources Resource) {
   }
 
   Error::ResourceNotReady(ResourceToString(Resource));
+  return MissingSound;
 }
 
 
@@ -184,6 +193,7 @@ Font& ResManager::GetFont(const Resources Resource) {
   }
 
   Error::ResourceNotReady(ResourceToString(Resource));
+  return MissingFont;
 }
 
 
