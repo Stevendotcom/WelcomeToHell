@@ -12,9 +12,12 @@ namespace {
 
 std::list<int> Targets;
 
-constexpr float k_Speed = 1000;
-constexpr float k_Width = 30;
+constexpr float k_Speed = 1000.0F;
+constexpr float k_Width = 30.0F;
+constexpr size_t k_AmountMax = 15;
 int UniqueId = 0;
+
+
 
 enum {
   e_Front,
@@ -72,13 +75,16 @@ void Bullet::Shoot(std::list<BulletType>& Bullets,
                              nullptr,
                              UniqueId};
 
-  UniqueId++;
+  if (Bullets.size() < k_AmountMax) {
+  //TODO find a way to recharge?
+    UniqueId++;
 
 #ifdef _DEBUG
-  std::cout << "Buller init. ID: " << Bullet.f_Id << "\n";
+    std::cout << "Buller init. ID: " << Bullet.f_Id << "\n";
 #endif
 
-  Bullets.push_back(Bullet);
+    Bullets.push_back(Bullet);
+  }
 }
 
 
