@@ -22,6 +22,7 @@ void Player::Initialize(PlayerType& Player) {
   Player = {k_DefAccel,
             k_DefRadius,
             k_DefHearts,
+            0,
             {g_ScreenWidth / 2.0F, g_ScreenHeight / 2.0F},
             {0.0F, 0.0F},
             {0.0F, -1.0F},
@@ -31,8 +32,7 @@ void Player::Initialize(PlayerType& Player) {
 
 
 void Player::Accelerate(PlayerType& Player) {
-  Player.f_Speed =
-      Add(Player.f_Speed,
+  Player.f_Speed = Add(Player.f_Speed,
                        Multiply(Player.f_Direction,
                                 Player.f_Acceleration * GetFrameTime()));
 
@@ -54,24 +54,22 @@ void Player::Duplicate(const PlayerType& Player,
 
     case WhereCollides::Up:
       Duplicated.f_Position = {Player.f_Position.x,
-                                     g_ScreenHeight + Player.f_Position.
-                                     y};
+                               g_ScreenHeight + Player.f_Position.y};
       break;
 
     case WhereCollides::Down:
       Duplicated.f_Position = {Player.f_Position.x,
-                                     Player.f_Position.y -
-                                     g_ScreenHeight};
+                               Player.f_Position.y - g_ScreenHeight};
       break;
 
     case WhereCollides::Right:
       Duplicated.f_Position = {Player.f_Position.x - g_ScreenWidth,
-                                     Player.f_Position.y};
+                               Player.f_Position.y};
       break;
 
     case WhereCollides::Left:
       Duplicated.f_Position = {g_ScreenWidth + Player.f_Position.x,
-                                     Player.f_Position.y};
+                               Player.f_Position.y};
       break;
   }
 }
@@ -85,6 +83,7 @@ void Player::UpdateDuplicate(PlayerType& Player,
   Duplicated = {Player.f_Acceleration,
                 Player.f_Radius,
                 Player.f_Hearts,
+                Player.f_Score,
                 Duplicated.f_Position,
                 Player.f_Speed,
                 Player.f_Direction,
@@ -139,6 +138,8 @@ void Player::UpdateDuplicate(PlayerType& Player,
   }
 }
 
+
+
 void Player::Update(PlayerType& Player, const float Delta, bool IsDuplicated) {
   if (!IsDuplicated) {
 
@@ -149,9 +150,8 @@ void Player::Update(PlayerType& Player, const float Delta, bool IsDuplicated) {
 
     Player.f_Direction = Normalize(k_Temp, k_Mag);
   }
-  Player.f_Position = {
-      Player.f_Position.x + Player.f_Speed.x * Delta,
-      Player.f_Position.y + Player.f_Speed.y * Delta};
+  Player.f_Position = {Player.f_Position.x + Player.f_Speed.x * Delta,
+                       Player.f_Position.y + Player.f_Speed.y * Delta};
 }
 
 

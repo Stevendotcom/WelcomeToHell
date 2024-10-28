@@ -17,6 +17,7 @@ bool Pause = false;
 constexpr int k_MaxWaitTime = 5;
 float Timer = 0.0f;
 float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
+int k_Score = 234;
 
 
 
@@ -85,6 +86,7 @@ void ManageDemons(Player::PlayerType& Player,
           if (IsCircleCircle(Bullet.f_Vectors[0], 1, Demon.f_Position,
                              Demon.f_Radius) || IsCircleCircle(
                   Bullet.f_Vectors[1], 1, Demon.f_Position, Demon.f_Radius)) {
+            Player.f_Score += k_Score;
             DivideDemon(Demon, Demons);
             Bullet::AddToTargets(Bullet.f_Id);
           }
@@ -174,6 +176,7 @@ void Draw(const Player::PlayerType& Player,
     DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10, 10,
              WHITE);
     DrawText(TextFormat("Hearts= %i", Player.f_Hearts), 10, 20, 10, WHITE);
+    DrawText(TextFormat("Score= %i", Player.f_Score), 10, 30, 10, WHITE);
     DrawCircleLinesV(Player.f_Position, Player.f_Radius, RAYWHITE);
 #endif
 
