@@ -16,6 +16,7 @@ bool Pause = false;
 constexpr int k_MaxWaitTime = 5;
 float Timer = 0.0f;
 float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
+int k_Score = 234;
 
 
 
@@ -26,8 +27,7 @@ void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
       Accelerate(Player);
     }
     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-      Shoot(Bullets, Player.f_Direction, Player.f_Radius,
-            Player.f_Position);
+      Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
     }
   }
 
@@ -39,8 +39,8 @@ void ManagePlayerDuplicates(Player::PlayerType& Player,
                             Player::PlayerType& Duplicated,
                             bool& DuplicatedVisible,
                             WhereCollides& CollisionPlace) {
-  if (IsBorderCircle(Player.f_Position, Player.f_Radius, CollisionPlace)
-      && !DuplicatedVisible) {
+  if (IsBorderCircle(Player.f_Position, Player.f_Radius, CollisionPlace) && !
+      DuplicatedVisible) {
 
     DuplicatedVisible = true;
     Duplicate(Player, Duplicated, CollisionPlace);
@@ -74,8 +74,8 @@ void ManageDemons(Player::PlayerType& Player,
         UpdateDuplicate(Demon, Demon.f_Duplicate, CollisionPlace);
       }
 
-      if (IsCircleCircle(Player.f_Position, Player.f_Radius,
-                         Demon.f_Position, Demon.f_Radius)) {
+      if (IsCircleCircle(Player.f_Position, Player.f_Radius, Demon.f_Position,
+                         Demon.f_Radius)) {
         Player.f_Hearts--;
         DivideDemon(Demon, Demons);
       }
@@ -85,6 +85,7 @@ void ManageDemons(Player::PlayerType& Player,
           if (IsCircleCircle(Bullet.f_Vectors[0], 1, Demon.f_Position,
                              Demon.f_Radius) || IsCircleCircle(
                   Bullet.f_Vectors[1], 1, Demon.f_Position, Demon.f_Radius)) {
+            Player.f_Score += k_Score;
             DivideDemon(Demon, Demons);
             Bullet::AddToTargets(Bullet.f_Id);
           }
@@ -98,8 +99,8 @@ void ManageDemons(Player::PlayerType& Player,
 
 
 void ManageBullets(std::list<Bullet::BulletType>& Bullets,
-                  std::list<Bullet::BulletType>& BulletDuplicates,
-                  WhereCollides& CollisionPlace) {
+                   std::list<Bullet::BulletType>& BulletDuplicates,
+                   WhereCollides& CollisionPlace) {
   if (!Bullets.empty()) {
     Update(Bullets, GetFrameTime());
 
@@ -133,7 +134,6 @@ void Update(Player::PlayerType& Player,
             std::list<Demon::DemonType>& Demons,
             std::list<Bullet::BulletType>& Bullets,
             std::list<Bullet::BulletType>& BulletDuplicates) {
-
 
   auto CollisionPlace = WhereCollides::Down;
 
@@ -171,42 +171,38 @@ void Draw(const Player::PlayerType& Player,
                     static_cast<float>(g_ScreenWidth),
                     static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
 
-
 #ifdef _DEBUG
-      DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10,
-               10, WHITE);
-      DrawText(TextFormat("Hearts= %i", Player.f_Hearts), 10, 20, 10, WHITE);
-      DrawCircleLinesV(Player.f_Position, Player.f_Radius, RAYWHITE);
+    DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10, 10,
+             WHITE);
+    DrawText(TextFormat("Hearts= %i", Player.f_Hearts), 10, 20, 10, WHITE);
+    DrawText(TextFormat("Score= %i", Player.f_Score), 10, 30, 10, WHITE);
+
+    DrawCircleLinesV(Player.f_Position, Player.f_Radius, RAYWHITE);
 #endif
 
-      Player::Draw(Player);
-      if (DuplicatedVisible) {
+    Player::Draw(Player);
+    if (DuplicatedVisible) {
 
 #ifdef _DEBUG
-        DrawCircleLinesV(Duplicated.f_Position, Duplicated.f_Radius,
-                         RAYWHITE);
+      DrawCircleLinesV(Duplicated.f_Position, Duplicated.f_Radius, RAYWHITE);
 #endif
 
-        Player::Draw(Duplicated);
+      Player::Draw(Duplicated);
+    }
+
+    for (auto& Demon : Demons) {
+      Demon::Draw(Demon);
+      if (Demon.f_Duplicate) {
+        Demon::Draw(*Demon.f_Duplicate, true);
       }
+    }
 
-
-
-      for (auto& Demon : Demons) {
-        Demon::Draw(Demon);
-        if (Demon.f_Duplicate) {
-          Demon::Draw(*Demon.f_Duplicate, true);
-        }
-      }
-
-
-
-      if (!Bullets.empty()) {
-        Bullet::Draw(Bullets);
-      }
-      if (!BulletDuplicates.empty()) {
-        Bullet::Draw(BulletDuplicates);
-      }
+    if (!Bullets.empty()) {
+      Bullet::Draw(Bullets);
+    }
+    if (!BulletDuplicates.empty()) {
+      Bullet::Draw(BulletDuplicates);
+    }
 
   }
   EndDrawing();
