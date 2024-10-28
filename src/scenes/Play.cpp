@@ -22,10 +22,10 @@ float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
 void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
 
   if (!Pause) {
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
       Accelerate(Player);
     }
-    if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) {
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
       Shoot(Bullets, Player.f_Direction, Player.f_Radius,
             Player.f_Position);
     }
