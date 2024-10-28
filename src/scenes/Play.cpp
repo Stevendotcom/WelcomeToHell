@@ -7,6 +7,7 @@
 #include "actors/Player.h"
 #include "engine/Collisions.h"
 #include "engine/ResManager.h"
+#include "engine/SceneManager.h"
 
 using namespace Collisions;
 
@@ -154,8 +155,8 @@ void Draw(const Player::PlayerType& Player,
           const bool DuplicatedVisible,
           const Player::PlayerType& Duplicated,
           std::list<Demon::DemonType>& Demons,
-          std::list<Bullet::BulletType>& Bullets,
-          std::list<Bullet::BulletType>& BulletDuplicates) {
+          const std::list<Bullet::BulletType>& Bullets,
+          const std::list<Bullet::BulletType>& BulletDuplicates) {
   const Texture2D& Background = GetTexture(ResManager::Resources::Background);
 
   BeginDrawing();
@@ -176,7 +177,6 @@ void Draw(const Player::PlayerType& Player,
              WHITE);
     DrawText(TextFormat("Hearts= %i", Player.f_Hearts), 10, 20, 10, WHITE);
     DrawText(TextFormat("Score= %i", Player.f_Score), 10, 30, 10, WHITE);
-
     DrawCircleLinesV(Player.f_Position, Player.f_Radius, RAYWHITE);
 #endif
 
@@ -220,6 +220,12 @@ void DemonTimer(std::list<Demon::DemonType>& Demons,
   }
 }
 
+
+
+bool HasPlayerLost(const Player::PlayerType& Player) {
+  return Player.f_Hearts <= 0;
+}
+
 }
 
 
@@ -229,7 +235,6 @@ void Play::Play() {
   const Music Music = GetMusic(ResManager::Resources::GameMusic);
   constexpr float k_MusicVol = 0.1F;
   bool Exit = false;
-  bool PlayerWon = false;
   static bool DuplicatedVisible = false;
 
   Player::PlayerType Player;
@@ -243,14 +248,16 @@ void Play::Play() {
   PlayMusicStream(Music);
   SetMusicVolume(Music, k_MusicVol);
 
-  while (!Exit && !PlayerWon && !WindowShouldClose()) {
+  while (!Exit && !WindowShouldClose()) {
     Input(Player, Bullets);
     Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets,
            BulletDuplicates);
+    Exit = HasPlayerLost(Player);
     DemonTimer(Demons, Player.f_Position);
     UpdateMusicStream(Music);
     Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets,
          BulletDuplicates);
   }
 
+  ChangeScene(SceneManager::Scenes::Exit); //TODO CHANGE
 }
