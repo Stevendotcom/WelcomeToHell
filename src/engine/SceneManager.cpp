@@ -4,6 +4,7 @@
 
 #include "CloseUp.h"
 #include "Error.h"
+#include "scenes/MainMenu.h"
 #include "scenes/Play.h"
 
 namespace {
@@ -12,12 +13,13 @@ void SceneLoop(const SceneManager::Scenes SelectedScene) {
 
   switch (SelectedScene) {
     case SceneManager::Scenes::MainMenu:
-      //MainMenu();
-      Play::Play();
+      MainMenu::Menu();
       break;
     case SceneManager::Scenes::Play:
+      Play::Play();
       break;
     case SceneManager::Scenes::Credits:
+      CloseUp::Close();
       break;
     case SceneManager::Scenes::Exit:
       CloseUp::Close();
