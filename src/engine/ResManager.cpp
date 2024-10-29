@@ -21,6 +21,9 @@ Texture2D PlayerSprite;
 Texture2D DemonSpriteMove;
 Texture2D BulletSprite;
 Texture2D MissingTexture;
+Texture2D HeartSprite;
+Texture2D HeartBackground;
+Texture2D Pause;
 
 #pragma endregion
 
@@ -66,9 +69,9 @@ std::string ResManager::ResourceToString(const Resources Resource) {
     case Resources::DemonSpriteMove:
       return "DemonSpriteMove";
     case Resources::BulletSprite:
-      return  "BulletSprite";
+      return "BulletSprite";
     case Resources::Last:
-      return  "";
+      return "";
     default:
       return "unknown";
   }
@@ -101,6 +104,23 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
         return BulletSprite;
       }
       break;
+    case Resources::HeartSprite:
+      if (IsTextureReady(HeartSprite)) {
+        return HeartSprite;
+      }
+      break;
+
+    case Resources::HeartBackground:
+      if (IsTextureReady(HeartBackground)) {
+        return HeartBackground;
+      }
+    break;
+    case Resources::Pause:
+      if (IsTextureReady(Pause)) {
+        return Pause;
+      }
+      break;
+
     default:
       Error::UnknownResource(ResourceToString(Resource));
   }
@@ -209,6 +229,9 @@ void ResManager::MakeTextures() {
   PlayerSprite = LoadTexture("res/sprites/jetpack.png");
   DemonSpriteMove = LoadTexture("res/sprites/CacodaemonMoveOnly.png");
   BulletSprite = LoadTexture("res/sprites/bullet.png");
+  HeartSprite = LoadTexture("res/sprites/Health&Stamina/Colors.png");
+  HeartBackground = LoadTexture("res/sprites/Health&Stamina/Border.png");
+  Pause = LoadTexture("res/sprites/StonePixel/Buttons/InsideFrameButtons32x32.png");
 }
 
 
