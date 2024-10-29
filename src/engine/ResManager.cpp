@@ -25,6 +25,8 @@ Texture2D HeartSprite;
 Texture2D HeartBackground;
 Texture2D Buttons;
 Texture2D PauseBG;
+Texture2D Btn;
+Texture2D BtnPressed;
 
 #pragma endregion
 
@@ -127,6 +129,16 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
       if (IsTextureReady(PauseBG)) {
         return PauseBG;
       }
+    break;
+    case Resources::Btn:
+      if (IsTextureReady(Btn)) {
+        return Btn;
+      }
+    break;
+      case Resources::BtnPressed:
+        if (IsTextureReady(BtnPressed)) {
+          return BtnPressed;
+        }
     break;
     default:
       Error::UnknownResource(ResourceToString(Resource));
@@ -240,6 +252,8 @@ void ResManager::MakeTextures() {
   HeartBackground = LoadTexture("res/sprites/Health&Stamina/Border.png");
   Buttons = LoadTexture("res/sprites/StonePixel/Buttons/InsideFrameButtons32x32.png");
   PauseBG = LoadTexture("res/sprites/StonePixel/Frames/2.png");
+  Btn = LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button.png");
+  BtnPressed = LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button2.png");
 }
 
 
