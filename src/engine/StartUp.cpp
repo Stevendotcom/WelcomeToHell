@@ -5,6 +5,8 @@
 #include "raylib.h"
 #include <iostream>
 
+#include "SceneManager.h"
+
 namespace {
 
 void MakeRes() {
@@ -35,4 +37,5 @@ void StartUp::Start() {
 
   MakeRes();
 
+  SceneManager::ChangeScene();
 }
