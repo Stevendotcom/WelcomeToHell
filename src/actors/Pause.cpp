@@ -1,6 +1,7 @@
 ﻿#include "Pause.h"
 
 #include "Constants.h"
+#include "Player.h"
 #include "engine/Math.h"
 #include "engine/ResManager.h"
 
@@ -68,11 +69,13 @@ void Input(bool& Exit, bool& Ret) {
 
 
 
-void Draw() {
+void DrawLocal(const Player::PlayerType& Player) {
 
   const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
   const Texture2D& k_PauseBG = GetTexture(ResManager::Resources::PauseBG);
   const Texture2D& k_Buttons = GetTexture(ResManager::Resources::Buttons);
+
+  const std::string k_Message = "You Lost!";
 
   BeginDrawing();
   {
@@ -105,14 +108,18 @@ void Draw() {
                     k_ButtonsSize * k_ScaleBut,
                     k_ButtonsSize * k_ScaleBut}, {0, 0}, 0, WHITE);
 
-    DrawText("Return",
+    DrawText(Player.f_Hearts <= 0 ? "Restart" : "Return",
              static_cast<int>(k_ButtonsX + k_ButtonsSize + k_FontSize + 15.0F),
-             static_cast<int>(k_ButtonsY + k_ButtonsSize), k_FontSize, WHITE);
+             static_cast<int>(k_ButtonsY + k_ButtonsSize), Player.f_Hearts <= 0 ? k_FontSize - 4: k_FontSize, WHITE);
     DrawText(
         "Exit",
         static_cast<int>(k_ButtonsX + k_ButtonsSize + k_FontSize + 25.0F),
         static_cast<int>(k_ButtonsY + k_ButtonsSize * k_ScaleBut + k_FontSize),
         k_FontSize, WHITE);
+
+    if(Player.f_Hearts <= 0) {
+      DrawText(k_Message.c_str(), (g_ScreenWidth - MeasureText(k_Message.c_str(), 86) ) / 2, 100, 86, WHITE);
+    }
   }
   EndDrawing();
 }
@@ -121,7 +128,7 @@ void Draw() {
 
 
 
-bool Pause::Pause() {
+bool Pause::Pause(const Player::PlayerType& Player) {
   const Sound k_Dropship = GetSound(ResManager::Resources::Dropship);
   bool Exit = false;
   bool Ret = false;
@@ -136,7 +143,7 @@ bool Pause::Pause() {
 
   while (!Exit && !WindowShouldClose() && !Ret) {
     Input(Exit, Ret);
-    Draw();
+    DrawLocal(Player);
   }
 
   if (WasPlaying) {

@@ -48,7 +48,7 @@ void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 
       if (Math::IsInRect(k_DestPause, GetMousePosition())) {
-        Exit = Pause::Pause();
+        Exit = Pause::Pause(Player);
       } else {
         Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
       }
@@ -286,8 +286,14 @@ void DemonTimer(std::list<Demon::DemonType>& Demons,
 
 
 
-void HasPlayerLost(const Player::PlayerType& Player) {
-  Exit = Player.f_Hearts <= 0 || Exit;
+bool HasPlayerLost(const Player::PlayerType& Player) {
+  if (Player.f_Hearts <= 0) {
+    Exit = Pause::Pause(Player);
+    if (!Exit) {
+      return true;
+    }
+  }
+  return false;
 }
 
 }
@@ -300,6 +306,7 @@ void Play::Play() {
   const Sound k_Dropship = GetSound(ResManager::Resources::Dropship);
   constexpr float k_MusicVol = 0.5F;
   bool DuplicatedVisible = false;
+  bool Restart = false;
 
   Player::PlayerType Player;
   Player::PlayerType Duplicated;
@@ -318,10 +325,16 @@ void Play::Play() {
     if (!IsSoundPlaying(k_Dropship)) {
       PlaySound(k_Dropship);
     }
+    if (Restart) {
+      Initialize(Player);
+      Demons.clear();
+      Bullets.clear();
+      BulletDuplicates.clear();
+    }
     Input(Player, Bullets);
     Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets,
            BulletDuplicates);
-    HasPlayerLost(Player);
+    Restart = HasPlayerLost(Player);
     DemonTimer(Demons, Player.f_Position);
     UpdateMusicStream(k_Music);
     Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets,
