@@ -61,6 +61,7 @@ void Bullet::Shoot(std::list<BulletType>& Bullets,
                    const Vector2& PlayerDirection,
                    const float PlayerRadius,
                    const Vector2& PlayerPosition) {
+
   const BulletType Bullet = {PlayerDirection,
                              {Math::Add(
                                   Math::Multiply(
@@ -79,9 +80,7 @@ void Bullet::Shoot(std::list<BulletType>& Bullets,
   //TODO find a way to recharge?
     UniqueId++;
 
-#ifdef _DEBUG
-    std::cout << "Buller init. ID: " << Bullet.f_Id << "\n";
-#endif
+    PlaySound(GetSound(ResManager::Resources::Shoot));
 
     Bullets.push_back(Bullet);
   }

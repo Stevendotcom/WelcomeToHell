@@ -5,6 +5,7 @@
 #include "engine/ResManager.h"
 
 namespace {
+bool SoundPlayed = false;
 constexpr float k_Scale = 1.5;
 constexpr float k_ButtonsSize = 32.0F;
 constexpr float k_ButtonsX = 400.0F;
@@ -12,26 +13,57 @@ constexpr float k_ButtonsY = 300.0F;
 constexpr int k_ScaleBut = 3;
 constexpr int k_FontSize = 40;
 
+
+
+void PlayHoverSound() {
+  const Sound Hover = GetSound(ResManager::Resources::MenuHover);
+
+  if (!IsSoundPlaying(Hover) && !SoundPlayed) {
+    PlaySound(Hover);
+    SoundPlayed = true;
+  }
+
+}
+
+
+
 void Input(bool& Exit, bool& Ret) {
+
   const Vector2 k_MousePos = GetMousePosition();
-  if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-    //Ret
-    if (Math::IsInRect({k_ButtonsX,
-                    k_ButtonsY,
-                    k_ButtonsSize * k_ScaleBut,
-                    k_ButtonsSize * k_ScaleBut}, k_MousePos)) {
+
+  constexpr int ReturnTextWidth = 140;
+  constexpr int ExitTextWidth = 100;
+
+  if (Math::IsInRect({k_ButtonsX,
+                      k_ButtonsY,
+                      k_ButtonsSize * k_ScaleBut + ReturnTextWidth,
+                      k_ButtonsSize * k_ScaleBut}, k_MousePos)) {
+
+    PlayHoverSound();
+
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
       Exit = false;
       Ret = !Exit;
     }
-    //exit
-    else if (Math::IsInRect({k_ButtonsX,
-                    k_ButtonsY + k_ButtonsSize * k_ScaleBut,
-                    k_ButtonsSize * k_ScaleBut,
-                    k_ButtonsSize * k_ScaleBut}, k_MousePos)) {
-      Exit = true;
-      Ret = !Exit;
+
+  } else {
+    if (Math::IsInRect({k_ButtonsX,
+                        k_ButtonsY + k_ButtonsSize * k_ScaleBut,
+                        k_ButtonsSize * k_ScaleBut + ExitTextWidth,
+                        k_ButtonsSize * k_ScaleBut}, k_MousePos)) {
+
+      PlayHoverSound();
+
+      if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+        Exit = true;
+        Ret = !Exit;
+      }
+
+    } else {
+      SoundPlayed = false;
     }
   }
+
 }
 
 
@@ -90,12 +122,25 @@ void Draw() {
 
 
 bool Pause::Pause() {
+  const Sound k_Dropship = GetSound(ResManager::Resources::Dropship);
   bool Exit = false;
   bool Ret = false;
+  bool WasPlaying = false;
+
+  if (IsSoundPlaying(k_Dropship)) {
+    PauseSound(k_Dropship);
+    WasPlaying = true;
+  }
+
+  PlaySound(GetSound(ResManager::Resources::MenuOpen));
+
   while (!Exit && !WindowShouldClose() && !Ret) {
     Input(Exit, Ret);
     Draw();
   }
 
+  if (WasPlaying) {
+    ResumeSound(k_Dropship);
+  }
   return Exit || WindowShouldClose();
 }
