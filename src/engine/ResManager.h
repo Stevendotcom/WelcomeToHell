@@ -19,7 +19,8 @@ enum class Resources {
   BulletSprite,
   HeartSprite,
   HeartBackground,
-  Pause,
+  Buttons,
+  PauseBG,
   Last
 };
 
