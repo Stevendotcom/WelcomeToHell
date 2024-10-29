@@ -13,7 +13,7 @@ struct PlayerType {
   Vector2 f_Speed;
   Vector2 f_Direction;
   Texture f_Sprite;
-
+  bool f_IsInvencible;
 };
 
 

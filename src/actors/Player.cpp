@@ -26,7 +26,8 @@ void Player::Initialize(PlayerType& Player) {
             {g_ScreenWidth / 2.0F, g_ScreenHeight / 2.0F},
             {0.0F, 0.0F},
             {0.0F, -1.0F},
-            GetTexture(ResManager::Resources::PlayerSprite)};
+            GetTexture(ResManager::Resources::PlayerSprite),
+            false};
 }
 
 
@@ -87,7 +88,8 @@ void Player::UpdateDuplicate(PlayerType& Player,
                 Duplicated.f_Position,
                 Player.f_Speed,
                 Player.f_Direction,
-                Player.f_Sprite};
+                Player.f_Sprite,
+                Player.f_IsInvencible};
 
   Update(Duplicated, GetFrameTime(), true);
 
@@ -171,5 +173,6 @@ void Player::Draw(const PlayerType& Player) {
 
   DrawTexturePro(Player.f_Sprite, Source, Dest,
                  {Player.f_Radius * k_Scale, Player.f_Radius * k_Scale},
-                 k_RotCorrection - GetRotation(Player.f_Direction), WHITE);
+                 k_RotCorrection - GetRotation(Player.f_Direction),
+                 Player.f_IsInvencible ? RED : WHITE);
 }
