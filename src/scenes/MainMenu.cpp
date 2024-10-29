@@ -108,6 +108,49 @@ bool Input() {
 
 
 
+void Draw() {
+  const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
+  const Texture2D& k_Btn = GetTexture(ResManager::Resources::Btn);
+  const Texture2D& k_BtnPressed = GetTexture(ResManager::Resources::BtnPressed);
+  const Sound& k_Hover = GetSound(ResManager::Resources::MenuHover);
+  constexpr int k_TitleFontSize = 64;
+  constexpr int k_TMargin = 20;
+
+  BeginDrawing();
+
+  ClearBackground(BLACK);
+  DrawTexturePro(k_Background,
+                 {0,
+                  0,
+                  static_cast<float>(k_Background.width),
+                  static_cast<float>(k_Background.height)},
+                 {0,
+                  0,
+                  static_cast<float>(g_ScreenWidth),
+                  static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
+  DrawText(k_Title.c_str(),
+           (g_ScreenWidth - MeasureText(k_Title.c_str(), k_TitleFontSize)) / 2,
+           k_TMargin + k_TitleFontSize, k_TitleFontSize, WHITE);
+
+  for (auto& Btn : Btns) {
+
+    DrawTexturePro((Btn.f_IsHover ? k_BtnPressed : k_Btn),
+                   k_BackgroundButtonSource, Btn.f_Dest, {0, 0}, 0, WHITE);
+
+    DrawText(Btn.f_Text.c_str(),
+             static_cast<int>(Btn.f_Dest.x + (
+                                Btn.f_Dest.width - static_cast<float>(
+                                  MeasureText(Btn.f_Text.c_str(), k_FontSize)))
+                              / 2.0F),
+             static_cast<int>(Btn.f_Dest.y + (Btn.f_Dest.height - k_FontSize) /
+                              2), k_FontSize, WHITE);
+
+    if (Btn.f_IsHover && !IsSoundPlaying(k_Hover) && !Btn.f_HasSoundPlayed) {
+      PlaySound(k_Hover);
+      Btn.f_HasSoundPlayed = true;
+    }
+
+  }
 
 
 }
@@ -115,4 +158,17 @@ bool Input() {
 
 
 void MainMenu::Menu() {
+  const Music k_MenuMusic = GetMusic(ResManager::Resources::MainMenuMusic);
+
+  PlayMusicStream(k_MenuMusic);
+  SetMusicVolume(k_MenuMusic, 1);
+  InitBtns();
+
+  while (!WindowShouldClose() && !Input()) {
+    UpdateMusicStream(k_MenuMusic);
+    Draw();
+  }
+
+  StopMusicStream(k_MenuMusic);
+  ChangeScene(SceneChange);
 }
