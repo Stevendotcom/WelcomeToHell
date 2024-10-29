@@ -7,5 +7,4 @@
 int main() {
   StartUp::Start();
   SceneManager::ChangeScene();
-  CloseUp::Close();
 }
