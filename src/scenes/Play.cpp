@@ -45,7 +45,7 @@ void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
       Accelerate(Player);
     }
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 
       if (Math::IsInRect(k_DestPause, GetMousePosition())) {
         Exit = Pause::Pause();
@@ -296,9 +296,9 @@ void HasPlayerLost(const Player::PlayerType& Player) {
 
 void Play::Play() {
 
-  const Music Music = GetMusic(ResManager::Resources::GameMusic);
-  const Sound Dropship = GetSound(ResManager::Resources::Dropship);
-  constexpr float k_MusicVol = 0.1F;
+  const Music k_Music = GetMusic(ResManager::Resources::GameMusic);
+  const Sound k_Dropship = GetSound(ResManager::Resources::Dropship);
+  constexpr float k_MusicVol = 0.5F;
   bool DuplicatedVisible = false;
 
   Player::PlayerType Player;
@@ -309,27 +309,27 @@ void Play::Play() {
 
   Initialize(Player);
 
-  PlayMusicStream(Music);
-  SetMusicVolume(Music, k_MusicVol);
-  PlaySound(Dropship);
-  SetSoundVolume(Dropship, 0.1F);
+  PlayMusicStream(k_Music);
+  SetMusicVolume(k_Music, k_MusicVol);
+  PlaySound(k_Dropship);
+  SetSoundVolume(k_Dropship, 0.1F);
 
   while (!Exit && !WindowShouldClose()) {
-    if (!IsSoundPlaying(Dropship)) {
-      PlaySound(Dropship);
+    if (!IsSoundPlaying(k_Dropship)) {
+      PlaySound(k_Dropship);
     }
     Input(Player, Bullets);
     Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets,
            BulletDuplicates);
     HasPlayerLost(Player);
     DemonTimer(Demons, Player.f_Position);
-    UpdateMusicStream(Music);
+    UpdateMusicStream(k_Music);
     Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets,
          BulletDuplicates);
 
   }
 
-  StopMusicStream(Music);
-  StopSound(Dropship);
+  StopMusicStream(k_Music);
+  StopSound(k_Dropship);
   ChangeScene(SceneManager::Scenes::Exit);
 }
