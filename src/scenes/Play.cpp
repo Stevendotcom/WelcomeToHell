@@ -1,5 +1,8 @@
 ﻿#include "Play.h"
 
+#include <iostream>
+#include <ostream>
+
 #include "Constants.h"
 #include "raylib.h"
 #include "actors/Bullet.h"
@@ -13,22 +16,43 @@ using namespace Collisions;
 
 namespace {
 
-bool Pause = false;
 constexpr int k_MaxWaitTime = 5;
+constexpr int k_RMargin = 30;
+constexpr int k_ScalePause = 2;
+int k_ScoreGain = 234;
+bool Pause = false;
 float Timer = 0.0f;
 float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
-int k_Score = 234;
+constexpr float k_TMargin = 30.0F;
+constexpr float k_LMargin = 20.0F;
+constexpr float k_HeartSpriteSize = 16.0F;
+
+constexpr Rectangle k_SourcePause = {64.0F, 0, 32.0F, 32.0F};
+constexpr Rectangle k_DestPause{
+    g_ScreenWidth - (k_RMargin + k_SourcePause.width * k_ScalePause),
+    k_TMargin,
+    k_SourcePause.width * k_ScalePause,
+    k_SourcePause.height * k_ScalePause};
 
 
 
 void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
+  const Vector2 k_MousePos = GetMousePosition();
 
   if (!Pause) {
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
       Accelerate(Player);
     }
     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-      Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
+
+      if (k_MousePos.x >= k_DestPause.x &&
+          k_MousePos.x <= k_DestPause.x + k_DestPause.width && k_MousePos.y >= k_DestPause.y
+          && k_MousePos.y <= k_DestPause.y + k_DestPause.height) {
+        std::cout << "Paused" << std::endl;
+        std::cout << k_MousePos.x << k_MousePos.y << std::endl;
+      } else {
+        Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
+      }
     }
   }
 
@@ -86,7 +110,7 @@ void ManageDemons(Player::PlayerType& Player,
           if (IsCircleCircle(Bullet.f_Vectors[0], 1, Demon.f_Position,
                              Demon.f_Radius) || IsCircleCircle(
                   Bullet.f_Vectors[1], 1, Demon.f_Position, Demon.f_Radius)) {
-            Player.f_Score += k_Score;
+            Player.f_Score += k_ScoreGain;
             DivideDemon(Demon, Demons);
             Bullet::AddToTargets(Bullet.f_Id);
           }
@@ -151,6 +175,41 @@ void Update(Player::PlayerType& Player,
 
 
 
+void DrawLives(const Player::PlayerType& Player) {
+  constexpr float k_LPadding = 45.0F;
+  constexpr float k_Scale = 3.0F;
+
+  Vector2 Position;
+
+  for (int I = 0; I < Player.f_Hearts; I++) {
+    Position = {
+        k_LMargin + (k_LPadding + k_HeartSpriteSize) * static_cast<float>(I),
+        k_TMargin};
+    DrawTextureEx(GetTexture(ResManager::Resources::HeartBackground), Position,
+                  0, k_Scale, WHITE);
+    DrawTextureEx(GetTexture(ResManager::Resources::HeartSprite), Position, 0,
+                  k_Scale, WHITE);
+  }
+}
+
+
+
+void DrawUI(const Player::PlayerType& Player) {
+  constexpr int k_FontSize = 30;
+
+  DrawLives(Player);
+
+  DrawTexturePro(GetTexture(ResManager::Resources::Pause), k_SourcePause, k_DestPause,
+                 {0, 0}, 0, WHITE);
+
+  DrawText(TextFormat("Score: %i", Player.f_Score),
+           static_cast<int>(k_LMargin) + k_FontSize,
+           static_cast<int>(k_TMargin) + static_cast<int>(k_HeartSpriteSize) * 3
+           + 10, k_FontSize, WHITE);
+}
+
+
+
 void Draw(const Player::PlayerType& Player,
           const bool DuplicatedVisible,
           const Player::PlayerType& Duplicated,
@@ -172,14 +231,6 @@ void Draw(const Player::PlayerType& Player,
                     static_cast<float>(g_ScreenWidth),
                     static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
 
-#ifdef _DEBUG
-    DrawText(TextFormat("Speed= %f", Math::GetMag(Player.f_Speed)), 10, 10, 10,
-             WHITE);
-    DrawText(TextFormat("Hearts= %i", Player.f_Hearts), 10, 20, 10, WHITE);
-    DrawText(TextFormat("Score= %i", Player.f_Score), 10, 30, 10, WHITE);
-    DrawCircleLinesV(Player.f_Position, Player.f_Radius, RAYWHITE);
-#endif
-
     Player::Draw(Player);
     if (DuplicatedVisible) {
 
@@ -200,9 +251,12 @@ void Draw(const Player::PlayerType& Player,
     if (!Bullets.empty()) {
       Bullet::Draw(Bullets);
     }
+
     if (!BulletDuplicates.empty()) {
       Bullet::Draw(BulletDuplicates);
     }
+
+    DrawUI(Player);
 
   }
   EndDrawing();

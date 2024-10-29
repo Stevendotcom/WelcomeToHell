@@ -17,6 +17,9 @@ enum class Resources {
   PlayerSprite,
   DemonSpriteMove,
   BulletSprite,
+  HeartSprite,
+  HeartBackground,
+  Pause,
   Last
 };
 
