@@ -37,13 +37,22 @@ constexpr Rectangle k_DestPause{
 
 
 void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
+  const Vector2 k_MousePos = GetMousePosition();
 
   if (!Pause) {
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
       Accelerate(Player);
     }
     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-      Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
+
+      if (k_MousePos.x >= k_DestPause.x &&
+          k_MousePos.x <= k_DestPause.x + k_DestPause.width && k_MousePos.y >= k_DestPause.y
+          && k_MousePos.y <= k_DestPause.y + k_DestPause.height) {
+        std::cout << "Paused" << std::endl;
+        std::cout << k_MousePos.x << k_MousePos.y << std::endl;
+      } else {
+        Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
+      }
     }
   }
 
