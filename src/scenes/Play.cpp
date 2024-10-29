@@ -7,6 +7,7 @@
 #include "raylib.h"
 #include "actors/Bullet.h"
 #include "actors/Demon.h"
+#include "actors/Pause.h"
 #include "actors/Player.h"
 #include "engine/Collisions.h"
 #include "engine/ResManager.h"
@@ -26,6 +27,7 @@ float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
 constexpr float k_TMargin = 30.0F;
 constexpr float k_LMargin = 20.0F;
 constexpr float k_HeartSpriteSize = 16.0F;
+bool Exit = false;
 
 constexpr Rectangle k_SourcePause = {64.0F, 0, 32.0F, 32.0F};
 constexpr Rectangle k_DestPause{
@@ -45,11 +47,10 @@ void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
     }
     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
 
-      if (k_MousePos.x >= k_DestPause.x &&
-          k_MousePos.x <= k_DestPause.x + k_DestPause.width && k_MousePos.y >= k_DestPause.y
-          && k_MousePos.y <= k_DestPause.y + k_DestPause.height) {
-        std::cout << "Paused" << std::endl;
-        std::cout << k_MousePos.x << k_MousePos.y << std::endl;
+      if (k_MousePos.x >= k_DestPause.x && k_MousePos.x <= k_DestPause.x +
+          k_DestPause.width && k_MousePos.y >= k_DestPause.y && k_MousePos.y <=
+          k_DestPause.y + k_DestPause.height) {
+        Exit = Pause::Pause();
       } else {
         Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
       }
@@ -199,8 +200,8 @@ void DrawUI(const Player::PlayerType& Player) {
 
   DrawLives(Player);
 
-  DrawTexturePro(GetTexture(ResManager::Resources::Pause), k_SourcePause, k_DestPause,
-                 {0, 0}, 0, WHITE);
+  DrawTexturePro(GetTexture(ResManager::Resources::Buttons), k_SourcePause,
+                 k_DestPause, {0, 0}, 0, WHITE);
 
   DrawText(TextFormat("Score: %i", Player.f_Score),
            static_cast<int>(k_LMargin) + k_FontSize,
@@ -216,16 +217,17 @@ void Draw(const Player::PlayerType& Player,
           std::list<Demon::DemonType>& Demons,
           const std::list<Bullet::BulletType>& Bullets,
           const std::list<Bullet::BulletType>& BulletDuplicates) {
-  const Texture2D& Background = GetTexture(ResManager::Resources::Background);
+
+  const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
 
   BeginDrawing();
   {
     ClearBackground(BLACK);
-    DrawTexturePro(Background,
+    DrawTexturePro(k_Background,
                    {0,
                     0,
-                    static_cast<float>(Background.width),
-                    static_cast<float>(Background.height)},
+                    static_cast<float>(k_Background.width),
+                    static_cast<float>(k_Background.height)},
                    {0,
                     0,
                     static_cast<float>(g_ScreenWidth),
@@ -276,8 +278,8 @@ void DemonTimer(std::list<Demon::DemonType>& Demons,
 
 
 
-bool HasPlayerLost(const Player::PlayerType& Player) {
-  return Player.f_Hearts <= 0;
+void HasPlayerLost(const Player::PlayerType& Player) {
+  Exit = Player.f_Hearts <= 0 || Exit;
 }
 
 }
@@ -288,8 +290,7 @@ void Play::Play() {
 
   const Music Music = GetMusic(ResManager::Resources::GameMusic);
   constexpr float k_MusicVol = 0.1F;
-  bool Exit = false;
-  static bool DuplicatedVisible = false;
+  bool DuplicatedVisible = false;
 
   Player::PlayerType Player;
   Player::PlayerType Duplicated;
@@ -304,14 +305,16 @@ void Play::Play() {
 
   while (!Exit && !WindowShouldClose()) {
     Input(Player, Bullets);
+
     Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets,
            BulletDuplicates);
-    Exit = HasPlayerLost(Player);
+    HasPlayerLost(Player);
     DemonTimer(Demons, Player.f_Position);
     UpdateMusicStream(Music);
     Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets,
          BulletDuplicates);
+
   }
 
-  ChangeScene(SceneManager::Scenes::Exit); //TODO CHANGE
+  ChangeScene(SceneManager::Scenes::Exit);
 }

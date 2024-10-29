@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "CloseUp.h"
 #include "Error.h"
 #include "scenes/Play.h"
 
@@ -19,8 +20,10 @@ void SceneLoop(const SceneManager::Scenes SelectedScene) {
     case SceneManager::Scenes::Credits:
       break;
     case SceneManager::Scenes::Exit:
+      CloseUp::Close();
       break;
     default:
+      CloseUp::Close();
       Error::Unhandled(__LINE__, __FILE__);
       break;
   }
