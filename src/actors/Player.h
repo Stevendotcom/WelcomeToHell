@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "engine/Math.h"
 #include "engine/Collisions.h"
+#include "engine/Math.h"
 
 namespace Player {
 

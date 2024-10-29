@@ -21,6 +21,8 @@ enum class Resources {
   HeartBackground,
   Buttons,
   PauseBG,
+  Btn,
+  BtnPressed,
   Last
 };
 
