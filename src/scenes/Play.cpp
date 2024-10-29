@@ -24,6 +24,8 @@ int k_ScoreGain = 234;
 bool Pause = false;
 float Timer = 0.0f;
 float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
+float InvencibleTimer = 0.0F;
+float InvencibleTimerDuration = 3.0F;
 constexpr float k_TMargin = 30.0F;
 constexpr float k_LMargin = 20.0F;
 constexpr float k_HeartSpriteSize = 16.0F;
@@ -96,10 +98,11 @@ void ManageDemons(Player::PlayerType& Player,
         UpdateDuplicate(Demon, Demon.f_Duplicate, CollisionPlace);
       }
 
-      if (IsCircleCircle(Player.f_Position, Player.f_Radius, Demon.f_Position,
+      if (!Player.f_IsInvencible && IsCircleCircle(Player.f_Position, Player.f_Radius, Demon.f_Position,
                          Demon.f_Radius)) {
         Player.f_Hearts--;
         DivideDemon(Demon, Demons);
+        Player.f_IsInvencible = true;
       }
 
       if (!Bullets.empty()) {
@@ -159,6 +162,14 @@ void Update(Player::PlayerType& Player,
             std::list<Bullet::BulletType>& BulletDuplicates) {
 
   auto CollisionPlace = WhereCollides::Down;
+
+  if (Player.f_IsInvencible) {
+    InvencibleTimer += GetFrameTime();
+    if (InvencibleTimer >= InvencibleTimerDuration) {
+      InvencibleTimer = 0;
+      Player.f_IsInvencible = false;
+    }
+  }
 
   Player::Update(Player, GetFrameTime());
 
@@ -315,7 +326,6 @@ void Play::Play() {
     UpdateMusicStream(Music);
     Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets,
          BulletDuplicates);
-
 
   }
 
