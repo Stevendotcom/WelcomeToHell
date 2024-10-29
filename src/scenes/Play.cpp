@@ -108,6 +108,7 @@ void ManageDemons(Player::PlayerType& Player,
                              Demon.f_Radius) || IsCircleCircle(
                   Bullet.f_Vectors[1], 1, Demon.f_Position, Demon.f_Radius)) {
             Player.f_Score += k_ScoreGain;
+            PlaySound(GetSound(ResManager::Resources::Hit));
             DivideDemon(Demon, Demons);
             Bullet::AddToTargets(Bullet.f_Id);
           }
@@ -285,6 +286,7 @@ void HasPlayerLost(const Player::PlayerType& Player) {
 void Play::Play() {
 
   const Music Music = GetMusic(ResManager::Resources::GameMusic);
+  const Sound Dropship = GetSound(ResManager::Resources::Dropship);
   constexpr float k_MusicVol = 0.1F;
   bool DuplicatedVisible = false;
 
@@ -298,10 +300,14 @@ void Play::Play() {
 
   PlayMusicStream(Music);
   SetMusicVolume(Music, k_MusicVol);
+  PlaySound(Dropship);
+  SetSoundVolume(Dropship, 0.1F);
 
   while (!Exit && !WindowShouldClose()) {
+    if (!IsSoundPlaying(Dropship)) {
+      PlaySound(Dropship);
+    }
     Input(Player, Bullets);
-
     Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets,
            BulletDuplicates);
     HasPlayerLost(Player);
@@ -310,7 +316,10 @@ void Play::Play() {
     Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets,
          BulletDuplicates);
 
+
   }
 
+  StopMusicStream(Music);
+  StopSound(Dropship);
   ChangeScene(SceneManager::Scenes::Exit);
 }

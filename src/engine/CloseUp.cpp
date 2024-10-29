@@ -14,7 +14,14 @@ void CloseUp::Close() {
         break;
 
       case ResManager::Resources::Background:
-        UnloadTexture(GetTexture(ResManager::Resources::Background));
+        __fallthrough case ResManager::Resources::PlayerSprite:
+        __fallthrough case ResManager::Resources::DemonSpriteMove:
+        __fallthrough case ResManager::Resources::BulletSprite:
+        __fallthrough case ResManager::Resources::HeartSprite:
+        __fallthrough case ResManager::Resources::HeartBackground:
+        __fallthrough case ResManager::Resources::Buttons:
+        __fallthrough case ResManager::Resources::PauseBG:
+        UnloadTexture(GetTexture(static_cast<ResManager::Resources>(Resource)));
         break;
 
       case ResManager::Resources::MainMenuMusic:
@@ -30,9 +37,10 @@ void CloseUp::Close() {
         __fallthrough case ResManager::Resources::MenuHover:
         UnloadSound(GetSound(static_cast<ResManager::Resources>(Resource)));
         break;
-
       case ResManager::Resources::Last:
+        //pass
         break;
+
     }
   }
   CloseAudioDevice();
