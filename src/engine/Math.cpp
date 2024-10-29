@@ -120,3 +120,9 @@ bool Math::IsEqual(const Vector2& A, const Vector2& B) {
 bool Math::IsEqual(const float A, const float B) {
   return A >= B - FLT_EPSILON && A <= B + FLT_EPSILON;
 }
+
+
+
+bool Math::IsInRect(const Rectangle& Rect, const Vector2 Pos) {
+  return Pos.x > Rect.x && Pos.x <= Rect.width + Rect.x && Pos.y > Rect.y && Pos.y < Rect.y + Rect.height;
+}
