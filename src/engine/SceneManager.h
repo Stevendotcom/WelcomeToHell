@@ -5,6 +5,7 @@ enum class Scenes {
   MainMenu = 1,
   Play,
   Credits,
+  Instruccions,
   Exit
 };
 

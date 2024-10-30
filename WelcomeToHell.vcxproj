@@ -59,7 +59,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)obj\</IntDir>
+    <IntDir>$(SolutionDir)obj\$(Configuration)</IntDir>
     <TargetName>$(SolutionName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -242,7 +242,6 @@
     <Folder Include="lib\" />
     <Folder Include="obj\" />
     <Folder Include="res\" />
-    <Folder Include="src\scenes\" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\actors\Bullet.cpp" />
@@ -259,6 +258,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\scenes\Credits.cpp" />
     <ClCompile Include="src\scenes\Exit.cpp" />
+    <ClCompile Include="src\scenes\Instructions.cpp" />
     <ClCompile Include="src\scenes\MainMenu.cpp" />
     <ClCompile Include="src\scenes\Play.cpp" />
   </ItemGroup>
@@ -277,6 +277,7 @@
     <ClInclude Include="src\engine\StartUp.h" />
     <ClInclude Include="src\scenes\Credits.h" />
     <ClInclude Include="src\scenes\Exit.h" />
+    <ClInclude Include="src\scenes\Instructions.h" />
     <ClInclude Include="src\scenes\MainMenu.h" />
     <ClInclude Include="src\scenes\Play.h" />
   </ItemGroup>

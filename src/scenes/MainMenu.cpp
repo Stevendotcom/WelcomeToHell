@@ -28,7 +28,7 @@ constexpr float k_MiddleScreenWidth = g_ScreenWidth / 2.0F;
 constexpr float k_BMargin = 50.0F;
 constexpr float k_BPad = 20.0F;
 
-constexpr int k_BtnAmount = 3;
+constexpr int k_BtnAmount = 4;
 constexpr int k_FontSize = 36;
 
 const std::string k_Title = "Welcome To Hell";
@@ -53,11 +53,14 @@ void InitBtns() {
         Btn.f_Text = "Exit";
         break;
       case 2:
-        Btn.f_Text = "Credits";
+        Btn.f_Text = "How To Play";
         break;
       case 3:
-        Btn.f_Text = "Play";
+        Btn.f_Text = "Credits";
         break;
+      case 4:
+        Btn.f_Text = "Play";
+      break;
       default:
         Error::Unhandled(__LINE__, __FILE__);
     }
@@ -85,9 +88,12 @@ bool Input() {
             SceneChange = SceneManager::Scenes::Exit;
             break;
           case 2:
+            SceneChange = SceneManager::Scenes::Instruccions;
+          break;
+          case 3:
             SceneChange = SceneManager::Scenes::Credits;
             break;
-          case 3:
+          case 4:
             SceneChange = SceneManager::Scenes::Play;
             break;
           default:

@@ -5,6 +5,7 @@
 #include "CloseUp.h"
 #include "Error.h"
 #include "scenes/Credits.h"
+#include "scenes/Instructions.h"
 #include "scenes/MainMenu.h"
 #include "scenes/Play.h"
 
@@ -21,6 +22,9 @@ void SceneLoop(const SceneManager::Scenes SelectedScene) {
       break;
     case SceneManager::Scenes::Credits:
       Credits::Credits();
+      break;
+    case SceneManager::Scenes::Instruccions:
+      Instructions::Instructions();
       break;
     case SceneManager::Scenes::Exit:
       CloseUp::Close();
