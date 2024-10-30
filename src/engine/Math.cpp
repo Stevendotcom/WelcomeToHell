@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "raylib.h"
+
 using namespace std;
 
 namespace {
@@ -66,17 +68,18 @@ Vector2 Math::Rotate(const Vector2& A, float Angle) {
   if (A.x < 0) {
     OgAngle = PI + OgAngle;
   } else if (A.x >= 0 && A.y > 0) {
-    OgAngle = 2.0f * PI + OgAngle;
+    OgAngle = 2.0F * PI + OgAngle;
   }
 
   if (Angle > 2.0F * PI) {
-    Angle  = Angle * PI / 180.0F;
+    Angle = Angle * PI / 180.0F;
   }
 
   OgAngle += Angle;
 
   //rotation Matrix
-  return {A.x * cos(OgAngle) - A.y * sin(OgAngle), A.x * sin(OgAngle) + A.y * cos(OgAngle)};
+  return {A.x * cos(OgAngle) - A.y * sin(OgAngle),
+          A.x * sin(OgAngle) + A.y * cos(OgAngle)};
 }
 
 
@@ -124,5 +127,6 @@ bool Math::IsEqual(const float A, const float B) {
 
 
 bool Math::IsInRect(const Rectangle& Rect, const Vector2 Pos) {
-  return Pos.x > Rect.x && Pos.x <= Rect.width + Rect.x && Pos.y > Rect.y && Pos.y < Rect.y + Rect.height;
+  return Pos.x > Rect.x && Pos.x <= Rect.width + Rect.x && Pos.y > Rect.y && Pos
+         .y < Rect.y + Rect.height;
 }

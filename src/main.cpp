@@ -1,6 +1,4 @@
-﻿#include "engine/CloseUp.h"
-#include "engine/SceneManager.h"
-#include "engine/StartUp.h"
+﻿#include "engine/StartUp.h"
 
 
 

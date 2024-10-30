@@ -1,5 +1,9 @@
 ﻿#include "Pause.h"
 
+#include <string>
+
+#include "raylib.h"
+
 #include "Constants.h"
 #include "Player.h"
 #include "engine/Math.h"
@@ -110,15 +114,18 @@ void DrawLocal(const Player::PlayerType& Player) {
 
     DrawText(Player.f_Hearts <= 0 ? "Restart" : "Return",
              static_cast<int>(k_ButtonsX + k_ButtonsSize + k_FontSize + 15.0F),
-             static_cast<int>(k_ButtonsY + k_ButtonsSize), Player.f_Hearts <= 0 ? k_FontSize - 4: k_FontSize, WHITE);
+             static_cast<int>(k_ButtonsY + k_ButtonsSize),
+             Player.f_Hearts <= 0 ? k_FontSize - 4 : k_FontSize, WHITE);
     DrawText(
         "Exit",
         static_cast<int>(k_ButtonsX + k_ButtonsSize + k_FontSize + 25.0F),
         static_cast<int>(k_ButtonsY + k_ButtonsSize * k_ScaleBut + k_FontSize),
         k_FontSize, WHITE);
 
-    if(Player.f_Hearts <= 0) {
-      DrawText(k_Message.c_str(), (g_ScreenWidth - MeasureText(k_Message.c_str(), 86) ) / 2, 100, 86, WHITE);
+    if (Player.f_Hearts <= 0) {
+      DrawText(k_Message.c_str(),
+               (g_ScreenWidth - MeasureText(k_Message.c_str(), 86)) / 2, 100,
+               86, WHITE);
     }
   }
   EndDrawing();

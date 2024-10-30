@@ -1,7 +1,8 @@
 ﻿#include "Player.h"
 
-#include "Constants.h"
 #include "raylib.h"
+
+#include "Constants.h"
 #include "engine/Collisions.h"
 #include "engine/Math.h"
 #include "engine/ResManager.h"
@@ -142,7 +143,9 @@ void Player::UpdateDuplicate(PlayerType& Player,
 
 
 
-void Player::Update(PlayerType& Player, const float Delta, bool IsDuplicated) {
+void Player::Update(PlayerType& Player,
+                    const float Delta,
+                    const bool IsDuplicated) {
   if (!IsDuplicated) {
 
     const Vector2 k_Temp = {GetMousePosition().x - Player.f_Position.x,

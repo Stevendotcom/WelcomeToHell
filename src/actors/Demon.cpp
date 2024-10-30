@@ -1,6 +1,9 @@
 #include "Demon.h"
 
 #include <iostream>
+#include <list>
+
+#include "raylib.h"
 
 #include "Constants.h"
 #include "engine/Collisions.h"
@@ -69,7 +72,7 @@ Vector2 GetRandomStart() {
     Right
   };
 
-  const Start Starting = static_cast<Start>(GetRandomValue(
+  const auto Starting = static_cast<Start>(GetRandomValue(
       static_cast<int>(Start::Up), static_cast<int>(Start::Right)));
   Vector2 Position;
 
@@ -334,13 +337,13 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
 
 
 
-void Demon::Draw(DemonType& Demon, bool IsDup) {
+void Demon::Draw(DemonType& Demon, const bool IsDup) {
   constexpr float k_Scale = 2.0F;
   constexpr float k_Minute = 60.0F;
 
   if (FrameTime > k_Cols * k_Rows / k_Minute) {
     Demon.f_Frame = GetNextFrame(Demon);
-    Demon.f_Frame.height *= (Demon.f_Direction.x > 0.0F ? 1.0f : -1.0f);
+    Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
     FrameTime = 0;
   }
   FrameTime += GetFrameTime();
@@ -348,8 +351,8 @@ void Demon::Draw(DemonType& Demon, bool IsDup) {
   DrawTexturePro(Demon.f_Sprite, Demon.f_Frame,
                  {Demon.f_Position.x,
                   Demon.f_Position.y,
-                  Demon.f_Radius * k_Scale * 2.0f,
-                  Demon.f_Radius * k_Scale * 2.0f},
+                  Demon.f_Radius * k_Scale * 2.0F,
+                  Demon.f_Radius * k_Scale * 2.0F},
                  {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
                  -Math::GetRotation(Demon.f_Direction), WHITE);
 #ifdef _DEBUG

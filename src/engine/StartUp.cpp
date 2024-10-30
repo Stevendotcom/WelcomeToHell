@@ -1,10 +1,11 @@
 ﻿#include "StartUp.h"
 
-#include "Constants.h"
-#include "ResManager.h"
-#include "raylib.h"
 #include <iostream>
 
+#include "raylib.h"
+
+#include "Constants.h"
+#include "ResManager.h"
 #include "SceneManager.h"
 
 namespace {

@@ -1,13 +1,15 @@
 ﻿#include "Collisions.h"
 
+#include "raylib.h"
+
 #include "Constants.h"
 
 
 
 bool Collisions::IsCircleCircle(const Vector2& APosition,
-                                float ARadius,
+                                const float ARadius,
                                 const Vector2& BPosition,
-                                float BRadius) {
+                                const float BRadius) {
   const float k_Dist = (APosition.x - BPosition.x) * (APosition.x - BPosition.x)
                        + (APosition.y - BPosition.y) * (
                          APosition.y - BPosition.y);

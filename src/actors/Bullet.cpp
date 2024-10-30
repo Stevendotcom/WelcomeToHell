@@ -1,8 +1,12 @@
 ﻿#include "Bullet.h"
 
 #include <iostream>
+#include <list>
+
+#include "raylib.h"
 
 #include "Constants.h"
+#include "engine/Collisions.h"
 #include "engine/Math.h"
 #include "engine/ResManager.h"
 
@@ -65,8 +69,7 @@ void Bullet::Shoot(std::list<BulletType>& Bullets,
   const BulletType Bullet = {PlayerDirection,
                              {Math::Add(
                                   Math::Multiply(
-                                      PlayerDirection,
-                                      (k_Width + PlayerRadius)),
+                                      PlayerDirection, k_Width + PlayerRadius),
                                   PlayerPosition),
                               Math::Add(
                                   Math::Multiply(PlayerDirection, PlayerRadius),
@@ -77,7 +80,7 @@ void Bullet::Shoot(std::list<BulletType>& Bullets,
                              UniqueId};
 
   if (Bullets.size() < k_AmountMax) {
-  //TODO find a way to recharge?
+
     UniqueId++;
 
     PlaySound(GetSound(ResManager::Resources::Shoot));
@@ -200,7 +203,7 @@ void Bullet::Duplicate(BulletType& Bullet,
 
 
 
-void Bullet::Update(std::list<BulletType>& Bullets, float Delta) {
+void Bullet::Update(std::list<BulletType>& Bullets, const float Delta) {
   for (BulletType& Bullet : Bullets) {
     Bullet.f_Vectors[e_Front].x += Bullet.f_Speed * Delta * Bullet.f_Direction.
         x;

@@ -1,6 +1,6 @@
 ﻿#include "Instructions.h"
 
-#include <raylib.h>
+#include "raylib.h"
 
 #include "Constants.h"
 #include "engine/Math.h"
@@ -12,9 +12,11 @@ constexpr Rectangle k_Dest = {30, 700, 250.0F, 50.0F};
 
 bool IsHover = false;
 
+
+
 bool Input() {
   const Vector2 MousePos = GetMousePosition();
-  if (Math::IsInRect(k_Dest, MousePos) ) {
+  if (Math::IsInRect(k_Dest, MousePos)) {
     IsHover = true;
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
       return true;
@@ -22,6 +24,8 @@ bool Input() {
   }
   return false;
 }
+
+
 
 void Draw() {
   const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
@@ -62,16 +66,14 @@ void Draw() {
              "to aim and the right click to accelerate. You also can shut your shotgun with left-click.",
              20)) / 2, 260, 20, WHITE);
 
-    DrawTexturePro((IsHover ? k_BtnPressed : k_Btn),
-                 k_Source, k_Dest, {0, 0}, 0, WHITE);
+    DrawTexturePro(IsHover ? k_BtnPressed : k_Btn, k_Source, k_Dest, {0, 0}, 0,
+                   WHITE);
 
     DrawText("Return",
              static_cast<int>(k_Dest.x + (
                                 k_Dest.width - static_cast<float>(
-                                  MeasureText("Return", 20)))
-                              / 2.0F),
-             static_cast<int>(k_Dest.y + (k_Dest.height - 20) /
-                              2), 20, WHITE);
+                                  MeasureText("Return", 20))) / 2.0F),
+             static_cast<int>(k_Dest.y + (k_Dest.height - 20) / 2), 20, WHITE);
   }
   EndDrawing();
 

@@ -1,15 +1,16 @@
 ﻿#include "Play.h"
 
-#include <iostream>
-#include <ostream>
+#include <list>
+
+#include "raylib.h"
 
 #include "Constants.h"
-#include "raylib.h"
 #include "actors/Bullet.h"
 #include "actors/Demon.h"
 #include "actors/Pause.h"
 #include "actors/Player.h"
 #include "engine/Collisions.h"
+#include "engine/Math.h"
 #include "engine/ResManager.h"
 #include "engine/SceneManager.h"
 
@@ -22,7 +23,7 @@ constexpr int k_RMargin = 30;
 constexpr int k_ScalePause = 2;
 int k_ScoreGain = 234;
 bool Pause = false;
-float Timer = 0.0f;
+float Timer = 0.0F;
 float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
 float InvencibleTimer = 0.0F;
 float InvencibleTimerDuration = 3.0F;
@@ -98,8 +99,9 @@ void ManageDemons(Player::PlayerType& Player,
         UpdateDuplicate(Demon, Demon.f_Duplicate, CollisionPlace);
       }
 
-      if (!Player.f_IsInvencible && IsCircleCircle(Player.f_Position, Player.f_Radius, Demon.f_Position,
-                         Demon.f_Radius)) {
+      if (!Player.f_IsInvencible && IsCircleCircle(
+              Player.f_Position, Player.f_Radius, Demon.f_Position,
+              Demon.f_Radius)) {
         Player.f_Hearts--;
         DivideDemon(Demon, Demons);
         Player.f_IsInvencible = true;
@@ -278,7 +280,7 @@ void DemonTimer(std::list<Demon::DemonType>& Demons,
                 const Vector2& PlayerPosition) {
   Timer += GetFrameTime();
   if (Timer > TimeLimit) {
-    Timer = 0.0f;
+    Timer = 0.0F;
     TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
     Initialize(Demons, PlayerPosition);
   }

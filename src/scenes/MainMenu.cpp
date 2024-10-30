@@ -1,8 +1,9 @@
 ﻿#include "MainMenu.h"
 
 #include <array>
-#include <iostream>
-#include <raylib.h>
+#include <string>
+
+#include "raylib.h"
 
 #include "Constants.h"
 #include "engine/Error.h"
@@ -43,7 +44,7 @@ void InitBtns() {
   for (auto& Btn : Btns) {
     I++;
     Btn.f_Dest = k_ButtonDef;
-    Btn.f_Dest.x = k_MiddleScreenWidth - (k_ButtonDef.width / 2.0F);
+    Btn.f_Dest.x = k_MiddleScreenWidth - k_ButtonDef.width / 2.0F;
     //Note the reverse order
     Btn.f_Dest.y = g_ScreenHeight - k_BMargin - (k_BPad + Btn.f_Dest.height) *
                    static_cast<float>(I);
@@ -60,7 +61,7 @@ void InitBtns() {
         break;
       case 4:
         Btn.f_Text = "Play";
-      break;
+        break;
       default:
         Error::Unhandled(__LINE__, __FILE__);
     }
@@ -89,7 +90,7 @@ bool Input() {
             break;
           case 2:
             SceneChange = SceneManager::Scenes::Instruccions;
-          break;
+            break;
           case 3:
             SceneChange = SceneManager::Scenes::Credits;
             break;
@@ -140,7 +141,7 @@ void Draw() {
 
   for (auto& Btn : Btns) {
 
-    DrawTexturePro((Btn.f_IsHover ? k_BtnPressed : k_Btn),
+    DrawTexturePro(Btn.f_IsHover ? k_BtnPressed : k_Btn,
                    k_BackgroundButtonSource, Btn.f_Dest, {0, 0}, 0, WHITE);
 
     DrawText(Btn.f_Text.c_str(),

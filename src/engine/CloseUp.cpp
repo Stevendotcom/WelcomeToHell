@@ -1,5 +1,7 @@
 ﻿#include "CloseUp.h"
 
+#include "raylib.h"
+
 #include "ResManager.h"
 
 

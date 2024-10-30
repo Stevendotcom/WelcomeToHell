@@ -36,7 +36,9 @@ void Accelerate(PlayerType& Player);
  * @param Duplicated 
  * @param CollisionPlace 
  */
-void Duplicate(const PlayerType& Player, PlayerType& Duplicated, Collisions::WhereCollides CollisionPlace);
+void Duplicate(const PlayerType& Player,
+               PlayerType& Duplicated,
+               Collisions::WhereCollides CollisionPlace);
 
 /**
  * 

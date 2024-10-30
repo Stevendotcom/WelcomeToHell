@@ -1,7 +1,5 @@
 ﻿#include "SceneManager.h"
 
-#include <iostream>
-
 #include "CloseUp.h"
 #include "Error.h"
 #include "scenes/Credits.h"

@@ -2,6 +2,7 @@
 #include <list>
 
 #include "raylib.h"
+
 #include "engine/Collisions.h"
 
 namespace Demon {

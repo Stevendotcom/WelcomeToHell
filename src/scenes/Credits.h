@@ -1,4 +1,4 @@
 ﻿#pragma once
 namespace Credits {
-  void Credits();
+void Credits();
 };

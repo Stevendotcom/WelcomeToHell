@@ -1,7 +1,8 @@
 ﻿#include "ResManager.h"
 
-#include <iostream>
 #include <string>
+
+#include "raylib.h"
 
 #include "Error.h"
 
@@ -118,7 +119,7 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
       if (IsTextureReady(HeartBackground)) {
         return HeartBackground;
       }
-    break;
+      break;
     case Resources::Buttons:
       if (IsTextureReady(Buttons)) {
         return Buttons;
@@ -129,17 +130,17 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
       if (IsTextureReady(PauseBG)) {
         return PauseBG;
       }
-    break;
+      break;
     case Resources::Btn:
       if (IsTextureReady(Btn)) {
         return Btn;
       }
-    break;
-      case Resources::BtnPressed:
-        if (IsTextureReady(BtnPressed)) {
-          return BtnPressed;
-        }
-    break;
+      break;
+    case Resources::BtnPressed:
+      if (IsTextureReady(BtnPressed)) {
+        return BtnPressed;
+      }
+      break;
     default:
       Error::UnknownResource(ResourceToString(Resource));
   }
@@ -250,10 +251,12 @@ void ResManager::MakeTextures() {
   BulletSprite = LoadTexture("res/sprites/bullet.png");
   HeartSprite = LoadTexture("res/sprites/Health&Stamina/Colors.png");
   HeartBackground = LoadTexture("res/sprites/Health&Stamina/Border.png");
-  Buttons = LoadTexture("res/sprites/StonePixel/Buttons/InsideFrameButtons32x32.png");
+  Buttons = LoadTexture(
+      "res/sprites/StonePixel/Buttons/InsideFrameButtons32x32.png");
   PauseBG = LoadTexture("res/sprites/StonePixel/Frames/2.png");
   Btn = LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button.png");
-  BtnPressed = LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button2.png");
+  BtnPressed =
+      LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button2.png");
 }
 
 
