@@ -51,9 +51,9 @@ void Draw() {
              (g_ScreenWidth - MeasureText("How To Play!", 60)) / 2, 120, 60,
              WHITE);
     DrawText(
-        "The objective is to survive as long as you can agains a hord of demons.",
+        "The objective is to survive as long as you can against a horde of demons.",
         (g_ScreenWidth - MeasureText(
-             "The objective is to survive as long as you can agains a hord of demons.",
+             "The objective is to survive as long as you can against a horde of demons.",
              20)) / 2, 200, 20, WHITE);
     DrawText(
         "For that, you have your trusty jetpack, which you control using the mouse,",
@@ -61,9 +61,9 @@ void Draw() {
              "For that, you have your trusty jetpack, which you control using the mouse",
              20)) / 2, 240, 20, WHITE);
     DrawText(
-        "to aim and the right click to accelerate. You also can shut your shotgun with left-click.",
+        "to aim and the right click to accelerate. You also can shoot your shotgun with left-click.",
         (g_ScreenWidth - MeasureText(
-             "to aim and the right click to accelerate. You also can shut your shotgun with left-click.",
+             "to aim and the right click to accelerate. You also can shoot your shotgun with left-click.",
              20)) / 2, 260, 20, WHITE);
 
     DrawTexturePro(IsHover ? k_BtnPressed : k_Btn, k_Source, k_Dest, {0, 0}, 0,
