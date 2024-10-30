@@ -46,7 +46,7 @@ void Draw() {
     DrawText("Thanks For playing!",
              (g_ScreenWidth - MeasureText("Thanks For playing!", 60)) / 2, 120,
              60, WHITE);
-    DrawText("Background and character by myself",
+    DrawText("Background, character and by Nicolas Gallardo",
              (g_ScreenWidth - MeasureText("Background and character by myself",
                                           20)) / 2, 200, 20, WHITE);
     DrawText(
