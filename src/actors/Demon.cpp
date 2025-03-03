@@ -355,6 +355,7 @@ void Demon::Draw(DemonType& Demon, const bool IsDup) {
                   Demon.f_Radius * k_Scale * 2.0F},
                  {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
                  -Math::GetRotation(Demon.f_Direction), WHITE);
+
 #ifdef _DEBUG
   DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup ? BLACK : WHITE);
 #endif
