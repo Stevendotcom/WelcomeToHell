@@ -337,7 +337,7 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
 
 
 
-void Demon::Draw(DemonType& Demon, const bool IsDup) {
+void Demon::Draw(DemonType& Demon) {
   constexpr float k_Scale = 2.0F;
   constexpr float k_Minute = 60.0F;
 
