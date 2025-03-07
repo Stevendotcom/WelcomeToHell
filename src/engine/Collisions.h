@@ -25,4 +25,9 @@ bool IsBorderCircle(const Vector2& Position,
                     WhereCollides& CollisionPlace);
 
 bool IsDotBorder(const Vector2& Position, WhereCollides& CollisionPlace);
+
+bool IsCircleSquare(const Vector2& CirclePosition,
+                    float Radius,
+                    const Vector2& SquarePosition,
+                    const Vector2& Size);
 };
