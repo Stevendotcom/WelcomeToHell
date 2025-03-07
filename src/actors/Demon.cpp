@@ -45,25 +45,6 @@ void Kill(std::list<Demon::DemonType>& Demons, const int Id) {
 
 
 
-/**
- *
- * @param Demon
- * @return
- */
-Demon::Frame GetNextFrame(Demon::DemonType& Demon) {
-  const Demon::Frame NewFrame = {
-      static_cast<float>(Demon.f_FrameIndex % k_Cols * (
-                           Demon.f_Sprite.width / k_Cols)),
-      static_cast<float>(
-        Demon.f_FrameIndex > 6 ? Demon.f_Sprite.height / k_Rows : 0),
-      static_cast<float>(Demon.f_Sprite.width / k_Cols),
-      static_cast<float>(Demon.f_Sprite.height / k_Rows),};
-  Demon.f_FrameIndex++;
-  return NewFrame;
-}
-
-
-
 Vector2 GetRandomStart() {
   enum class Start {
     Up,
@@ -79,7 +60,8 @@ Vector2 GetRandomStart() {
   switch (Starting) {
 
     case Start::Up:
-      Position = {static_cast<float>(GetRandomValue(0, g_ScreenWidth)), 0};
+      Position = {static_cast<float>(GetRandomValue(0, g_ScreenWidth)),
+                  0};
       break;
 
     case Start::Down:
@@ -88,7 +70,8 @@ Vector2 GetRandomStart() {
       break;
 
     case Start::Left:
-      Position = {0, static_cast<float>(GetRandomValue(0, g_ScreenHeight))};
+      Position = {0,
+                  static_cast<float>(GetRandomValue(0, g_ScreenHeight))};
       break;
 
     case Start::Right:
@@ -97,7 +80,8 @@ Vector2 GetRandomStart() {
       break;
 
     default:
-      Position = {0, 0};
+      Position = {0,
+                  0};
       Error::Unhandled(__LINE__, __FILE__);
   }
   return Position;
@@ -189,7 +173,8 @@ void Demon::Initialize(std::list<DemonType>& Demons,
                        const Vector2& PlayerPosition) {
 
   DemonType Demon = {GetRandomStart(),
-                     {0, 0},
+                     {0,
+                      0},
                      k_Speed,
                      GetRadiusRandom(),
                      GetTexture(ResManager::Resources::DemonSpriteMove),
@@ -339,24 +324,26 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
 
 void Demon::Draw(DemonType& Demon) {
   constexpr float k_Scale = 2.0F;
-  constexpr float k_Minute = 60.0F;
 
-  if (FrameTime > k_Cols * k_Rows / k_Minute) {
-    Demon.f_Frame = GetNextFrame(Demon);
+  if (Animations::Update(Demon.f_Frame, k_Rows, k_Cols, Demon.f_FrameIndex,
+                         FrameTime, {static_cast<float>(Demon.f_Sprite.width),
+                                     static_cast<float>(Demon.f_Sprite.
+                                       height)})) {
     Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
-    FrameTime = 0;
   }
-  FrameTime += GetFrameTime();
 
-  DrawTexturePro(Demon.f_Sprite, Demon.f_Frame,
-                 {Demon.f_Position.x,
-                  Demon.f_Position.y,
-                  Demon.f_Radius * k_Scale * 2.0F,
-                  Demon.f_Radius * k_Scale * 2.0F},
-                 {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
+
+  DrawTexturePro(Demon.f_Sprite, Demon.f_Frame, {Demon.f_Position.x,
+                                                 Demon.f_Position.y,
+                                                 Demon.f_Radius * k_Scale *
+                                                 2.0F,
+                                                 Demon.f_Radius * k_Scale *
+                                                 2.0F}, {
+                     Demon.f_Radius * k_Scale,
+                     Demon.f_Radius * k_Scale},
                  -Math::GetRotation(Demon.f_Direction), WHITE);
 
 #ifdef _DEBUG
-  DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup ? BLACK : WHITE);
+  DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, Demon.f_Duplicate? BLACK : WHITE);
 #endif
 }
