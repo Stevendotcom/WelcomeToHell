@@ -29,18 +29,6 @@ std::list<int> Targets;
 enum class Radii { Big = 80, Mid = 50, Sml = 30 };
 
 
-
-void Kill(std::list<Demon::DemonType>& Demons, const int Id) {
-
-#ifdef _DEBUG
-  std::cout << "Demon kill. ID: " << Id << "\n";
-#endif
-
-  // For clarity: lambda function that checks if id == Demon.f_id
-  Demons.remove_if([&, Id](auto& Demon) -> bool {
-    return Demon.f_Id == Id;
-  });
-
 }
 
 
@@ -234,8 +222,17 @@ void Demon::Duplicate(DemonType& Demon,
 
 void Demon::Execute(std::list<DemonType>& Demons) {
   for (const auto Target : Targets) {
-    Kill(Demons, Target);
+
+#ifdef _DEBUG
+    std::cout << "Demon kill. ID: " << Target << "\n";
+#endif
+
+    // For clarity: lambda function that checks if id == Demon.f_id
+    Demons.remove_if([&, Target](auto& Demon) -> bool {
+      return Demon.f_Id == Target;
+    });
   }
+
   Targets.clear();
 }
 
@@ -316,6 +313,13 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
   for (DemonType& Demon : Demons) {
     Demon.f_Position.x += Demon.f_Speed * Delta * Demon.f_Direction.x;
     Demon.f_Position.y += Demon.f_Speed * Delta * Demon.f_Direction.y;
+
+    if (Animations::Update(Demon.f_Frame, k_Rows, k_Cols, Demon.f_FrameIndex,
+                        FrameTime, {static_cast<float>(Demon.f_Sprite.width),
+                                    static_cast<float>(Demon.f_Sprite.
+                                      height)})) {
+      Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
+                                      }
   }
 
 }
@@ -324,14 +328,6 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
 
 void Demon::Draw(DemonType& Demon) {
   constexpr float k_Scale = 2.0F;
-
-  if (Animations::Update(Demon.f_Frame, k_Rows, k_Cols, Demon.f_FrameIndex,
-                         FrameTime, {static_cast<float>(Demon.f_Sprite.width),
-                                     static_cast<float>(Demon.f_Sprite.
-                                       height)})) {
-    Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
-  }
-
 
   DrawTexturePro(Demon.f_Sprite, Demon.f_Frame, {Demon.f_Position.x,
                                                  Demon.f_Position.y,
@@ -344,6 +340,7 @@ void Demon::Draw(DemonType& Demon) {
                  -Math::GetRotation(Demon.f_Direction), WHITE);
 
 #ifdef _DEBUG
-  DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, Demon.f_Duplicate? BLACK : WHITE);
+  DrawCircleLinesV(Demon.f_Position, Demon.f_Radius,
+                   Demon.f_Duplicate ? BLACK : WHITE);
 #endif
 }
