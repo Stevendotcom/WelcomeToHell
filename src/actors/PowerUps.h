@@ -23,13 +23,14 @@ struct PowerUp {
   int f_SpriteFrames;
   int f_FrameIndex;
   int f_Id;
+  float f_FrameTime;
 };
 
 void Execute(std::list<PowerUp>& PowerUps);
 
 void AddPower(std::list<PowerUp>& Pows);
 
-void Update(std::list<PowerUp>& Powers, Player::PlayerType& Player);
+void Update(std::list<PowerUp>& Powers, Player::PlayerType& Player, float Delta);
 
 void Draw(const PowerUp& Pow);
 

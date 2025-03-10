@@ -11,7 +11,6 @@ namespace {
 
 using namespace PowerUps;
 
-float FrameTime = 0;
 std::list<int> Targets;
 
 int UniqueId = 0;
@@ -101,7 +100,9 @@ void PowerUps::AddPower(std::list<PowerUp>& Pows) {
 }
 
 
-void PowerUps::Update(std::list<PowerUp>& Powers, Player::PlayerType& Player) {
+void PowerUps::Update(std::list<PowerUp>& Powers,
+                      Player::PlayerType& Player,
+                      const float Delta) {
 
   for (auto& Power : Powers) {
 
@@ -113,7 +114,7 @@ void PowerUps::Update(std::list<PowerUp>& Powers, Player::PlayerType& Player) {
     }
 
     Animations::Update(Power.f_Frame, 1, Power.f_SpriteFrames,
-                       Power.f_FrameIndex, FrameTime, {
+                       Power.f_FrameIndex, Power.f_FrameTime, Delta, {
                            static_cast<float>(Power.f_Sprite.width),
                            static_cast<float>(Power.f_Sprite.height)});
 
