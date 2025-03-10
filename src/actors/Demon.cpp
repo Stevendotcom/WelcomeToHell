@@ -334,16 +334,15 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
 
 
 void Demon::Draw(const DemonType& Demon) {
-  constexpr float k_Scale = 2.0F;
-
+  const float TextureAdjust = Demon.f_Radius * 1.2f;
   DrawTexturePro(Demon.f_Sprite, Demon.f_Frame, {Demon.f_Position.x,
                                                  Demon.f_Position.y,
-                                                 Demon.f_Radius * k_Scale *
-                                                 2.0F,
-                                                 Demon.f_Radius * k_Scale *
-                                                 2.0F}, {
-                     Demon.f_Radius * k_Scale,
-                     Demon.f_Radius * k_Scale},
+                                                 Demon.f_Radius *
+                                                 2.0F + TextureAdjust,
+                                                 Demon.f_Radius *
+                                                 2.0F + TextureAdjust}, {
+                     Demon.f_Radius + TextureAdjust / 2,
+                     Demon.f_Radius + TextureAdjust / 2},
                  -Math::GetRotation(Demon.f_Direction), WHITE);
 
 #ifdef _DEBUG
