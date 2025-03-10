@@ -15,12 +15,13 @@ std::list<int> Targets;
 
 int UniqueId = 0;
 
-constexpr float k_SpeedBoostP = 1.1f;
+constexpr int k_Size = 64;
 
 
 void UsePower(Player::PlayerType& Player, const Powers Power) {
 
-  constexpr int k_PointBoost = 100;
+  constexpr int k_PointBoost = 1000;
+  constexpr float k_SpeedBoostP = 2.5f;
 
   switch (Power) {
     case Powers::PointsBoost:
@@ -44,14 +45,19 @@ void UsePower(Player::PlayerType& Player, const Powers Power) {
 
 
 Vector2 GetRandomPos() {
-  return {static_cast<float>(GetRandomValue(1, g_ScreenWidth)),
-          static_cast<float>(GetRandomValue(1, g_ScreenHeight))};
+  return {static_cast<float>(GetRandomValue(1, g_ScreenWidth - k_Size)),
+          static_cast<float>(GetRandomValue(1, g_ScreenHeight - k_Size))};
 }
 
 }
 
 
 void PowerUps::Execute(std::list<PowerUp>& PowerUps) {
+
+  if (Targets.empty()) {
+    return;
+  }
+
   for (const auto Target : Targets) {
 
 #ifdef _DEBUG
@@ -70,27 +76,30 @@ void PowerUps::Execute(std::list<PowerUp>& PowerUps) {
 
 void PowerUps::AddPower(std::list<PowerUp>& Pows) {
   PowerUp NewPower = {GetRandomPos(),
-                      {16,
-                       16},
+                      {k_Size,
+                       k_Size},
                       Powers::PointsBoost,
                       {},
                       {},
                       0,
                       0,
-                      UniqueId};
+                      UniqueId,
+                      0};
 
-  switch (static_cast<Powers>(rand() % 3)) {
+  switch (static_cast<Powers>(GetRandomValue(0, 2))) {
     case Powers::PointsBoost:
       NewPower.f_SpriteFrames = 6;
       NewPower.f_Sprite = GetTexture(ResManager::Resources::Diamond);
       break;
 
     case Powers::OneUp:
+      NewPower.f_Power = Powers::OneUp;
       NewPower.f_SpriteFrames = 6;
       NewPower.f_Sprite = GetTexture(ResManager::Resources::OneUp);
       break;
 
     case Powers::SpeedBoost:
+      NewPower.f_Power = Powers::SpeedBoost;
       NewPower.f_SpriteFrames = 1;
       NewPower.f_Sprite = GetTexture(ResManager::Resources::Batteries);
       break;
@@ -110,7 +119,6 @@ void PowerUps::Update(std::list<PowerUp>& Powers,
                                    Power.f_Position, Power.f_Size)) {
       Targets.push_back(Power.f_Id);
       UsePower(Player, Power.f_Power);
-      continue;
     }
 
     Animations::Update(Power.f_Frame, 1, Power.f_SpriteFrames,
