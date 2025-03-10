@@ -1,27 +1,35 @@
 ﻿#pragma once
-#include <raylib.h>
+#include <list>
+
+#include "raylib.h"
+
+#include "Player.h"
+#include "engine/Animations.h"
 
 namespace PowerUps {
 
-using Frame = Rectangle;
-
-enum Powers {
-
+enum class Powers {
+  PointsBoost,
+  OneUp,
+  SpeedBoost
 };
 
 struct PowerUp {
   Vector2 f_Position;
+  Vector2 f_Size;
   Powers f_Power;
   Texture f_Sprite;
-  Frame f_Frame;
+  Animations::Frame f_Frame;
+  int f_SpriteFrames;
   int f_FrameIndex;
   int f_Id;
-  bool f_Active;
 };
 
-void AddPower(PowerUp& Pow);
+void Execute(std::list<PowerUp>& PowerUps);
 
-void Update(PowerUp& Pow, const Vector2 PlayerPos&);
+void AddPower(std::list<PowerUp>& Pows);
+
+void Update(std::list<PowerUp>& Powers, Player::PlayerType& Player);
 
 void Draw(const PowerUp& Pow);
 
