@@ -224,7 +224,11 @@ void Demon::Execute(std::list<DemonType>& Demons) {
 
     // For clarity: lambda function that checks if id == Demon.f_id
     Demons.remove_if([&, Target](auto& Demon) -> bool {
-      return Demon.f_Id == Target;
+      if (Demon.f_Id == Target) {
+        delete Demon.f_Duplicate;
+        return true;
+      }
+      return false;
     });
   }
 

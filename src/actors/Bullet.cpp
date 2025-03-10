@@ -46,7 +46,11 @@ void Bullet::Execute(std::list<BulletType>& Bullets) {
 
     // For clarity: lambda function that checks if id == Bullet.f_id
     Bullets.remove_if([&, Target](auto& Bullet) -> bool {
-      return Bullet.f_Id == Target;
+      if (Bullet.f_Id == Target) {
+        delete Bullet.f_Duplicate;
+        return true;
+      }
+      return false;
     });
   }
   Targets.clear();
