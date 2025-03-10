@@ -25,21 +25,13 @@ void AddToTargets(int Id);
 
 void Execute(std::list<BulletType>& Bullets);
 
-/**
-* @brief
-*/
+void Clear(std::list<Bullet::BulletType>& Bullets);
+
 void Shoot(std::list<BulletType>& Bullets,
            const Vector2& PlayerDirection,
            float PlayerRadius,
            const Vector2& PlayerPosition);
 
-/**
- * @brief
- * @param Bullet
- * @param Duplicated
- * @param CollisionPlace
- * @param BulletDups
- */
 void UpdateDuplicate(BulletType& Bullet,
                      BulletType& Duplicated,
                      Collisions::WhereCollides CollisionPlace,
@@ -55,10 +47,7 @@ void Duplicate(BulletType& Bullet,
  */
 void Update(std::list<BulletType>& Bullets, float Delta);
 
-/**
- * @brief
- * @param Bullets
- */
-void Draw(const std::list<BulletType>& Bullets);
+
+void Draw(const BulletType& Bullet);
 
 };

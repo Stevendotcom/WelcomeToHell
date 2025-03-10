@@ -60,6 +60,14 @@ void Bullet::Execute(std::list<BulletType>& Bullets) {
 }
 
 
+void Bullet::Clear(std::list<BulletType>& Bullets) {
+  for (const auto Bullet : Bullets) {
+    delete Bullet.f_Duplicate;
+  }
+  Bullets.clear();
+}
+
+
 
 void Bullet::Shoot(std::list<BulletType>& Bullets,
                    const Vector2& PlayerDirection,
