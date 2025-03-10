@@ -9,6 +9,7 @@
 #include "actors/Demon.h"
 #include "actors/Pause.h"
 #include "actors/Player.h"
+#include "actors/PowerUps.h"
 #include "engine/Collisions.h"
 #include "engine/Math.h"
 #include "engine/ResManager.h"
@@ -26,10 +27,14 @@ bool Pause = false;
 float Timer = 0.0F;
 float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
 float InvencibleTimer = 0.0F;
-float InvencibleTimerDuration = 3.0F;
+float BoostTimer = 0.0F;
+float NewPowerTimer = 0.0F;
+float NewPowerIn = static_cast<float>(GetRandomValue(1, 3));
+constexpr float k_InvencibleTimerDuration = 3.0F;
 constexpr float k_TMargin = 30.0F;
 constexpr float k_LMargin = 20.0F;
 constexpr float k_HeartSpriteSize = 16.0F;
+constexpr float k_BoostTime = 2.5f;
 bool Exit = false;
 
 constexpr Rectangle k_SourcePause = {64.0F, 0, 32.0F, 32.0F};
@@ -161,19 +166,37 @@ void Update(Player::PlayerType& Player,
             bool& DuplicatedVisible,
             std::list<Demon::DemonType>& Demons,
             std::list<Bullet::BulletType>& Bullets,
-            std::list<Bullet::BulletType>& BulletDuplicates) {
+            std::list<PowerUps::PowerUp>& Powers) {
 
   auto CollisionPlace = WhereCollides::Down;
 
   if (Player.f_IsInvencible) {
-    InvencibleTimer += GetFrameTime();
-    if (InvencibleTimer >= InvencibleTimerDuration) {
+    InvencibleTimer += Delta;
+    if (InvencibleTimer >= k_InvencibleTimerDuration) {
       InvencibleTimer = 0;
       Player.f_IsInvencible = false;
     }
   }
 
-  Player::Update(Player, GetFrameTime());
+  if (Player.f_IsPowerBoostActive) {
+    BoostTimer += Delta;
+    if (BoostTimer >= k_BoostTime) {
+      BoostTimer = 0;
+      Player.f_IsPowerBoostActive = false;
+      Player.f_Acceleration = Player.f_DefAccel;
+    }
+  }
+
+  NewPowerTimer += Delta;
+  if (NewPowerTimer >= NewPowerIn) {
+    NewPowerTimer = 0;
+    NewPowerIn = static_cast<float>(GetRandomValue(3, 6));
+    AddPower(Powers);
+  }
+
+  Player::Update(Player, Delta);
+
+  PowerUps::Update(Powers, Player, Delta);
 
   ManagePlayerDuplicates(Player, Duplicated, DuplicatedVisible, CollisionPlace);
 
@@ -182,6 +205,8 @@ void Update(Player::PlayerType& Player,
   ManageBullets(Bullets, BulletDuplicates, CollisionPlace);
 
   Execute(Demons);
+
+  Execute(Powers);
 }
 
 
@@ -226,7 +251,7 @@ void Draw(const Player::PlayerType& Player,
           const Player::PlayerType& Duplicated,
           std::list<Demon::DemonType>& Demons,
           const std::list<Bullet::BulletType>& Bullets,
-          const std::list<Bullet::BulletType>& BulletDuplicates) {
+          const std::list<PowerUps::PowerUp>& Powers) {
 
   const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
 
@@ -243,6 +268,12 @@ void Draw(const Player::PlayerType& Player,
                     static_cast<float>(g_ScreenWidth),
                     static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
 
+    //Powers
+    for (const auto& Power : Powers) {
+        PowerUps::Draw(Power);
+    }
+
+    //Player
     Player::Draw(Player);
     if (DuplicatedVisible) {
 
@@ -314,7 +345,7 @@ void Play::Play() {
   Player::PlayerType Duplicated;
   std::list<Demon::DemonType> Demons;
   std::list<Bullet::BulletType> Bullets;
-  std::list<Bullet::BulletType> BulletDuplicates;
+  std::list<PowerUps::PowerUp> Powers;
 
   Initialize(Player);
 
@@ -329,18 +360,16 @@ void Play::Play() {
     }
     if (Restart) {
       Initialize(Player);
-      Demons.clear();
-      Bullets.clear();
-      BulletDuplicates.clear();
+      Clear(Demons);
+      Clear(Bullets);
+      Powers.clear();
     }
     Input(Player, Bullets);
-    Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets,
-           BulletDuplicates);
+    Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets, Powers);
     Restart = HasPlayerLost(Player);
     DemonTimer(Demons, Player.f_Position);
     UpdateMusicStream(k_Music);
-    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets,
-         BulletDuplicates);
+    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers);
 
   }
 
