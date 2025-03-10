@@ -25,12 +25,7 @@ int UniqueId = 0;
 std::list<int> Targets;
 
 
-
 enum class Radii { Big = 80, Mid = 50, Sml = 30 };
-
-
-}
-
 
 
 Vector2 GetRandomStart() {
@@ -315,18 +310,18 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
     Demon.f_Position.y += Demon.f_Speed * Delta * Demon.f_Direction.y;
 
     if (Animations::Update(Demon.f_Frame, k_Rows, k_Cols, Demon.f_FrameIndex,
-                        FrameTime, {static_cast<float>(Demon.f_Sprite.width),
-                                    static_cast<float>(Demon.f_Sprite.
-                                      height)})) {
+                           FrameTime, {static_cast<float>(Demon.f_Sprite.width),
+                                       static_cast<float>(Demon.f_Sprite.
+                                         height)})) {
       Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
-                                      }
+    }
   }
 
 }
 
 
 
-void Demon::Draw(DemonType& Demon) {
+void Demon::Draw(const DemonType& Demon) {
   constexpr float k_Scale = 2.0F;
 
   DrawTexturePro(Demon.f_Sprite, Demon.f_Frame, {Demon.f_Position.x,

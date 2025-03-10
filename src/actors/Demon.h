@@ -46,6 +46,6 @@ void Execute(std::list<DemonType>& Demons);
 void Update(std::list<DemonType>& Demons, float Delta);
 
 
-void Draw(DemonType& Demon);
+void Draw(const DemonType& Demon);
 
 };
