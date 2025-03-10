@@ -36,7 +36,7 @@ void UpdateDuplicate(DemonType& Demon,
                      DemonType* Duplicated,
                      Collisions::WhereCollides CollisionPlace);
 
-void Duplicate(DemonType& Demon,
+void Duplicate(const DemonType& Demon,
                DemonType* Duplicated,
                Collisions::WhereCollides CollisionPlace);
 

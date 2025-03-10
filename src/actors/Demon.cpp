@@ -25,7 +25,7 @@ int UniqueId = 0;
 std::list<int> Targets;
 
 
-enum class Radii { Big = 80, Mid = 50, Sml = 30 };
+enum class Radii { Big = 160, Mid = 100, Sml = 60 };
 
 
 Vector2 GetRandomStart() {
@@ -184,7 +184,7 @@ void Demon::Initialize(std::list<DemonType>& Demons,
 
 
 
-void Demon::Duplicate(DemonType& Demon,
+void Demon::Duplicate(const DemonType& Demon,
                       DemonType* Duplicated,
                       const WhereCollides CollisionPlace) {
   *Duplicated = Demon;
@@ -322,9 +322,9 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
     Demon.f_Position.y += Demon.f_Speed * Delta * Demon.f_Direction.y;
 
     if (Animations::Update(Demon.f_Frame, k_Rows, k_Cols, Demon.f_FrameIndex,
-                           FrameTime, {static_cast<float>(Demon.f_Sprite.width),
-                                       static_cast<float>(Demon.f_Sprite.
-                                         height)})) {
+                           FrameTime, Delta, {static_cast<float>(Demon.f_Sprite.width),
+                                             static_cast<float>(Demon.f_Sprite.
+                                               height)})) {
       Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
     }
   }
