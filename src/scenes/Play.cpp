@@ -37,7 +37,10 @@ constexpr float k_HeartSpriteSize = 16.0F;
 constexpr float k_BoostTime = 2.5f;
 bool Exit = false;
 
-constexpr Rectangle k_SourcePause = {64.0F, 0, 32.0F, 32.0F};
+constexpr Rectangle k_SourcePause = {64.0F,
+                                     0,
+                                     32.0F,
+                                     32.0F};
 constexpr Rectangle k_DestPause{
     g_ScreenWidth - (k_RMargin + k_SourcePause.width * k_ScalePause),
     k_TMargin,
@@ -132,7 +135,6 @@ void ManageDemons(Player::PlayerType& Player,
 
 
 void ManageBullets(std::list<Bullet::BulletType>& Bullets,
-                   std::list<Bullet::BulletType>& BulletDuplicates,
                    WhereCollides& CollisionPlace) {
   if (!Bullets.empty()) {
     Update(Bullets, GetFrameTime());
@@ -141,17 +143,15 @@ void ManageBullets(std::list<Bullet::BulletType>& Bullets,
 
       if (IsDotBorder(Bullet.f_Vectors[0], CollisionPlace)) {
 
-        Bullet::BulletType Dup;
+        auto* Dup = new Bullet::BulletType();
         Duplicate(Bullet, Dup, CollisionPlace);
-        BulletDuplicates.push_back(Dup);
-        Bullet.f_Duplicate = &BulletDuplicates.back();
+        Bullet.f_Duplicate = Dup;
 
       }
 
       if (Bullet.f_Duplicate) {
 
-        UpdateDuplicate(Bullet, *Bullet.f_Duplicate, CollisionPlace,
-                        BulletDuplicates);
+        UpdateDuplicate(Bullet, Bullet.f_Duplicate, CollisionPlace);
 
       }
 
@@ -169,6 +169,8 @@ void Update(Player::PlayerType& Player,
             std::list<PowerUps::PowerUp>& Powers) {
 
   auto CollisionPlace = WhereCollides::Down;
+
+  const float Delta = GetFrameTime();
 
   if (Player.f_IsInvencible) {
     InvencibleTimer += Delta;
@@ -202,13 +204,36 @@ void Update(Player::PlayerType& Player,
 
   ManageDemons(Player, Demons, Bullets, CollisionPlace);
 
-  ManageBullets(Bullets, BulletDuplicates, CollisionPlace);
+  ManageBullets(Bullets, CollisionPlace);
 
   Execute(Demons);
 
   Execute(Powers);
 }
 
+
+
+void DemonTimer(std::list<Demon::DemonType>& Demons,
+                const Vector2& PlayerPosition) {
+  Timer += GetFrameTime();
+  if (Timer > TimeLimit) {
+    Timer = 0.0F;
+    TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
+    Initialize(Demons, PlayerPosition);
+  }
+}
+
+
+
+bool HasPlayerLost(const Player::PlayerType& Player) {
+  if (Player.f_Hearts <= 0) {
+    Exit = Pause::Pause(Player);
+    if (!Exit) {
+      return true;
+    }
+  }
+  return false;
+}
 
 
 void DrawLives(const Player::PlayerType& Player) {
@@ -236,7 +261,8 @@ void DrawUI(const Player::PlayerType& Player) {
   DrawLives(Player);
 
   DrawTexturePro(GetTexture(ResManager::Resources::Buttons), k_SourcePause,
-                 k_DestPause, {0, 0}, 0, WHITE);
+                 k_DestPause, {0,
+                               0}, 0, WHITE);
 
   DrawText(TextFormat("Score: %i", Player.f_Score),
            static_cast<int>(k_LMargin) + k_FontSize,
@@ -249,7 +275,7 @@ void DrawUI(const Player::PlayerType& Player) {
 void Draw(const Player::PlayerType& Player,
           const bool DuplicatedVisible,
           const Player::PlayerType& Duplicated,
-          std::list<Demon::DemonType>& Demons,
+          const std::list<Demon::DemonType>& Demons,
           const std::list<Bullet::BulletType>& Bullets,
           const std::list<PowerUps::PowerUp>& Powers) {
 
@@ -258,15 +284,16 @@ void Draw(const Player::PlayerType& Player,
   BeginDrawing();
   {
     ClearBackground(BLACK);
-    DrawTexturePro(k_Background,
-                   {0,
-                    0,
-                    static_cast<float>(k_Background.width),
-                    static_cast<float>(k_Background.height)},
-                   {0,
-                    0,
-                    static_cast<float>(g_ScreenWidth),
-                    static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
+
+    //Background
+    DrawTexturePro(k_Background, {0,
+                                  0,
+                                  static_cast<float>(k_Background.width),
+                                  static_cast<float>(k_Background.height)}, {0,
+                     0,
+                     static_cast<float>(g_ScreenWidth),
+                     static_cast<float>(g_ScreenHeight)}, {0,
+                     0}, 0, WHITE);
 
     //Powers
     for (const auto& Power : Powers) {
@@ -275,28 +302,25 @@ void Draw(const Player::PlayerType& Player,
 
     //Player
     Player::Draw(Player);
+
     if (DuplicatedVisible) {
-
-#ifdef _DEBUG
-      DrawCircleLinesV(Duplicated.f_Position, Duplicated.f_Radius, RAYWHITE);
-#endif
-
       Player::Draw(Duplicated);
     }
 
-    for (auto& Demon : Demons) {
+    //Demons
+    for (const auto& Demon : Demons) {
       Demon::Draw(Demon);
       if (Demon.f_Duplicate) {
-        Demon::Draw(*Demon.f_Duplicate, true);
+        Demon::Draw(*Demon.f_Duplicate);
       }
     }
 
-    if (!Bullets.empty()) {
-      Bullet::Draw(Bullets);
-    }
-
-    if (!BulletDuplicates.empty()) {
-      Bullet::Draw(BulletDuplicates);
+    //Bullets
+    for (const auto& Bullet : Bullets) {
+      Bullet::Draw(Bullet);
+      if (Bullet.f_Duplicate) {
+        Bullet::Draw(*Bullet.f_Duplicate);
+      }
     }
 
     DrawUI(Player);
@@ -305,29 +329,6 @@ void Draw(const Player::PlayerType& Player,
   EndDrawing();
 }
 
-
-
-void DemonTimer(std::list<Demon::DemonType>& Demons,
-                const Vector2& PlayerPosition) {
-  Timer += GetFrameTime();
-  if (Timer > TimeLimit) {
-    Timer = 0.0F;
-    TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
-    Initialize(Demons, PlayerPosition);
-  }
-}
-
-
-
-bool HasPlayerLost(const Player::PlayerType& Player) {
-  if (Player.f_Hearts <= 0) {
-    Exit = Pause::Pause(Player);
-    if (!Exit) {
-      return true;
-    }
-  }
-  return false;
-}
 
 }
 
