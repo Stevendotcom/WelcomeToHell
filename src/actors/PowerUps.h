@@ -32,6 +32,6 @@ void AddPower(std::list<PowerUp>& Pows);
 
 void Update(std::list<PowerUp>& Powers, Player::PlayerType& Player, float Delta);
 
-void Draw(const PowerUp& Pow);
+void Draw(const PowerUp& Power);
 
 }

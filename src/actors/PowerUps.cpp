@@ -122,14 +122,19 @@ void PowerUps::Update(std::list<PowerUp>& Powers,
 }
 
 
-void PowerUps::Draw(const PowerUp& Pow) {
+void PowerUps::Draw(const PowerUp& Power) {
 
-  constexpr float k_Scale = 2.0F;
+  DrawTexturePro(Power.f_Sprite, Power.f_Frame, {Power.f_Position.x,
+                                                 Power.f_Position.y,
+                                                 Power.f_Size.x,
+                                                 Power.f_Size.y}, {0,
+                   0}, 0, WHITE);
 
-  DrawTexturePro(Pow.f_Sprite, Pow.f_Frame, {Pow.f_Position.x,
-                                             Pow.f_Position.y,
-                                             Pow.f_Size.x * k_Scale * 2.0F,
-                                             Pow.f_Size.y * k_Scale * 2.0F}, {
-                     Pow.f_Size.x * k_Scale,
-                     Pow.f_Size.y * k_Scale}, 0, WHITE);
+#ifdef _DEBUG
+  DrawRectangleLines(static_cast<int>(Power.f_Position.x),
+                     static_cast<int>(Power.f_Position.y),
+                     static_cast<int>(Power.f_Size.x),
+                     static_cast<int>(Power.f_Size.y), WHITE);
+#endif
+
 }
