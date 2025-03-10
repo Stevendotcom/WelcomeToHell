@@ -324,8 +324,8 @@ void ResManager::MakeTextures() {
   Btn = LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button.png");
   BtnPressed =
       LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button2.png");
-  OneUp = LoadTexture("res/sprites/diamonds.png");
-  Diamond = LoadTexture("res/sprites/hearts");
+  OneUp = LoadTexture("res/sprites/hearts.png");
+  Diamond = LoadTexture("res/sprites/diamonds.png");
   Batteries = LoadTexture("res/sprites/speed-boost.png");
 }
 
