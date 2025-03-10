@@ -221,38 +221,34 @@ void Bullet::Update(std::list<BulletType>& Bullets, const float Delta) {
 
 
 
-void Bullet::Draw(const std::list<BulletType>& Bullets) {
+void Bullet::Draw(const BulletType& Bullet) {
   constexpr float k_RotCorrection = 90.0F;
 
   Rectangle Source;
   Rectangle Destination;
   Vector2 Origin;
 
-  for (auto& Bullet : Bullets) {
+  Source = {0,
+            0,
+            static_cast<float>(Bullet.f_Sprite.width),
+            static_cast<float>(Bullet.f_Sprite.height)};
 
-    Source = {0,
-              0,
-              static_cast<float>(Bullet.f_Sprite.width),
-              static_cast<float>(Bullet.f_Sprite.height)};
+  Destination = {
+      (Bullet.f_Vectors[e_Front].x + Bullet.f_Vectors[e_Back].x) / 2.0F,
+      (Bullet.f_Vectors[e_Front].y + Bullet.f_Vectors[e_Back].y) / 2.0F,
+      static_cast<float>(Bullet.f_Sprite.width) * 2.0F,
+      static_cast<float>(Bullet.f_Sprite.height) * 2.0F};
 
-    Destination = {
-        (Bullet.f_Vectors[e_Front].x + Bullet.f_Vectors[e_Back].x) / 2.0F,
-        (Bullet.f_Vectors[e_Front].y + Bullet.f_Vectors[e_Back].y) / 2.0F,
-        static_cast<float>(Bullet.f_Sprite.width) * 2.0F,
-        static_cast<float>(Bullet.f_Sprite.height) * 2.0F};
+  Origin = {static_cast<float>(Bullet.f_Sprite.width),
+            static_cast<float>(Bullet.f_Sprite.height)};
 
-    Origin = {static_cast<float>(Bullet.f_Sprite.width),
-              static_cast<float>(Bullet.f_Sprite.height)};
-
-    DrawTexturePro(Bullet.f_Sprite, Source, Destination, Origin,
-                   k_RotCorrection - Math::GetRotation(Bullet.f_Direction),
-                   WHITE);
+  DrawTexturePro(Bullet.f_Sprite, Source, Destination, Origin,
+                 k_RotCorrection - Math::GetRotation(Bullet.f_Direction),
+                 WHITE);
 
 #ifdef _DEBUG
-    DrawCircleV(Bullet.f_Vectors[e_Front], 3, WHITE);
-    DrawCircleV(Bullet.f_Vectors[e_Back], 3, WHITE);
+  DrawCircleV(Bullet.f_Vectors[e_Front], 3, WHITE);
+  DrawCircleV(Bullet.f_Vectors[e_Back], 3, WHITE);
 #endif
-
-  }
 
 }
