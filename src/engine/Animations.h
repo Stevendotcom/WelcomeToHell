@@ -12,5 +12,6 @@ bool Update(Frame& Frame,
             int Cols,
             int& FrameIndex,
             float& FrameTime,
+            float Delta,
             const Vector2& SpriteSize);
 };

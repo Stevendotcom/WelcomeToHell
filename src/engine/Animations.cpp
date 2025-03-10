@@ -30,6 +30,7 @@ bool Animations::Update(Frame& Frame,
                         const int Cols,
                         int& FrameIndex,
                         float& FrameTime,
+                        const float Delta,
                         const Vector2& SpriteSize) {
 
   constexpr float k_Minute = 60.0F;
@@ -40,6 +41,6 @@ bool Animations::Update(Frame& Frame,
     HasUpdated = true;
   }
 
-  FrameTime += GetFrameTime();
+  FrameTime += Delta;
   return HasUpdated;
 }
