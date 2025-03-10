@@ -18,7 +18,7 @@ std::list<int> Targets;
 
 constexpr float k_Speed = 1000.0F;
 constexpr float k_Width = 30.0F;
-constexpr size_t k_AmountMax = 15;
+constexpr size_t k_AmountMax = 100;
 int UniqueId = 0;
 
 
