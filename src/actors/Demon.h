@@ -2,14 +2,11 @@
 #include <list>
 
 #include "raylib.h"
+#include "engine/Animations.h"
 
 #include "engine/Collisions.h"
 
 namespace Demon {
-
-using Frame = Rectangle;
-
-
 
 struct DemonType {
   Vector2 f_Position;
@@ -17,7 +14,7 @@ struct DemonType {
   float f_Speed;
   float f_Radius;
   Texture f_Sprite;
-  Frame f_Frame;
+  Animations::Frame f_Frame;
   int f_FrameIndex;
   int f_Id;
   DemonType* f_Duplicate;
@@ -34,33 +31,23 @@ void DivideDemon(DemonType& Demon, std::list<DemonType>& Demons);
 */
 void Initialize(std::list<DemonType>& Demons, const Vector2& PlayerPosition);
 
-/**
- * @brief
- * @param Demon
- * @param Duplicated
- * @param CollisionPlace
- */
+
 void UpdateDuplicate(DemonType& Demon,
                      DemonType* Duplicated,
                      Collisions::WhereCollides CollisionPlace);
 
-void Duplicate(DemonType& Demon,
+void Duplicate(const DemonType& Demon,
                DemonType* Duplicated,
                Collisions::WhereCollides CollisionPlace);
 
+void Clear(std::list<DemonType>& Demons);
+
 void Execute(std::list<DemonType>& Demons);
 
-/**
- * @brief
- * @param Delta
- */
+
 void Update(std::list<DemonType>& Demons, float Delta);
 
-/**
- * @brief
- * @param Demon
- * @param IsDup
- */
-void Draw(DemonType& Demon, bool IsDup = false);
+
+void Draw(const DemonType& Demon);
 
 };

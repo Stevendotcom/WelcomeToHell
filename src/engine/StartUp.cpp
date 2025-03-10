@@ -30,9 +30,17 @@ void StartUp::Start() {
   InitAudioDevice();
 
   if (!IsAudioDeviceReady()) {
+
+#ifdef _DEBUG
     std::cerr << "Error setting up Audio device" << '\n';
-    //abort(); // TODO should be a closure without audio
+    CloseWindow();
+    abort();
   }
+#else
+    CloseWindow();
+    return;
+  }
+#endif
 
   SetExitKey(KEY_NULL);
 

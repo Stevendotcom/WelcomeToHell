@@ -25,43 +25,7 @@ int UniqueId = 0;
 std::list<int> Targets;
 
 
-
-enum class Radii { Big = 80, Mid = 50, Sml = 30 };
-
-
-
-void Kill(std::list<Demon::DemonType>& Demons, const int Id) {
-
-#ifdef _DEBUG
-  std::cout << "Demon kill. ID: " << Id << "\n";
-#endif
-
-  // For clarity: lambda function that checks if id == Demon.f_id
-  Demons.remove_if([&, Id](auto& Demon) -> bool {
-    return Demon.f_Id == Id;
-  });
-
-}
-
-
-
-/**
- *
- * @param Demon
- * @return
- */
-Demon::Frame GetNextFrame(Demon::DemonType& Demon) {
-  const Demon::Frame NewFrame = {
-      static_cast<float>(Demon.f_FrameIndex % k_Cols * (
-                           Demon.f_Sprite.width / k_Cols)),
-      static_cast<float>(
-        Demon.f_FrameIndex > 6 ? Demon.f_Sprite.height / k_Rows : 0),
-      static_cast<float>(Demon.f_Sprite.width / k_Cols),
-      static_cast<float>(Demon.f_Sprite.height / k_Rows),};
-  Demon.f_FrameIndex++;
-  return NewFrame;
-}
-
+enum class Radii { Big = 160, Mid = 100, Sml = 60 };
 
 
 Vector2 GetRandomStart() {
@@ -79,7 +43,8 @@ Vector2 GetRandomStart() {
   switch (Starting) {
 
     case Start::Up:
-      Position = {static_cast<float>(GetRandomValue(0, g_ScreenWidth)), 0};
+      Position = {static_cast<float>(GetRandomValue(0, g_ScreenWidth)),
+                  0};
       break;
 
     case Start::Down:
@@ -88,7 +53,8 @@ Vector2 GetRandomStart() {
       break;
 
     case Start::Left:
-      Position = {0, static_cast<float>(GetRandomValue(0, g_ScreenHeight))};
+      Position = {0,
+                  static_cast<float>(GetRandomValue(0, g_ScreenHeight))};
       break;
 
     case Start::Right:
@@ -97,7 +63,8 @@ Vector2 GetRandomStart() {
       break;
 
     default:
-      Position = {0, 0};
+      Position = {0,
+                  0};
       Error::Unhandled(__LINE__, __FILE__);
   }
   return Position;
@@ -189,7 +156,8 @@ void Demon::Initialize(std::list<DemonType>& Demons,
                        const Vector2& PlayerPosition) {
 
   DemonType Demon = {GetRandomStart(),
-                     {0, 0},
+                     {0,
+                      0},
                      k_Speed,
                      GetRadiusRandom(),
                      GetTexture(ResManager::Resources::DemonSpriteMove),
@@ -216,7 +184,7 @@ void Demon::Initialize(std::list<DemonType>& Demons,
 
 
 
-void Demon::Duplicate(DemonType& Demon,
+void Demon::Duplicate(const DemonType& Demon,
                       DemonType* Duplicated,
                       const WhereCollides CollisionPlace) {
   *Duplicated = Demon;
@@ -246,11 +214,32 @@ void Demon::Duplicate(DemonType& Demon,
 }
 
 
+void Demon::Clear(std::list<DemonType>& Demons) {
+  for (const auto& Demon : Demons) {
+    delete Demon.f_Duplicate;
+  }
+  Demons.clear();
+}
+
+
 
 void Demon::Execute(std::list<DemonType>& Demons) {
   for (const auto Target : Targets) {
-    Kill(Demons, Target);
+
+#ifdef _DEBUG
+    std::cout << "Demon kill. ID: " << Target << "\n";
+#endif
+
+    // For clarity: lambda function that checks if id == Demon.f_id
+    Demons.remove_if([&, Target](auto& Demon) -> bool {
+      if (Demon.f_Id == Target) {
+        delete Demon.f_Duplicate;
+        return true;
+      }
+      return false;
+    });
   }
+
   Targets.clear();
 }
 
@@ -331,32 +320,33 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
   for (DemonType& Demon : Demons) {
     Demon.f_Position.x += Demon.f_Speed * Delta * Demon.f_Direction.x;
     Demon.f_Position.y += Demon.f_Speed * Delta * Demon.f_Direction.y;
+
+    if (Animations::Update(Demon.f_Frame, k_Rows, k_Cols, Demon.f_FrameIndex,
+                           FrameTime, Delta, {static_cast<float>(Demon.f_Sprite.width),
+                                             static_cast<float>(Demon.f_Sprite.
+                                               height)})) {
+      Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
+    }
   }
 
 }
 
 
 
-void Demon::Draw(DemonType& Demon, const bool IsDup) {
-  constexpr float k_Scale = 2.0F;
-  constexpr float k_Minute = 60.0F;
-
-  if (FrameTime > k_Cols * k_Rows / k_Minute) {
-    Demon.f_Frame = GetNextFrame(Demon);
-    Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
-    FrameTime = 0;
-  }
-  FrameTime += GetFrameTime();
-
-  DrawTexturePro(Demon.f_Sprite, Demon.f_Frame,
-                 {Demon.f_Position.x,
-                  Demon.f_Position.y,
-                  Demon.f_Radius * k_Scale * 2.0F,
-                  Demon.f_Radius * k_Scale * 2.0F},
-                 {Demon.f_Radius * k_Scale, Demon.f_Radius * k_Scale},
+void Demon::Draw(const DemonType& Demon) {
+  const float TextureAdjust = Demon.f_Radius * 1.2f;
+  DrawTexturePro(Demon.f_Sprite, Demon.f_Frame, {Demon.f_Position.x,
+                                                 Demon.f_Position.y,
+                                                 Demon.f_Radius *
+                                                 2.0F + TextureAdjust,
+                                                 Demon.f_Radius *
+                                                 2.0F + TextureAdjust}, {
+                     Demon.f_Radius + TextureAdjust / 2,
+                     Demon.f_Radius + TextureAdjust / 2},
                  -Math::GetRotation(Demon.f_Direction), WHITE);
 
 #ifdef _DEBUG
-  DrawCircleLinesV(Demon.f_Position, Demon.f_Radius, IsDup ? BLACK : WHITE);
+  DrawCircleLinesV(Demon.f_Position, Demon.f_Radius,
+                   Demon.f_Duplicate ? BLACK : WHITE);
 #endif
 }

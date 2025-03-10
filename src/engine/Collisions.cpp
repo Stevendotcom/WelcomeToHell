@@ -70,3 +70,31 @@ bool Collisions::IsDotBorder(const Vector2& Position,
   return Collides;
 
 }
+
+
+bool Collisions::IsCircleSquare(const Vector2& CirclePosition,
+                                const float Radius,
+                                const Vector2& SquarePosition,
+                                const Vector2& Size) {
+
+  float DistanceX = 0;
+  float DistanceY = 0;
+  float Distance = 0;
+
+  if (CirclePosition.x < SquarePosition.x) {
+    DistanceX = SquarePosition.x - CirclePosition.x;
+  } else {
+    DistanceX = CirclePosition.x - (SquarePosition.x + Size.x);
+  }
+
+  if (CirclePosition.y > SquarePosition.y) {
+    DistanceY = CirclePosition.y - (SquarePosition.y + Size.y);
+  } else {
+    DistanceY = SquarePosition.y - CirclePosition.y;
+  }
+
+  Distance = (DistanceX * DistanceX) + (DistanceY * DistanceY);
+
+  return Distance <= Radius * Radius;
+
+}

@@ -26,7 +26,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
+    <EnableASAN>false</EnableASAN>
     <PreferredToolArchitecture>x86</PreferredToolArchitecture>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)</OutDir>
@@ -119,6 +119,8 @@
     <ClCompile Include="src\actors\Demon.cpp" />
     <ClCompile Include="src\actors\Pause.cpp" />
     <ClCompile Include="src\actors\Player.cpp" />
+    <ClCompile Include="src\actors\PowerUps.cpp" />
+    <ClCompile Include="src\engine\Animations.cpp" />
     <ClCompile Include="src\engine\CloseUp.cpp" />
     <ClCompile Include="src\engine\Collisions.cpp" />
     <ClCompile Include="src\engine\Error.cpp" />
@@ -138,7 +140,9 @@
     <ClInclude Include="src\actors\Demon.h" />
     <ClInclude Include="src\actors\Pause.h" />
     <ClInclude Include="src\actors\Player.h" />
+    <ClInclude Include="src\actors\PowerUps.h" />
     <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\engine\Animations.h" />
     <ClInclude Include="src\engine\CloseUp.h" />
     <ClInclude Include="src\engine\Collisions.h" />
     <ClInclude Include="src\engine\Error.h" />

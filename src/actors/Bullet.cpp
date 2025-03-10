@@ -18,7 +18,7 @@ std::list<int> Targets;
 
 constexpr float k_Speed = 1000.0F;
 constexpr float k_Width = 30.0F;
-constexpr size_t k_AmountMax = 15;
+constexpr size_t k_AmountMax = 100;
 int UniqueId = 0;
 
 
@@ -31,21 +31,6 @@ enum {
 }
 
 
-
-void Bullet::Kill(std::list<BulletType>& Bullets, const int Id) {
-#ifdef _DEBUG
-  std::cout << "Bullet kill. ID: " << Id << "\n";
-#endif
-
-  // For clarity: lambda function that checks if id == Bullet.f_id
-  Bullets.remove_if([&, Id](auto& Bullet) -> bool {
-    return Bullet.f_Id == Id;
-  });
-
-}
-
-
-
 void Bullet::AddToTargets(const int Id) {
   Targets.push_back(Id);
 }
@@ -54,9 +39,29 @@ void Bullet::AddToTargets(const int Id) {
 
 void Bullet::Execute(std::list<BulletType>& Bullets) {
   for (const auto Target : Targets) {
-    Kill(Bullets, Target);
+
+#ifdef _DEBUG
+    std::cout << "Bullet kill. ID: " << Target << "\n";
+#endif
+
+    // For clarity: lambda function that checks if id == Bullet.f_id
+    Bullets.remove_if([&, Target](auto& Bullet) -> bool {
+      if (Bullet.f_Id == Target) {
+        delete Bullet.f_Duplicate;
+        return true;
+      }
+      return false;
+    });
   }
   Targets.clear();
+}
+
+
+void Bullet::Clear(std::list<BulletType>& Bullets) {
+  for (const auto Bullet : Bullets) {
+    delete Bullet.f_Duplicate;
+  }
+  Bullets.clear();
 }
 
 
@@ -92,17 +97,16 @@ void Bullet::Shoot(std::list<BulletType>& Bullets,
 
 
 void Bullet::UpdateDuplicate(BulletType& Bullet,
-                             BulletType& Duplicated,
-                             const WhereCollides CollisionPlace,
-                             std::list<BulletType>& BulletDups) {
+                             BulletType* Duplicated,
+                             const WhereCollides CollisionPlace) {
 
   bool ShouldDupRemove = false;
-  const float Resultant = Duplicated.f_Speed * GetFrameTime();
+  const float Resultant = Duplicated->f_Speed * GetFrameTime();
 
-  Duplicated.f_Vectors[e_Front].x += Resultant * Duplicated.f_Direction.x;
-  Duplicated.f_Vectors[e_Front].y += Resultant * Duplicated.f_Direction.y;
-  Duplicated.f_Vectors[e_Back].x += Resultant * Duplicated.f_Direction.x;
-  Duplicated.f_Vectors[e_Back].y += Resultant * Duplicated.f_Direction.y;
+  Duplicated->f_Vectors[e_Front].x += Resultant * Duplicated->f_Direction.x;
+  Duplicated->f_Vectors[e_Front].y += Resultant * Duplicated->f_Direction.y;
+  Duplicated->f_Vectors[e_Back].x += Resultant * Duplicated->f_Direction.x;
+  Duplicated->f_Vectors[e_Back].y += Resultant * Duplicated->f_Direction.y;
 
   // cases where the duplicate needs to disappear or get copied to player
   switch (CollisionPlace) {
@@ -110,7 +114,7 @@ void Bullet::UpdateDuplicate(BulletType& Bullet,
     case WhereCollides::Up:
       if (Bullet.f_Vectors[e_Back].y <= 0) {
         //if no longer visible
-        Bullet = Duplicated;
+        Bullet = *Duplicated;
         ShouldDupRemove = true;
 
       }
@@ -119,7 +123,7 @@ void Bullet::UpdateDuplicate(BulletType& Bullet,
     case WhereCollides::Down:
 
       if (Bullet.f_Vectors[e_Back].y >= g_ScreenHeight) {
-        Bullet = Duplicated;
+        Bullet = *Duplicated;
         ShouldDupRemove = true;
 
       }
@@ -128,7 +132,7 @@ void Bullet::UpdateDuplicate(BulletType& Bullet,
     case WhereCollides::Right:
 
       if (Bullet.f_Vectors[e_Back].x >= g_ScreenWidth) {
-        Bullet = Duplicated;
+        Bullet = *Duplicated;
         ShouldDupRemove = true;
 
       }
@@ -138,7 +142,7 @@ void Bullet::UpdateDuplicate(BulletType& Bullet,
 
       if (Bullet.f_Vectors[e_Back].x <= 0) {
 
-        Bullet = Duplicated;
+        Bullet = *Duplicated;
         ShouldDupRemove = true;
 
       }
@@ -146,7 +150,7 @@ void Bullet::UpdateDuplicate(BulletType& Bullet,
   }
 
   if (ShouldDupRemove) {
-    Kill(BulletDups, Duplicated.f_Id);
+    delete Duplicated;
     Bullet.f_Duplicate = nullptr;
   }
 
@@ -154,47 +158,47 @@ void Bullet::UpdateDuplicate(BulletType& Bullet,
 
 
 
-void Bullet::Duplicate(BulletType& Bullet,
-                       BulletType& Duplicated,
+void Bullet::Duplicate(const BulletType& Bullet,
+                       BulletType* Duplicated,
                        const WhereCollides CollisionPlace) {
-  Duplicated = Bullet;
+  *Duplicated = Bullet;
 
   switch (CollisionPlace) {
     case WhereCollides::Up:
-      Duplicated.f_Vectors[e_Front] = {Bullet.f_Vectors[e_Front].x,
-                                       g_ScreenHeight + Bullet.f_Vectors[
-                                         e_Front].y};
-      Duplicated.f_Vectors[e_Back] = {Bullet.f_Vectors[e_Back].x,
-                                      g_ScreenHeight + Bullet.f_Vectors[e_Back].
-                                      y};
+      Duplicated->f_Vectors[e_Front] = {Bullet.f_Vectors[e_Front].x,
+                                        g_ScreenHeight + Bullet.f_Vectors[
+                                          e_Front].y};
+      Duplicated->f_Vectors[e_Back] = {Bullet.f_Vectors[e_Back].x,
+                                       g_ScreenHeight + Bullet.f_Vectors[e_Back]
+                                       .y};
       break;
 
     case WhereCollides::Down:
-      Duplicated.f_Vectors[e_Front] = {Bullet.f_Vectors[e_Front].x,
-                                       Bullet.f_Vectors[e_Front].y -
-                                       g_ScreenHeight};
+      Duplicated->f_Vectors[e_Front] = {Bullet.f_Vectors[e_Front].x,
+                                        Bullet.f_Vectors[e_Front].y -
+                                        g_ScreenHeight};
 
-      Duplicated.f_Vectors[e_Back] = {Bullet.f_Vectors[e_Back].x,
-                                      Bullet.f_Vectors[e_Back].y -
-                                      g_ScreenHeight};
+      Duplicated->f_Vectors[e_Back] = {Bullet.f_Vectors[e_Back].x,
+                                       Bullet.f_Vectors[e_Back].y -
+                                       g_ScreenHeight};
       break;
 
     case WhereCollides::Right:
-      Duplicated.f_Vectors[e_Front] = {
+      Duplicated->f_Vectors[e_Front] = {
           Bullet.f_Vectors[e_Front].x - g_ScreenWidth,
           Bullet.f_Vectors[e_Front].y};
 
-      Duplicated.f_Vectors[e_Back] = {
+      Duplicated->f_Vectors[e_Back] = {
           Bullet.f_Vectors[e_Back].x - g_ScreenWidth,
           Bullet.f_Vectors[e_Back].y};
       break;
 
     case WhereCollides::Left:
-      Duplicated.f_Vectors[e_Front] = {
+      Duplicated->f_Vectors[e_Front] = {
           g_ScreenWidth + Bullet.f_Vectors[e_Front].x,
           Bullet.f_Vectors[e_Front].y};
 
-      Duplicated.f_Vectors[e_Back] = {
+      Duplicated->f_Vectors[e_Back] = {
           g_ScreenWidth + Bullet.f_Vectors[e_Back].x,
           Bullet.f_Vectors[e_Back].y};
       break;
@@ -217,38 +221,34 @@ void Bullet::Update(std::list<BulletType>& Bullets, const float Delta) {
 
 
 
-void Bullet::Draw(const std::list<BulletType>& Bullets) {
+void Bullet::Draw(const BulletType& Bullet) {
   constexpr float k_RotCorrection = 90.0F;
 
   Rectangle Source;
   Rectangle Destination;
   Vector2 Origin;
 
-  for (auto& Bullet : Bullets) {
+  Source = {0,
+            0,
+            static_cast<float>(Bullet.f_Sprite.width),
+            static_cast<float>(Bullet.f_Sprite.height)};
 
-    Source = {0,
-              0,
-              static_cast<float>(Bullet.f_Sprite.width),
-              static_cast<float>(Bullet.f_Sprite.height)};
+  Destination = {
+      (Bullet.f_Vectors[e_Front].x + Bullet.f_Vectors[e_Back].x) / 2.0F,
+      (Bullet.f_Vectors[e_Front].y + Bullet.f_Vectors[e_Back].y) / 2.0F,
+      static_cast<float>(Bullet.f_Sprite.width) * 2.0F,
+      static_cast<float>(Bullet.f_Sprite.height) * 2.0F};
 
-    Destination = {
-        (Bullet.f_Vectors[e_Front].x + Bullet.f_Vectors[e_Back].x) / 2.0F,
-        (Bullet.f_Vectors[e_Front].y + Bullet.f_Vectors[e_Back].y) / 2.0F,
-        static_cast<float>(Bullet.f_Sprite.width) * 2.0F,
-        static_cast<float>(Bullet.f_Sprite.height) * 2.0F};
+  Origin = {static_cast<float>(Bullet.f_Sprite.width),
+            static_cast<float>(Bullet.f_Sprite.height)};
 
-    Origin = {static_cast<float>(Bullet.f_Sprite.width),
-              static_cast<float>(Bullet.f_Sprite.height)};
-
-    DrawTexturePro(Bullet.f_Sprite, Source, Destination, Origin,
-                   k_RotCorrection - Math::GetRotation(Bullet.f_Direction),
-                   WHITE);
+  DrawTexturePro(Bullet.f_Sprite, Source, Destination, Origin,
+                 k_RotCorrection - Math::GetRotation(Bullet.f_Direction),
+                 WHITE);
 
 #ifdef _DEBUG
-    DrawCircleV(Bullet.f_Vectors[e_Front], 3, WHITE);
-    DrawCircleV(Bullet.f_Vectors[e_Back], 3, WHITE);
+  DrawCircleV(Bullet.f_Vectors[e_Front], 3, WHITE);
+  DrawCircleV(Bullet.f_Vectors[e_Back], 3, WHITE);
 #endif
-
-  }
 
 }
