@@ -28,6 +28,9 @@ Texture2D Buttons;
 Texture2D PauseBG;
 Texture2D Btn;
 Texture2D BtnPressed;
+Texture2D OneUp;
+Texture2D Diamond;
+Texture2D Batteries;
 
 #pragma endregion
 
@@ -53,30 +56,70 @@ std::string ResManager::ResourceToString(const Resources Resource) {
   switch (Resource) {
     case Resources::AlmendraDisplay:
       return "AlmendraDisplay";
+
     case Resources::Background:
       return "Background";
+
     case Resources::MainMenuMusic:
       return "MainMenuMusic";
+
     case Resources::GameMusic:
       return "GameMusic";
+
     case Resources::Shoot:
       return "Shoot";
+
     case Resources::Hit:
       return "Hit";
+
     case Resources::Dropship:
       return "Dropship";
+
     case Resources::MenuOpen:
       return "MenuOpen";
+
     case Resources::MenuHover:
       return "MenuHover";
+
     case Resources::PlayerSprite:
       return "PlayerSprite";
+
     case Resources::DemonSpriteMove:
       return "DemonSpriteMove";
+
     case Resources::BulletSprite:
       return "BulletSprite";
+
+    case Resources::HeartSprite:
+      return "HeartSprite";
+
+    case Resources::HeartBackground:
+      return "HeartBackground";
+
+    case Resources::Buttons:
+      return "Buttons";
+
+    case Resources::PauseBG:
+      return "PauseBG";
+
+    case Resources::Btn:
+      return "Btn";
+
+    case Resources::BtnPressed:
+      return "BtnPressed";
+
+    case Resources::OneUp:
+      return "OneUp";
+
+    case Resources::Diamond:
+      return "Diamond";
+
+    case Resources::Batteries:
+      return "Batteries";
+
     case Resources::Last:
       return "";
+
     default:
       return "unknown";
   }
@@ -104,11 +147,13 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
         return DemonSpriteMove;
       }
       break;
+
     case Resources::BulletSprite:
       if (IsTextureReady(BulletSprite)) {
         return BulletSprite;
       }
       break;
+
     case Resources::HeartSprite:
       if (IsTextureReady(HeartSprite)) {
         return HeartSprite;
@@ -120,6 +165,7 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
         return HeartBackground;
       }
       break;
+
     case Resources::Buttons:
       if (IsTextureReady(Buttons)) {
         return Buttons;
@@ -131,16 +177,37 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
         return PauseBG;
       }
       break;
+
     case Resources::Btn:
       if (IsTextureReady(Btn)) {
         return Btn;
       }
       break;
+
     case Resources::BtnPressed:
       if (IsTextureReady(BtnPressed)) {
         return BtnPressed;
       }
       break;
+
+    case Resources::OneUp:
+      if (IsTextureReady(OneUp)) {
+        return OneUp;
+      }
+      break;
+
+    case Resources::Diamond:
+      if (IsTextureReady(Diamond)) {
+        return Diamond;
+      }
+      break;
+
+    case Resources::Batteries:
+      if (IsTextureReady(Batteries)) {
+        return Batteries;
+      }
+      break;
+
     default:
       Error::UnknownResource(ResourceToString(Resource));
   }
@@ -257,6 +324,9 @@ void ResManager::MakeTextures() {
   Btn = LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button.png");
   BtnPressed =
       LoadTexture("res/sprites/StonePixel/Buttons/Button1/Button2.png");
+  OneUp = LoadTexture("res/sprites/diamonds.png");
+  Diamond = LoadTexture("res/sprites/hearts");
+  Batteries = LoadTexture("res/sprites/speed-boost.png");
 }
 
 

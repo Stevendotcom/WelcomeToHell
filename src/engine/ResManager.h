@@ -24,6 +24,9 @@ enum class Resources {
   PauseBG,
   Btn,
   BtnPressed,
+  OneUp,
+  Diamond,
+  Batteries,
   Last
 };
 
