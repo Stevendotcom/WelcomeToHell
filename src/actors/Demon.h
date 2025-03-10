@@ -40,6 +40,8 @@ void Duplicate(DemonType& Demon,
                DemonType* Duplicated,
                Collisions::WhereCollides CollisionPlace);
 
+void Clear(std::list<DemonType>& Demons);
+
 void Execute(std::list<DemonType>& Demons);
 
 

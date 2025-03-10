@@ -214,6 +214,14 @@ void Demon::Duplicate(DemonType& Demon,
 }
 
 
+void Demon::Clear(std::list<DemonType>& Demons) {
+  for (const auto& Demon : Demons) {
+    delete Demon.f_Duplicate;
+  }
+  Demons.clear();
+}
+
+
 
 void Demon::Execute(std::list<DemonType>& Demons) {
   for (const auto Target : Targets) {
