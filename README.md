@@ -11,6 +11,7 @@ Made for Practicas Profesionales 1, 2024
 - Shapeforms audio free sfx, ShapeForms, https://shapeforms.itch.io/shapeforms-audio-free-sfx
 - DropShip Idle, Pixabay, https://pixabay.com/sound-effects/dropship-idle-hum-84742/
 - Snake's Authentic Gun Sounds, SnakeF8, https://f8studios.itch.io/snakes-authentic-gun-sounds
+- Coins & Gems & Chests & More, greatedocbrown, https://greatdocbrown.itch.io/coins-gems-etc
 
 # To install
 Just unzip and execute corresponding file
