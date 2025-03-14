@@ -154,10 +154,13 @@ void Player::UpdateDuplicate(PlayerType& Player,
 void Player::Update(PlayerType& Player,
                     const float Delta,
                     const bool IsDuplicated) {
+
+  const Vector2 MousePos = GetMousePosition();
+
   if (!IsDuplicated) {
 
-    const Vector2 k_Temp = {GetMousePosition().x - Player.f_Position.x,
-                            GetMousePosition().y - Player.f_Position.y};
+    const Vector2 k_Temp = {MousePos.x - Player.f_Position.x,
+                            MousePos.y - Player.f_Position.y};
 
     const float k_Mag = GetMag(k_Temp);
 
@@ -188,6 +191,7 @@ void Player::Draw(const PlayerType& Player) {
                                                  Player.f_Radius * k_Scale},
                  k_RotCorrection - GetRotation(Player.f_Direction),
                  Player.f_IsInvencible ? RED : WHITE);
+
 
 #ifdef _DEBUG
   DrawCircleLinesV(Player.f_Position, Player.f_Radius,WHITE);
