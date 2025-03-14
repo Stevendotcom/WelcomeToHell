@@ -141,6 +141,8 @@ bool Pause::Pause(const Player::PlayerType& Player) {
   bool Ret = false;
   bool WasPlaying = false;
 
+  ShowCursor();
+
   if (IsSoundPlaying(k_Dropship)) {
     PauseSound(k_Dropship);
     WasPlaying = true;
@@ -156,5 +158,8 @@ bool Pause::Pause(const Player::PlayerType& Player) {
   if (WasPlaying) {
     ResumeSound(k_Dropship);
   }
+
+  HideCursor();
+
   return Exit || WindowShouldClose();
 }
