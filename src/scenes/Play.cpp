@@ -167,17 +167,14 @@ void ManageBullets(std::list<Bullet::BulletType>& Bullets,
 
 
 
-void Update(Player::PlayerType& Player,
-            Player::PlayerType& Duplicated,
-            bool& DuplicatedVisible,
-            std::list<Demon::DemonType>& Demons,
-            std::list<Bullet::BulletType>& Bullets,
-            std::list<PowerUps::PowerUp>& Powers,
-            std::list<Beholder::BeholderType>& Beholders) {
-
-  auto CollisionPlace = WhereCollides::Down;
-
-  const float Delta = GetFrameTime();
+void UpdateTimers(Player::PlayerType& Player, std::list<Demon::DemonType>& Demons, std::list<PowerUps::PowerUp>& Powers, std::list<Beholder::BeholderType>& Beholders, const float Delta)
+{
+  DemonSpawnTimer += Delta;
+  if (DemonSpawnTimer > DemonSpawnerTimeLimit) {
+    DemonSpawnTimer = 0.0F;
+    DemonSpawnerTimeLimit = static_cast<float>(GetRandomValue(2, k_MaxWaitTime));
+    Initialize(Demons, Player.f_Position);
+  }
 
   if (Player.f_IsInvencible) {
     InvencibleTimer += Delta;
@@ -203,6 +200,29 @@ void Update(Player::PlayerType& Player,
     AddPower(Powers);
   }
 
+  NewBeholderTimer += Delta;
+  if (NewBeholderTimer >= NewBeholderIn) {
+    NewBeholderTimer = 0;
+    NewBeholderIn = static_cast<float>(GetRandomValue(5, 10));
+    AddBeholder(Beholders);
+  }
+}
+
+
+void Update(Player::PlayerType& Player,
+            Player::PlayerType& Duplicated,
+            bool& DuplicatedVisible,
+            std::list<Demon::DemonType>& Demons,
+            std::list<Bullet::BulletType>& Bullets,
+            std::list<PowerUps::PowerUp>& Powers,
+            std::list<Beholder::BeholderType>& Beholders) {
+
+  auto CollisionPlace = WhereCollides::Down;
+
+  const float Delta = GetFrameTime();
+
+  UpdateTimers(Player, Demons, Powers, Beholders, Delta);
+
   Player::Update(Player, Delta);
 
   PowerUps::Update(Powers, Player, Delta);
@@ -221,20 +241,6 @@ void Update(Player::PlayerType& Player,
 
   Execute(Beholders);
 }
-
-
-
-void DemonTimer(std::list<Demon::DemonType>& Demons,
-                const Vector2& PlayerPosition) {
-  Timer += GetFrameTime();
-  if (Timer > TimeLimit) {
-    Timer = 0.0F;
-    TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
-    Initialize(Demons, PlayerPosition);
-  }
-}
-
-
 
 bool HasPlayerLost(const Player::PlayerType& Player) {
   if (Player.f_Hearts <= 0) {
@@ -390,7 +396,6 @@ void Play::Play() {
     Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets, Powers,
            Beholders);
     Restart = HasPlayerLost(Player);
-    DemonTimer(Demons, Player.f_Position);
     UpdateMusicStream(k_Music);
     Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers, Beholders);
 
