@@ -32,6 +32,7 @@ Texture2D OneUp;
 Texture2D Diamond;
 Texture2D Batteries;
 Texture2D Beholder;
+Texture2D Mouse;
 
 #pragma endregion
 
@@ -120,6 +121,9 @@ std::string ResManager::ResourceToString(const Resources Resource) {
 
     case Resources::Beholder:
       return "Beholder";
+
+    case Resources::Mouse:
+      return "Mouse";
 
     case Resources::Last:
       return "";
@@ -215,6 +219,12 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
     case Resources::Beholder:
       if (IsTextureReady(Beholder)) {
         return Beholder;
+      }
+    break;
+
+    case Resources::Mouse:
+      if (IsTextureReady(Mouse)) {
+        return Mouse;
       }
     break;
 
@@ -338,6 +348,7 @@ void ResManager::MakeTextures() {
   Diamond = LoadTexture("res/sprites/diamonds.png");
   Batteries = LoadTexture("res/sprites/speed-boost.png");
   Beholder = LoadTexture("res/sprites/DreamSuckerSpriteSheet.png");
+  Mouse = LoadTexture("res/sprites/mouse.png");
 }
 
 

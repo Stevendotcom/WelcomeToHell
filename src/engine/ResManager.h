@@ -28,6 +28,7 @@ enum class Resources {
   Diamond,
   Batteries,
   Beholder,
+  Mouse,
   Last
 };
 
