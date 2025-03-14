@@ -31,6 +31,7 @@ Texture2D BtnPressed;
 Texture2D OneUp;
 Texture2D Diamond;
 Texture2D Batteries;
+Texture2D Beholder;
 
 #pragma endregion
 
@@ -116,6 +117,9 @@ std::string ResManager::ResourceToString(const Resources Resource) {
 
     case Resources::Batteries:
       return "Batteries";
+
+    case Resources::Beholder:
+      return "Beholder";
 
     case Resources::Last:
       return "";
@@ -207,6 +211,12 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
         return Batteries;
       }
       break;
+
+    case Resources::Beholder:
+      if (IsTextureReady(Beholder)) {
+        return Beholder;
+      }
+    break;
 
     default:
       Error::UnknownResource(ResourceToString(Resource));
@@ -327,6 +337,7 @@ void ResManager::MakeTextures() {
   OneUp = LoadTexture("res/sprites/hearts.png");
   Diamond = LoadTexture("res/sprites/diamonds.png");
   Batteries = LoadTexture("res/sprites/speed-boost.png");
+  Beholder = LoadTexture("res/sprites/DreamSuckerSpriteSheet.png");
 }
 
 
