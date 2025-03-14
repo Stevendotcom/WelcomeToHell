@@ -8,6 +8,7 @@
 #include "actors/Beholder.h"
 #include "actors/Bullet.h"
 #include "actors/Demon.h"
+#include "actors/Mouse.h"
 #include "actors/Pause.h"
 #include "actors/Player.h"
 #include "actors/PowerUps.h"
@@ -215,7 +216,8 @@ void Update(Player::PlayerType& Player,
             std::list<Demon::DemonType>& Demons,
             std::list<Bullet::BulletType>& Bullets,
             std::list<PowerUps::PowerUp>& Powers,
-            std::list<Beholder::BeholderType>& Beholders) {
+            std::list<Beholder::BeholderType>& Beholders,
+            Mouse::MouseType& Mouse) {
 
   auto CollisionPlace = WhereCollides::Down;
 
@@ -228,6 +230,8 @@ void Update(Player::PlayerType& Player,
   PowerUps::Update(Powers, Player, Delta);
 
   Beholder::Update(Beholders, Player, Delta);
+
+  Mouse::Update(Mouse);
 
   ManagePlayerDuplicates(Player, Duplicated, DuplicatedVisible, CollisionPlace);
 
@@ -295,7 +299,8 @@ void Draw(const Player::PlayerType& Player,
           const std::list<Demon::DemonType>& Demons,
           const std::list<Bullet::BulletType>& Bullets,
           const std::list<PowerUps::PowerUp>& Powers,
-          const std::list<Beholder::BeholderType>& Beholders) {
+          const std::list<Beholder::BeholderType>& Beholders,
+          const Mouse::MouseType& Mouse) {
 
   const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
 
@@ -346,6 +351,9 @@ void Draw(const Player::PlayerType& Player,
       Beholder::Draw(Beholder);
     }
 
+    //Mouse
+    Mouse::Draw(Mouse);
+
     DrawUI(Player);
 
   }
@@ -373,13 +381,17 @@ void Play::Play() {
   list<Bullet::BulletType> Bullets;
   list<PowerUps::PowerUp> Powers;
   list<Beholder::BeholderType> Beholders;
+  Mouse::MouseType Mouse;
 
   Initialize(Player);
+  Initialize(Mouse);
 
   PlayMusicStream(k_Music);
   SetMusicVolume(k_Music, k_MusicVol);
   PlaySound(k_Dropship);
   SetSoundVolume(k_Dropship, 0.1F);
+
+  HideCursor();
 
   while (!Exit && !WindowShouldClose()) {
     if (!IsSoundPlaying(k_Dropship)) {
@@ -394,10 +406,10 @@ void Play::Play() {
     }
     Input(Player, Bullets);
     Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets, Powers,
-           Beholders);
+           Beholders, Mouse);
     Restart = HasPlayerLost(Player);
     UpdateMusicStream(k_Music);
-    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers, Beholders);
+    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers, Beholders, Mouse);
 
   }
 

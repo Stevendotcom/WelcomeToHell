@@ -114,6 +114,7 @@
     <ClCompile Include="src\actors\Beholder.cpp" />
     <ClCompile Include="src\actors\Bullet.cpp" />
     <ClCompile Include="src\actors\Demon.cpp" />
+    <ClCompile Include="src\actors\Mouse.cpp" />
     <ClCompile Include="src\actors\Pause.cpp" />
     <ClCompile Include="src\actors\Player.cpp" />
     <ClCompile Include="src\actors\PowerUps.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="src\actors\Beholder.h" />
     <ClInclude Include="src\actors\Bullet.h" />
     <ClInclude Include="src\actors\Demon.h" />
+    <ClInclude Include="src\actors\Mouse.h" />
     <ClInclude Include="src\actors\Pause.h" />
     <ClInclude Include="src\actors\Player.h" />
     <ClInclude Include="src\actors\PowerUps.h" />
