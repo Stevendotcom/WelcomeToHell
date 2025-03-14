@@ -31,8 +31,8 @@ void Beholder::Execute(std::list<BeholderType>& Beholders) {
 #endif
 
     // For clarity: lambda function that checks if id == Beholders.f_id
-    Beholders.remove_if([&, Target](auto& Beholders) -> bool {
-      if (Beholders.f_Id == Target) {
+    Beholders.remove_if([&, Target](auto& Beholder) -> bool {
+      if (Beholder.f_Id == Target) {
         return true;
       }
       return false;
