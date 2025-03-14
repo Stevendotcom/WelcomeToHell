@@ -13,6 +13,7 @@ struct DemonType {
   Vector2 f_Direction;
   float f_Speed;
   float f_Radius;
+  float f_FrameTime;
   Texture f_Sprite;
   Animations::Frame f_Frame;
   int f_FrameIndex;
@@ -26,9 +27,6 @@ void ChangeDirection(DemonType& Demon);
 
 void DivideDemon(DemonType& Demon, std::list<DemonType>& Demons);
 
-/**
-* @brief
-*/
 void Initialize(std::list<DemonType>& Demons, const Vector2& PlayerPosition);
 
 
