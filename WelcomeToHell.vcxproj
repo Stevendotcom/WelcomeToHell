@@ -76,9 +76,7 @@
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)lib\raylib-5.0_win32_msvc16\lib\*.dll" "$(OutDir)" /y
-              xcopy "$(SolutionDir)res\" "$(OutDir)res\" /i/y/s
-          </Command>
+      <Command>"$(SolutionDir)scripts\build.bat" "$(SolutionDir)" "$(TargetDir)" $(TargetName) raylib-5.0_win32_msvc16</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,9 +101,7 @@
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);raylib.lib;winmm.lib;opengl32.lib;kernel32.lib;gdi32.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)lib\raylib-5.0_win32_msvc16\lib\*.dll" "$(OutDir)" /y
-              xcopy "$(SolutionDir)res\" "$(OutDir)res\" /i/y/s
-          </Command>
+      <Command>"$(SolutionDir)scripts\build.bat" "$(SolutionDir)" "$(TargetDir)" $(TargetName) raylib-5.0_win32_msvc16 1       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -115,8 +111,10 @@
     <Folder Include="res\" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\actors\Beholder.cpp" />
     <ClCompile Include="src\actors\Bullet.cpp" />
     <ClCompile Include="src\actors\Demon.cpp" />
+    <ClCompile Include="src\actors\Mouse.cpp" />
     <ClCompile Include="src\actors\Pause.cpp" />
     <ClCompile Include="src\actors\Player.cpp" />
     <ClCompile Include="src\actors\PowerUps.cpp" />
@@ -136,8 +134,10 @@
     <ClCompile Include="src\scenes\Play.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actors\Beholder.h" />
     <ClInclude Include="src\actors\Bullet.h" />
     <ClInclude Include="src\actors\Demon.h" />
+    <ClInclude Include="src\actors\Mouse.h" />
     <ClInclude Include="src\actors\Pause.h" />
     <ClInclude Include="src\actors\Player.h" />
     <ClInclude Include="src\actors\PowerUps.h" />

@@ -5,8 +5,10 @@
 #include "raylib.h"
 
 #include "Constants.h"
+#include "actors/Beholder.h"
 #include "actors/Bullet.h"
 #include "actors/Demon.h"
+#include "actors/Mouse.h"
 #include "actors/Pause.h"
 #include "actors/Player.h"
 #include "actors/PowerUps.h"
@@ -22,20 +24,25 @@ namespace {
 constexpr int k_MaxWaitTime = 5;
 constexpr int k_RMargin = 30;
 constexpr int k_ScalePause = 2;
-int k_ScoreGain = 234;
-bool Pause = false;
-float Timer = 0.0F;
-float TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
-float InvencibleTimer = 0.0F;
-float BoostTimer = 0.0F;
-float NewPowerTimer = 0.0F;
-float NewPowerIn = static_cast<float>(GetRandomValue(1, 3));
+constexpr int k_ScoreGain = 234;
+
 constexpr float k_InvencibleTimerDuration = 3.0F;
 constexpr float k_TMargin = 30.0F;
 constexpr float k_LMargin = 20.0F;
 constexpr float k_HeartSpriteSize = 16.0F;
 constexpr float k_BoostTime = 2.5f;
+
+bool Pause = false;
 bool Exit = false;
+
+float DemonSpawnTimer = 0.0F;
+float DemonSpawnerTimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
+float InvencibleTimer = 0.0F;
+float BoostTimer = 0.0F;
+float NewPowerTimer = 0.0F;
+float NewPowerIn = static_cast<float>(GetRandomValue(1, 3));
+float NewBeholderTimer = 0.0F;
+float NewBeholderIn = static_cast<float>(GetRandomValue(15, 20));
 
 constexpr Rectangle k_SourcePause = {64.0F,
                                      0,
@@ -161,16 +168,14 @@ void ManageBullets(std::list<Bullet::BulletType>& Bullets,
 
 
 
-void Update(Player::PlayerType& Player,
-            Player::PlayerType& Duplicated,
-            bool& DuplicatedVisible,
-            std::list<Demon::DemonType>& Demons,
-            std::list<Bullet::BulletType>& Bullets,
-            std::list<PowerUps::PowerUp>& Powers) {
-
-  auto CollisionPlace = WhereCollides::Down;
-
-  const float Delta = GetFrameTime();
+void UpdateTimers(Player::PlayerType& Player, std::list<Demon::DemonType>& Demons, std::list<PowerUps::PowerUp>& Powers, std::list<Beholder::BeholderType>& Beholders, const float Delta)
+{
+  DemonSpawnTimer += Delta;
+  if (DemonSpawnTimer > DemonSpawnerTimeLimit) {
+    DemonSpawnTimer = 0.0F;
+    DemonSpawnerTimeLimit = static_cast<float>(GetRandomValue(2, k_MaxWaitTime));
+    Initialize(Demons, Player.f_Position);
+  }
 
   if (Player.f_IsInvencible) {
     InvencibleTimer += Delta;
@@ -196,9 +201,37 @@ void Update(Player::PlayerType& Player,
     AddPower(Powers);
   }
 
+  NewBeholderTimer += Delta;
+  if (NewBeholderTimer >= NewBeholderIn) {
+    NewBeholderTimer = 0;
+    NewBeholderIn = static_cast<float>(GetRandomValue(5, 10));
+    AddBeholder(Beholders);
+  }
+}
+
+
+void Update(Player::PlayerType& Player,
+            Player::PlayerType& Duplicated,
+            bool& DuplicatedVisible,
+            std::list<Demon::DemonType>& Demons,
+            std::list<Bullet::BulletType>& Bullets,
+            std::list<PowerUps::PowerUp>& Powers,
+            std::list<Beholder::BeholderType>& Beholders,
+            Mouse::MouseType& Mouse) {
+
+  auto CollisionPlace = WhereCollides::Down;
+
+  const float Delta = GetFrameTime();
+
+  UpdateTimers(Player, Demons, Powers, Beholders, Delta);
+
   Player::Update(Player, Delta);
 
   PowerUps::Update(Powers, Player, Delta);
+
+  Beholder::Update(Beholders, Player, Delta);
+
+  Mouse::Update(Mouse);
 
   ManagePlayerDuplicates(Player, Duplicated, DuplicatedVisible, CollisionPlace);
 
@@ -209,21 +242,9 @@ void Update(Player::PlayerType& Player,
   Execute(Demons);
 
   Execute(Powers);
+
+  Execute(Beholders);
 }
-
-
-
-void DemonTimer(std::list<Demon::DemonType>& Demons,
-                const Vector2& PlayerPosition) {
-  Timer += GetFrameTime();
-  if (Timer > TimeLimit) {
-    Timer = 0.0F;
-    TimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
-    Initialize(Demons, PlayerPosition);
-  }
-}
-
-
 
 bool HasPlayerLost(const Player::PlayerType& Player) {
   if (Player.f_Hearts <= 0) {
@@ -277,7 +298,9 @@ void Draw(const Player::PlayerType& Player,
           const Player::PlayerType& Duplicated,
           const std::list<Demon::DemonType>& Demons,
           const std::list<Bullet::BulletType>& Bullets,
-          const std::list<PowerUps::PowerUp>& Powers) {
+          const std::list<PowerUps::PowerUp>& Powers,
+          const std::list<Beholder::BeholderType>& Beholders,
+          const Mouse::MouseType& Mouse) {
 
   const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
 
@@ -297,7 +320,7 @@ void Draw(const Player::PlayerType& Player,
 
     //Powers
     for (const auto& Power : Powers) {
-        PowerUps::Draw(Power);
+      PowerUps::Draw(Power);
     }
 
     //Player
@@ -323,6 +346,14 @@ void Draw(const Player::PlayerType& Player,
       }
     }
 
+    //Beholder
+    for (const auto& Beholder: Beholders){
+      Beholder::Draw(Beholder);
+    }
+
+    //Mouse
+    Mouse::Draw(Mouse);
+
     DrawUI(Player);
 
   }
@@ -336,6 +367,8 @@ void Draw(const Player::PlayerType& Player,
 
 void Play::Play() {
 
+  using namespace std;
+
   const Music k_Music = GetMusic(ResManager::Resources::GameMusic);
   const Sound k_Dropship = GetSound(ResManager::Resources::Dropship);
   constexpr float k_MusicVol = 0.5F;
@@ -344,16 +377,21 @@ void Play::Play() {
 
   Player::PlayerType Player;
   Player::PlayerType Duplicated;
-  std::list<Demon::DemonType> Demons;
-  std::list<Bullet::BulletType> Bullets;
-  std::list<PowerUps::PowerUp> Powers;
+  list<Demon::DemonType> Demons;
+  list<Bullet::BulletType> Bullets;
+  list<PowerUps::PowerUp> Powers;
+  list<Beholder::BeholderType> Beholders;
+  Mouse::MouseType Mouse;
 
   Initialize(Player);
+  Initialize(Mouse);
 
   PlayMusicStream(k_Music);
   SetMusicVolume(k_Music, k_MusicVol);
   PlaySound(k_Dropship);
   SetSoundVolume(k_Dropship, 0.1F);
+
+  HideCursor();
 
   while (!Exit && !WindowShouldClose()) {
     if (!IsSoundPlaying(k_Dropship)) {
@@ -363,16 +401,21 @@ void Play::Play() {
       Initialize(Player);
       Clear(Demons);
       Clear(Bullets);
+      Clear(Beholders);
       Powers.clear();
     }
     Input(Player, Bullets);
-    Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets, Powers);
+    Update(Player, Duplicated, DuplicatedVisible, Demons, Bullets, Powers,
+           Beholders, Mouse);
     Restart = HasPlayerLost(Player);
-    DemonTimer(Demons, Player.f_Position);
     UpdateMusicStream(k_Music);
-    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers);
+    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers, Beholders, Mouse);
 
   }
+
+  //they have duplicates, so this needs to be called after
+  Clear(Demons);
+  Clear(Bullets);
 
   StopMusicStream(k_Music);
   StopSound(k_Dropship);

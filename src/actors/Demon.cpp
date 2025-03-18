@@ -19,7 +19,6 @@ constexpr float k_Speed = 100;
 constexpr int k_Rows = 2;
 constexpr int k_Cols = 6;
 
-float FrameTime = 0;
 int UniqueId = 0;
 
 std::list<int> Targets;
@@ -160,6 +159,7 @@ void Demon::Initialize(std::list<DemonType>& Demons,
                       0},
                      k_Speed,
                      GetRadiusRandom(),
+                     0,
                      GetTexture(ResManager::Resources::DemonSpriteMove),
                      {},
                      0,
@@ -322,9 +322,9 @@ void Demon::Update(std::list<DemonType>& Demons, const float Delta) {
     Demon.f_Position.y += Demon.f_Speed * Delta * Demon.f_Direction.y;
 
     if (Animations::Update(Demon.f_Frame, k_Rows, k_Cols, Demon.f_FrameIndex,
-                           FrameTime, Delta, {static_cast<float>(Demon.f_Sprite.width),
-                                             static_cast<float>(Demon.f_Sprite.
-                                               height)})) {
+                           Demon.f_FrameTime, Delta, {
+                               static_cast<float>(Demon.f_Sprite.width),
+                               static_cast<float>(Demon.f_Sprite.height)})) {
       Demon.f_Frame.height *= Demon.f_Direction.x > 0.0F ? 1.0F : -1.0F;
     }
   }
@@ -337,12 +337,12 @@ void Demon::Draw(const DemonType& Demon) {
   const float TextureAdjust = Demon.f_Radius * 1.2f;
   DrawTexturePro(Demon.f_Sprite, Demon.f_Frame, {Demon.f_Position.x,
                                                  Demon.f_Position.y,
-                                                 Demon.f_Radius *
-                                                 2.0F + TextureAdjust,
-                                                 Demon.f_Radius *
-                                                 2.0F + TextureAdjust}, {
-                     Demon.f_Radius + TextureAdjust / 2,
-                     Demon.f_Radius + TextureAdjust / 2},
+                                                 Demon.f_Radius * 2.0F +
+                                                 TextureAdjust,
+                                                 Demon.f_Radius * 2.0F +
+                                                 TextureAdjust},
+                 {Demon.f_Radius + TextureAdjust / 2,
+                  Demon.f_Radius + TextureAdjust / 2},
                  -Math::GetRotation(Demon.f_Direction), WHITE);
 
 #ifdef _DEBUG

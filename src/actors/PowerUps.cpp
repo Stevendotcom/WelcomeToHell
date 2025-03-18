@@ -53,11 +53,6 @@ Vector2 GetRandomPos() {
 
 
 void PowerUps::Execute(std::list<PowerUp>& PowerUps) {
-
-  if (Targets.empty()) {
-    return;
-  }
-
   for (const auto Target : Targets) {
 
 #ifdef _DEBUG
