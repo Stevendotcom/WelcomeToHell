@@ -29,9 +29,9 @@ bool Input() {
 
 
 void Draw() {
-  const Texture2D& k_Background = GetTexture(ResManager::Resources::Background);
-  const Texture2D& k_Btn = GetTexture(ResManager::Resources::Btn);
-  const Texture2D& k_BtnPressed = GetTexture(ResManager::Resources::BtnPressed);
+  const Texture2D k_Background = GetTexture(ResManager::Resources::Background);
+  const Texture2D k_Btn = GetTexture(ResManager::Resources::Btn);
+  const Texture2D k_BtnPressed = GetTexture(ResManager::Resources::BtnPressed);
   constexpr Rectangle k_Source = {0, 0, 58.0F, 25.0F};
 
   BeginDrawing();
@@ -50,8 +50,9 @@ void Draw() {
     DrawText("Thanks For playing!",
              (g_ScreenWidth - MeasureText("Thanks For playing!", 60)) / 2, 120,
              60, WHITE);
-    DrawText("Background, character and by Nicolas Gallardo",
-             (g_ScreenWidth - MeasureText("Background and character by myself",
+
+    DrawText("Background and character by Nicolas Gallardo, https://projectbifron.itch.io",
+             (g_ScreenWidth - MeasureText("Background and character by Nicolas Gallardo, https://projectbifron.itch.io",
                                           20)) / 2, 200, 20, WHITE);
     DrawText(
         "2D Pixel Art Cacodaemon Sprites, Elthen, https://elthen.itch.io/2d-pixel-art-cacodaemon-sprites",
@@ -78,6 +79,22 @@ void Draw() {
         (g_ScreenWidth - MeasureText(
              "Snake's Authentic Gun Sounds, SnakeF8, https://f8studios.itch.io/snakes-authentic-gun-sounds",
              20)) / 2, 400, 20, WHITE);
+
+    DrawText(
+        "Coins & Gems & Chests & More, greatedocbrown, https://greatdocbrown.itch.io/coins-gems-etc",
+        (g_ScreenWidth - MeasureText(
+             "Coins & Gems & Chests & More, greatedocbrown, https://greatdocbrown.itch.io/coins-gems-etc",
+             20)) / 2, 440, 20, WHITE);
+    DrawText(
+        "TheDreamSucker, Jobit91, https://jobit91.itch.io/thedreamsucker",
+        (g_ScreenWidth - MeasureText(
+             "TheDreamSucker, Jobit91, https://jobit91.itch.io/thedreamsucker",
+             20)) / 2, 480, 20, WHITE);
+    DrawText(
+        "160+ Cursors Crosshairs, KabGames, https://kaboff.itch.io/160-cursors-crosshairs-pack-32x32",
+        (g_ScreenWidth - MeasureText(
+             "160+ Cursors Crosshairs, KabGames, https://kaboff.itch.io/160-cursors-crosshairs-pack-32x32",
+             20)) / 2, 520, 20, WHITE);
 
     DrawTexturePro(IsHover ? k_BtnPressed : k_Btn, k_Source, k_Dest, {0, 0}, 0,
                    WHITE);
