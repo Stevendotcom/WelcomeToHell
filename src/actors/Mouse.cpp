@@ -3,6 +3,16 @@
 #include "engine/ResManager.h"
 
 
+bool Mouse::IsAccelerating() {
+  return IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
+}
+
+
+bool Mouse::IsFiring() {
+  return IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+}
+
+
 void Mouse::Initialize(MouseType& Mouse) {
   Mouse = {GetMousePosition(),
            GetTexture(ResManager::Resources::Mouse),
@@ -18,7 +28,7 @@ void Mouse::Update(MouseType& Mouse) {
 void Mouse::Draw(const MouseType& Mouse) {
 
   const Rectangle Source = {
-      IsMouseButtonDown(MOUSE_RIGHT_BUTTON) ? 0 : static_cast<float>(Mouse.f_Sprite.width) / 2.0f,
+      IsAccelerating() ? 0 : static_cast<float>(Mouse.f_Sprite.width) / 2.0f,
       0,
       static_cast<float>(Mouse.f_Sprite.width) / 2.0f,
       static_cast<float>(Mouse.f_Sprite.height)};
