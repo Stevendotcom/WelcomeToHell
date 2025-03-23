@@ -202,17 +202,17 @@ void Player::Draw(const PlayerType& Player) {
   constexpr float k_Scale = 2.0F;
   constexpr float k_FireFrames = 14.0F;
 
-  const Rectangle Source = {0,
+  const Rectangle k_Source = {0,
                             0,
                             static_cast<float>(Player.f_Sprite.width),
                             static_cast<float>(Player.f_Sprite.height)};
 
-  const Rectangle Dest = {Player.f_Position.x,
+  const Rectangle k_Dest = {Player.f_Position.x,
                           Player.f_Position.y,
                           Player.f_Radius * k_Scale * 2.0F,
                           Player.f_Radius * k_Scale * 2.0F};
 
-  DrawTexturePro(Player.f_Sprite, Source, Dest, {Player.f_Radius * k_Scale,
+  DrawTexturePro(Player.f_Sprite, k_Source, k_Dest, {Player.f_Radius * k_Scale,
                                                  Player.f_Radius * k_Scale},
                  k_RotCorrection - GetRotation(Player.f_Direction),
                  Player.f_IsInvencible ? RED : WHITE);
