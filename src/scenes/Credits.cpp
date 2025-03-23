@@ -9,7 +9,10 @@
 
 namespace {
 
-constexpr Rectangle k_Dest = {30, 700, 250.0F, 50.0F};
+constexpr Rectangle k_Dest = {30,
+                              700,
+                              250.0F,
+                              50.0F};
 
 bool IsHover = false;
 
@@ -32,28 +35,32 @@ void Draw() {
   const Texture2D k_Background = GetTexture(ResManager::Resources::Background);
   const Texture2D k_Btn = GetTexture(ResManager::Resources::Btn);
   const Texture2D k_BtnPressed = GetTexture(ResManager::Resources::BtnPressed);
-  constexpr Rectangle k_Source = {0, 0, 58.0F, 25.0F};
+  constexpr Rectangle k_Source = {0,
+                                  0,
+                                  58.0F,
+                                  25.0F};
 
   BeginDrawing();
   {
     ClearBackground(BLACK);
 
-    DrawTexturePro(k_Background,
-                   {0,
-                    0,
-                    static_cast<float>(k_Background.width),
-                    static_cast<float>(k_Background.height)},
-                   {0,
-                    0,
-                    static_cast<float>(g_ScreenWidth),
-                    static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
+    DrawTexturePro(k_Background, {0,
+                                  0,
+                                  static_cast<float>(k_Background.width),
+                                  static_cast<float>(k_Background.height)}, {0,
+                     0,
+                     static_cast<float>(g_ScreenWidth),
+                     static_cast<float>(g_ScreenHeight)}, {0,
+                     0}, 0, WHITE);
     DrawText("Thanks For playing!",
              (g_ScreenWidth - MeasureText("Thanks For playing!", 60)) / 2, 120,
              60, WHITE);
 
-    DrawText("Background and character by Nicolas Gallardo, https://projectbifron.itch.io",
-             (g_ScreenWidth - MeasureText("Background and character by Nicolas Gallardo, https://projectbifron.itch.io",
-                                          20)) / 2, 200, 20, WHITE);
+    DrawText(
+        "Background and character by Nicolas Gallardo, https://projectbifron.itch.io",
+        (g_ScreenWidth - MeasureText(
+             "Background and character by Nicolas Gallardo, https://projectbifron.itch.io",
+             20)) / 2, 200, 20, WHITE);
     DrawText(
         "2D Pixel Art Cacodaemon Sprites, Elthen, https://elthen.itch.io/2d-pixel-art-cacodaemon-sprites",
         (g_ScreenWidth - MeasureText(
@@ -85,19 +92,23 @@ void Draw() {
         (g_ScreenWidth - MeasureText(
              "Coins & Gems & Chests & More, greatedocbrown, https://greatdocbrown.itch.io/coins-gems-etc",
              20)) / 2, 440, 20, WHITE);
-    DrawText(
-        "TheDreamSucker, Jobit91, https://jobit91.itch.io/thedreamsucker",
-        (g_ScreenWidth - MeasureText(
-             "TheDreamSucker, Jobit91, https://jobit91.itch.io/thedreamsucker",
-             20)) / 2, 480, 20, WHITE);
+    DrawText("TheDreamSucker, Jobit91, https://jobit91.itch.io/thedreamsucker",
+             (g_ScreenWidth - MeasureText(
+                  "TheDreamSucker, Jobit91, https://jobit91.itch.io/thedreamsucker",
+                  20)) / 2, 480, 20, WHITE);
     DrawText(
         "160+ Cursors Crosshairs, KabGames, https://kaboff.itch.io/160-cursors-crosshairs-pack-32x32",
         (g_ScreenWidth - MeasureText(
              "160+ Cursors Crosshairs, KabGames, https://kaboff.itch.io/160-cursors-crosshairs-pack-32x32",
              20)) / 2, 520, 20, WHITE);
+    DrawText(
+        "Pixel Fire Asset Pack 2, devkidd, https://devkidd.itch.io/pixel-fire-asset-pack-2",
+        (g_ScreenWidth - MeasureText(
+             "Pixel Fire Asset Pack 2, devkidd, https://devkidd.itch.io/pixel-fire-asset-pack-2",
+             20)) / 2, 560, 20, WHITE);
 
-    DrawTexturePro(IsHover ? k_BtnPressed : k_Btn, k_Source, k_Dest, {0, 0}, 0,
-                   WHITE);
+    DrawTexturePro(IsHover ? k_BtnPressed : k_Btn, k_Source, k_Dest, {0,
+                     0}, 0, WHITE);
 
     DrawText("Return",
              static_cast<int>(k_Dest.x + (
