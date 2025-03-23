@@ -33,6 +33,8 @@ Texture2D Diamond;
 Texture2D Batteries;
 Texture2D Beholder;
 Texture2D Mouse;
+Texture2D FireBig;
+Texture2D FireSmall;
 
 #pragma endregion
 
@@ -124,6 +126,12 @@ std::string ResManager::ResourceToString(const Resources Resource) {
 
     case Resources::Mouse:
       return "Mouse";
+
+    case Resources::FireBig:
+      return "Big Fire";
+
+    case Resources::FireSmall:
+      return "Small Fire";
 
     case Resources::Last:
       return "";
@@ -225,6 +233,18 @@ Texture2D& ResManager::GetTexture(const Resources Resource) {
     case Resources::Mouse:
       if (IsTextureReady(Mouse)) {
         return Mouse;
+      }
+    break;
+
+    case Resources::FireBig:
+      if (IsTextureReady(FireBig)) {
+        return FireBig;
+      }
+    break;
+
+    case Resources::FireSmall:
+      if (IsTextureReady(FireSmall)) {
+        return FireSmall;
       }
     break;
 
@@ -349,6 +369,8 @@ void ResManager::MakeTextures() {
   Batteries = LoadTexture("res/sprites/speed-boost.png");
   Beholder = LoadTexture("res/sprites/DreamSuckerSpriteSheet.png");
   Mouse = LoadTexture("res/sprites/mouse.png");
+  FireBig = LoadTexture("res/sprites/jetpack-fire-accel.png");
+  FireSmall = LoadTexture("res/sprites/jetpack-fire.png");
 }
 
 

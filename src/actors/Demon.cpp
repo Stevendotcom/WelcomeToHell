@@ -176,9 +176,6 @@ void Demon::Initialize(std::list<DemonType>& Demons,
                    static_cast<float>(Demon.f_Sprite.width / k_Cols),
                    static_cast<float>(Demon.f_Sprite.height / k_Rows)};
 
-#ifdef _DEBUG
-  std::cout << "Demon init. ID: " << Demon.f_Id << "\n";
-#endif
   Demons.push_back(Demon);
 }
 
@@ -225,10 +222,6 @@ void Demon::Clear(std::list<DemonType>& Demons) {
 
 void Demon::Execute(std::list<DemonType>& Demons) {
   for (const auto Target : Targets) {
-
-#ifdef _DEBUG
-    std::cout << "Demon kill. ID: " << Target << "\n";
-#endif
 
     // For clarity: lambda function that checks if id == Demon.f_id
     Demons.remove_if([&, Target](auto& Demon) -> bool {

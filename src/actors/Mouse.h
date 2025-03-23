@@ -9,6 +9,10 @@ struct MouseType {
   float f_Radius;
 };
 
+bool IsAccelerating();
+
+bool IsFiring();
+
 void Initialize(MouseType& Mouse);
 
 void Update(MouseType& Mouse);

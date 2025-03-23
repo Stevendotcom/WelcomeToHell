@@ -3,6 +3,7 @@
 #include "raylib.h"
 
 #include "Constants.h"
+#include "Mouse.h"
 #include "engine/Collisions.h"
 #include "engine/Math.h"
 #include "engine/ResManager.h"
@@ -24,7 +25,9 @@ void Player::Initialize(PlayerType& Player) {
   Player = {k_DefAccel,
             k_DefRadius,
             k_DefAccel,
+            0,
             k_DefHearts,
+            0,
             0,
             {g_ScreenWidth / 2.0F,
              g_ScreenHeight / 2.0F},
@@ -32,7 +35,10 @@ void Player::Initialize(PlayerType& Player) {
              0.0F},
             {0.0F,
              -1.0F},
+            {},
             GetTexture(ResManager::Resources::PlayerSprite),
+            GetTexture(ResManager::Resources::FireSmall),
+            {},
             false,
             false};
 }
@@ -91,12 +97,17 @@ void Player::UpdateDuplicate(PlayerType& Player,
   Duplicated = {Player.f_Acceleration,
                 Player.f_Radius,
                 Player.f_Acceleration,
+                Player.f_FrameTime,
                 Player.f_Hearts,
                 Player.f_Score,
+                Player.f_FrameIndex,
                 Duplicated.f_Position,
                 Player.f_Speed,
                 Player.f_Direction,
+                Player.f_JetpackEndPosition,
                 Player.f_Sprite,
+                Player.f_SpriteFire,
+                Player.f_Frame,
                 Player.f_IsInvencible,
                 Player.f_IsPowerBoostActive};
 
@@ -169,6 +180,19 @@ void Player::Update(PlayerType& Player,
 
   Player.f_Position = {Player.f_Position.x + Player.f_Speed.x * Delta,
                        Player.f_Position.y + Player.f_Speed.y * Delta};
+
+  Player.f_JetpackEndPosition = {
+      (Player.f_Direction.x * -(Player.f_Radius + 64) + Player.f_Position.x),
+      (Player.f_Direction.y * -(Player.f_Radius + 64) + Player.f_Position.y)};
+
+  Player.f_SpriteFire = GetTexture(Mouse::IsAccelerating()
+                                     ? ResManager::Resources::FireBig
+                                     : ResManager::Resources::FireSmall);
+
+  Animations::Update(Player.f_Frame, 1, 14, Player.f_FrameIndex,
+                     Player.f_FrameTime, Delta, {
+                         static_cast<float>(Player.f_SpriteFire.width),
+                         static_cast<float>(Player.f_SpriteFire.height)});
 }
 
 
@@ -176,22 +200,32 @@ void Player::Update(PlayerType& Player,
 void Player::Draw(const PlayerType& Player) {
   constexpr float k_RotCorrection = 90.0F;
   constexpr float k_Scale = 2.0F;
+  constexpr float k_FireFrames = 14.0F;
 
-  const Rectangle Source = {0,
+  const Rectangle k_Source = {0,
                             0,
                             static_cast<float>(Player.f_Sprite.width),
                             static_cast<float>(Player.f_Sprite.height)};
 
-  const Rectangle Dest = {Player.f_Position.x,
+  const Rectangle k_Dest = {Player.f_Position.x,
                           Player.f_Position.y,
                           Player.f_Radius * k_Scale * 2.0F,
                           Player.f_Radius * k_Scale * 2.0F};
 
-  DrawTexturePro(Player.f_Sprite, Source, Dest, {Player.f_Radius * k_Scale,
+  DrawTexturePro(Player.f_Sprite, k_Source, k_Dest, {Player.f_Radius * k_Scale,
                                                  Player.f_Radius * k_Scale},
                  k_RotCorrection - GetRotation(Player.f_Direction),
                  Player.f_IsInvencible ? RED : WHITE);
 
+  DrawTexturePro(Player.f_SpriteFire, Player.f_Frame, {
+                     Player.f_JetpackEndPosition.x,
+                     Player.f_JetpackEndPosition.y,
+                     (Player.f_SpriteFire.width / k_FireFrames) * 2,
+                     static_cast<float>(Player.f_SpriteFire.height) * 2}, {
+                     (Player.f_SpriteFire.width / k_FireFrames),
+                     static_cast<float>(Player.f_SpriteFire.height)},
+                 -GetRotation({Player.f_Direction.x * -1,
+                              Player.f_Direction.y * -1}) + 90.0f, WHITE);
 
 #ifdef _DEBUG
   DrawCircleLinesV(Player.f_Position, Player.f_Radius,WHITE);

@@ -23,6 +23,15 @@ void CloseUp::Close() {
         __fallthrough case ResManager::Resources::HeartBackground:
         __fallthrough case ResManager::Resources::Buttons:
         __fallthrough case ResManager::Resources::PauseBG:
+        __fallthrough case ResManager::Resources::Btn:
+        __fallthrough case ResManager::Resources::BtnPressed:
+        __fallthrough case ResManager::Resources::OneUp:
+        __fallthrough case ResManager::Resources::Diamond:
+        __fallthrough case ResManager::Resources::Batteries:
+        __fallthrough case ResManager::Resources::Beholder:
+        __fallthrough case ResManager::Resources::Mouse:
+        __fallthrough case ResManager::Resources::FireBig:
+        __fallthrough case ResManager::Resources::FireSmall:
         UnloadTexture(GetTexture(static_cast<ResManager::Resources>(Resource)));
         break;
 
@@ -42,7 +51,6 @@ void CloseUp::Close() {
       case ResManager::Resources::Last:
         //pass
         break;
-
     }
   }
   CloseAudioDevice();

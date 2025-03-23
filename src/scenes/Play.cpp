@@ -58,10 +58,10 @@ constexpr Rectangle k_DestPause{
 
 void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
   if (!Pause) {
-    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+    if (Mouse::IsAccelerating()) {
       Accelerate(Player);
     }
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    if (Mouse::IsFiring()) {
 
       if (Math::IsInRect(k_DestPause, GetMousePosition())) {
         Exit = Pause::Pause(Player);

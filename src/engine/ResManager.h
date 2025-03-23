@@ -29,6 +29,8 @@ enum class Resources {
   Batteries,
   Beholder,
   Mouse,
+  FireBig,
+  FireSmall,
   Last
 };
 

@@ -26,10 +26,6 @@ const int k_Rows = 5;
 void Beholder::Execute(std::list<BeholderType>& Beholders) {
   for (const auto Target : Targets) {
 
-#ifdef _DEBUG
-    std::cout << "Beholder kill. ID: " << Target << "\n";
-#endif
-
     // For clarity: lambda function that checks if id == Beholders.f_id
     Beholders.remove_if([&, Target](auto& Beholder) -> bool {
       if (Beholder.f_Id == Target) {
