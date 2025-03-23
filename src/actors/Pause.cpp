@@ -79,54 +79,69 @@ void DrawLocal(const Player::PlayerType& Player) {
   const Texture2D& k_PauseBG = GetTexture(ResManager::Resources::PauseBG);
   const Texture2D& k_Buttons = GetTexture(ResManager::Resources::Buttons);
 
-  const std::string k_Message = "You Lost!";
+  std::string Message;
+
+  int FontSize;
 
   BeginDrawing();
   {
     ClearBackground(BLACK);
 
-    DrawTexturePro(k_Background,
-                   {0,
-                    0,
-                    static_cast<float>(k_Background.width),
-                    static_cast<float>(k_Background.height)},
-                   {0,
-                    0,
-                    static_cast<float>(g_ScreenWidth),
-                    static_cast<float>(g_ScreenHeight)}, {0, 0}, 0, WHITE);
+    DrawTexturePro(k_Background, {0,
+                                  0,
+                                  static_cast<float>(k_Background.width),
+                                  static_cast<float>(k_Background.height)}, {0,
+                     0,
+                     static_cast<float>(g_ScreenWidth),
+                     static_cast<float>(g_ScreenHeight)}, {0,
+                     0}, 0, WHITE);
 
     DrawTextureEx(k_PauseBG,
                   {(static_cast<float>(g_ScreenWidth) - static_cast<float>(
                       k_PauseBG.width) * k_Scale) / 2.0F,
                    0}, 0, k_Scale, WHITE);
 
-    DrawTexturePro(k_Buttons, {0, 0, k_ButtonsSize, k_ButtonsSize},
-                   {k_ButtonsX,
-                    k_ButtonsY,
-                    k_ButtonsSize * k_ScaleBut,
-                    k_ButtonsSize * k_ScaleBut}, {0, 0}, 0, WHITE);
+    DrawTexturePro(k_Buttons, {0,
+                               0,
+                               k_ButtonsSize,
+                               k_ButtonsSize}, {k_ButtonsX,
+                                                k_ButtonsY,
+                                                k_ButtonsSize * k_ScaleBut,
+                                                k_ButtonsSize * k_ScaleBut}, {0,
+                     0}, 0, WHITE);
 
-    DrawTexturePro(k_Buttons, {k_ButtonsSize, 0, k_ButtonsSize, k_ButtonsSize},
-                   {k_ButtonsX,
-                    k_ButtonsY + k_ButtonsSize * k_ScaleBut,
-                    k_ButtonsSize * k_ScaleBut,
-                    k_ButtonsSize * k_ScaleBut}, {0, 0}, 0, WHITE);
+    DrawTexturePro(k_Buttons, {k_ButtonsSize,
+                               0,
+                               k_ButtonsSize,
+                               k_ButtonsSize}, {k_ButtonsX,
+                                                k_ButtonsY + k_ButtonsSize *
+                                                k_ScaleBut,
+                                                k_ButtonsSize * k_ScaleBut,
+                                                k_ButtonsSize * k_ScaleBut}, {0,
+                     0}, 0, WHITE);
 
     DrawText(Player.f_Hearts <= 0 ? "Restart" : "Return",
              static_cast<int>(k_ButtonsX + k_ButtonsSize + k_FontSize + 15.0F),
              static_cast<int>(k_ButtonsY + k_ButtonsSize),
              Player.f_Hearts <= 0 ? k_FontSize - 4 : k_FontSize, WHITE);
-    DrawText(
-        "Exit",
-        static_cast<int>(k_ButtonsX + k_ButtonsSize + k_FontSize + 25.0F),
-        static_cast<int>(k_ButtonsY + k_ButtonsSize * k_ScaleBut + k_FontSize),
-        k_FontSize, WHITE);
+
+    DrawText("Return\n\nto Menu",
+             static_cast<int>(k_ButtonsX + k_ButtonsSize + k_FontSize + 20.0F),
+             static_cast<int>(k_ButtonsY + k_ButtonsSize * k_ScaleBut +
+                              k_FontSize - 20), k_FontSize - 4, WHITE);
 
     if (Player.f_Hearts <= 0) {
-      DrawText(k_Message.c_str(),
-               (g_ScreenWidth - MeasureText(k_Message.c_str(), 86)) / 2, 100,
-               86, WHITE);
+      FontSize = 32;
+      Message = "You Lost!";
+    } else {
+      FontSize = 42;
+      Message = "Pause";
     }
+
+    DrawText(Message.c_str(),
+             (g_ScreenWidth - MeasureText(Message.c_str(), FontSize)) / 2, 228,
+             FontSize, WHITE);
+
   }
   EndDrawing();
 }
@@ -135,9 +150,9 @@ void DrawLocal(const Player::PlayerType& Player) {
 
 
 
-bool Pause::Pause(const Player::PlayerType& Player) {
+bool Pause::Pause(const Player::PlayerType& Player, bool& CloseWindow) {
   const Sound k_Dropship = GetSound(ResManager::Resources::Dropship);
-  bool Exit = false;
+  bool GotoMenu = false;
   bool Ret = false;
   bool WasPlaying = false;
 
@@ -150,8 +165,9 @@ bool Pause::Pause(const Player::PlayerType& Player) {
 
   PlaySound(GetSound(ResManager::Resources::MenuOpen));
 
-  while (!Exit && !WindowShouldClose() && !Ret) {
-    Input(Exit, Ret);
+  while (!GotoMenu && !CloseWindow && !Ret) {
+    CloseWindow = WindowShouldClose();
+    Input(GotoMenu, Ret);
     DrawLocal(Player);
   }
 
@@ -159,7 +175,9 @@ bool Pause::Pause(const Player::PlayerType& Player) {
     ResumeSound(k_Dropship);
   }
 
-  HideCursor();
+  if (!GotoMenu) {
+    HideCursor();
+  }
 
-  return Exit || WindowShouldClose();
+  return GotoMenu;
 }

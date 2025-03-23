@@ -33,10 +33,12 @@ constexpr float k_HeartSpriteSize = 16.0F;
 constexpr float k_BoostTime = 2.5f;
 
 bool Pause = false;
-bool Exit = false;
+bool ReturnToMenu = false;
+bool EndWindow = false;
 
 float DemonSpawnTimer = 0.0F;
-float DemonSpawnerTimeLimit = static_cast<float>(GetRandomValue(0, k_MaxWaitTime));
+float DemonSpawnerTimeLimit = static_cast<float>(GetRandomValue(
+    0, k_MaxWaitTime));
 float InvencibleTimer = 0.0F;
 float BoostTimer = 0.0F;
 float NewPowerTimer = 0.0F;
@@ -64,7 +66,7 @@ void Input(Player::PlayerType& Player, std::list<Bullet::BulletType>& Bullets) {
     if (Mouse::IsFiring()) {
 
       if (Math::IsInRect(k_DestPause, GetMousePosition())) {
-        Exit = Pause::Pause(Player);
+        ReturnToMenu = Pause::Pause(Player, EndWindow);
       } else {
         Shoot(Bullets, Player.f_Direction, Player.f_Radius, Player.f_Position);
       }
@@ -168,12 +170,16 @@ void ManageBullets(std::list<Bullet::BulletType>& Bullets,
 
 
 
-void UpdateTimers(Player::PlayerType& Player, std::list<Demon::DemonType>& Demons, std::list<PowerUps::PowerUp>& Powers, std::list<Beholder::BeholderType>& Beholders, const float Delta)
-{
+void UpdateTimers(Player::PlayerType& Player,
+                  std::list<Demon::DemonType>& Demons,
+                  std::list<PowerUps::PowerUp>& Powers,
+                  std::list<Beholder::BeholderType>& Beholders,
+                  const float Delta) {
   DemonSpawnTimer += Delta;
   if (DemonSpawnTimer > DemonSpawnerTimeLimit) {
     DemonSpawnTimer = 0.0F;
-    DemonSpawnerTimeLimit = static_cast<float>(GetRandomValue(2, k_MaxWaitTime));
+    DemonSpawnerTimeLimit = static_cast<float>(
+      GetRandomValue(2, k_MaxWaitTime));
     Initialize(Demons, Player.f_Position);
   }
 
@@ -246,10 +252,11 @@ void Update(Player::PlayerType& Player,
   Execute(Beholders);
 }
 
+
 bool HasPlayerLost(const Player::PlayerType& Player) {
   if (Player.f_Hearts <= 0) {
-    Exit = Pause::Pause(Player);
-    if (!Exit) {
+    ReturnToMenu = Pause::Pause(Player, EndWindow);
+    if (!ReturnToMenu) {
       return true;
     }
   }
@@ -347,7 +354,7 @@ void Draw(const Player::PlayerType& Player,
     }
 
     //Beholder
-    for (const auto& Beholder: Beholders){
+    for (const auto& Beholder : Beholders) {
       Beholder::Draw(Beholder);
     }
 
@@ -393,7 +400,9 @@ void Play::Play() {
 
   HideCursor();
 
-  while (!Exit && !WindowShouldClose()) {
+  ReturnToMenu = false;
+
+  while (!WindowShouldClose() && !ReturnToMenu && !EndWindow) {
     if (!IsSoundPlaying(k_Dropship)) {
       PlaySound(k_Dropship);
     }
@@ -409,7 +418,8 @@ void Play::Play() {
            Beholders, Mouse);
     Restart = HasPlayerLost(Player);
     UpdateMusicStream(k_Music);
-    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers, Beholders, Mouse);
+    Draw(Player, DuplicatedVisible, Duplicated, Demons, Bullets, Powers,
+         Beholders, Mouse);
 
   }
 
@@ -419,5 +429,7 @@ void Play::Play() {
 
   StopMusicStream(k_Music);
   StopSound(k_Dropship);
-  ChangeScene(SceneManager::Scenes::Exit);
+  ChangeScene(ReturnToMenu
+                ? SceneManager::Scenes::MainMenu
+                : SceneManager::Scenes::Exit);
 }
