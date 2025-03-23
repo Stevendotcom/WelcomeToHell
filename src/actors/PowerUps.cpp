@@ -55,10 +55,6 @@ Vector2 GetRandomPos() {
 void PowerUps::Execute(std::list<PowerUp>& PowerUps) {
   for (const auto Target : Targets) {
 
-#ifdef _DEBUG
-    std::cout << "Power kill. ID: " << Target << "\n";
-#endif
-
     // For clarity: lambda function that checks if id == Demon.f_id
     PowerUps.remove_if([&, Target](auto& Power) -> bool {
       return Power.f_Id == Target;

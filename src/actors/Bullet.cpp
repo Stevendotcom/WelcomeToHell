@@ -40,10 +40,6 @@ void Bullet::AddToTargets(const int Id) {
 void Bullet::Execute(std::list<BulletType>& Bullets) {
   for (const auto Target : Targets) {
 
-#ifdef _DEBUG
-    std::cout << "Bullet kill. ID: " << Target << "\n";
-#endif
-
     // For clarity: lambda function that checks if id == Bullet.f_id
     Bullets.remove_if([&, Target](auto& Bullet) -> bool {
       if (Bullet.f_Id == Target) {
