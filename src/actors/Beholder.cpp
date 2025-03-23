@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "Player.h"
 #include "engine/Collisions.h"
+#include "engine/Math.h"
 #include "engine/ResManager.h"
 
 namespace {
